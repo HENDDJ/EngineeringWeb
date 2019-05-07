@@ -54,5 +54,7 @@
     .el-textarea__inner{
         width:200px !important;
     }
-
+    body {
+        overflow-y: scroll !important;
+    }
 </style>

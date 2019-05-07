@@ -1,21 +1,21 @@
 <template>
     <el-scrollbar wrapClass="scrollbar-wrapper" viewClass="scrollbar_view">
-        <el-menu background-color="#363C42" text-color="#fff" active-text-color="#409EFF" router  :default-active="$store.state.routerIndex" unique-opened  class="el-menu-personal">
+        <el-menu background-color="#363C42" text-color="#fff" active-text-color="#409EFF" router  :default-active="$store.state.routerIndex" unique-opened  class="el-menu-personal" :collapse="$store.state.isCollapse">
             <div v-for="item in routes" :key="item.name">
                 <!-- 有子菜单 -->
                 <el-submenu :index="item.path" v-if="item.children&&item.children.length" :key="item.id">
                     <template slot="title">
-                        <icon :name="item.meta.icon" scale="1.5"></icon>
+                        <icon :name="item.meta.icon" scale="2"></icon>
                         <span slot="title">{{item.meta && item.meta.title}}</span>
                     </template>
                     <el-menu-item :index="item.path+'/'+subItem.path" v-for="subItem in item.children" :key="subItem.id">
-                        <icon :name="subItem.meta.icon" scale="1.5"></icon>
+                        <icon :name="subItem.meta.icon" scale="1.6"></icon>
                         <span slot="title">{{subItem.meta && subItem.meta.title}}</span>
                     </el-menu-item>
                 </el-submenu>
                 <!-- 没有子菜单 -->
                 <el-menu-item :index="item.path" v-else>
-                    <icon :name="item.meta.icon" scale="1.5"></icon>
+                    <icon :name="item.meta.icon" scale="2"></icon>
                     <span slot="title">{{item.meta && item.meta.title}}</span>
                 </el-menu-item>
             </div>
@@ -54,9 +54,10 @@
     .el-menu-personal {
         height: 100%;
         text-align: left;
+        transition: all .5s;
     }
     svg {
-        margin: 0 5px 0 20px;
+        margin: 0 16px 0 5px;
     }
 </style>
 
