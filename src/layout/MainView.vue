@@ -15,7 +15,7 @@
                 picSty: {},
                 picMenu: [{src:"/static/img/menu/GIS平台.png",alt:"GIS平台",path:"/project/gismap"},
                     {src:"/static/img/menu/事故隐患.png",alt:"事故隐患",path:""},
-                    {src:"/static/img/menu/企业安全.png",alt:"企业安全",path:""},
+                    {src:"/static/img/menu/企业安全.png",alt:"企业安全",path:"/enterpriseSafety/safetyRegulations"},
                     {src:"/static/img/menu/应急.png",alt:"应急",path:""},
                     {src:"/static/img/menu/政务.png",alt:"政务",path:""},
                     {src:"/static/img/menu/环保卫生.png",alt:"环保卫生",path:""},

@@ -1,11 +1,6 @@
 <template>
     <section>
-        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/safetyEquipment" :columns="Columns">
-            <template slot="warning" slot-scope="slotProps">
-                <span v-if="getDays(slotProps.row.nextInspectionTime,slotProps.row.lastInspection)===0" style="color:orange">检测过期 </span>
-                <span v-if="getDays(slotProps.row.nextInspectionTime,slotProps.row.lastInspection)===1" style="color:greenyellow"> 临近检测</span>
-                <span v-if="getDays(slotProps.row.nextInspectionTime,slotProps.row.lastInspection)===2" style="color:red"> 检测不合格</span>
-            </template>
+        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/preWarning" :columns="Columns" :addBtnVis="false" :editBtnVis="false">
         </CommonCRUD>
     </section>
 </template>
@@ -25,11 +20,6 @@
                         des: "注册代码",
 
                 },
-                    {
-                        name: "propertyUnit",
-                        type: 'string',
-                        des: "产权单位",
-                    },
                     {
                         name: "equipmentType",
                         type: 'string',
@@ -53,35 +43,39 @@
                         des: "下次检查时间",
                     },
                     {
-                        name: "warnType",
+                        name: "type",
                         type: 'string',
                         des: "预警类型",
-                        slot: true,
-                        slotName: "warning",
-                        // formatter:(row)=>{
-                        //     if(row.nextInspectionTime){
-                        //         var  aDate,  oDate1,  oDate2,  iDays
-                        //         aDate  =  this.getyyyyMMdd().split("-")
-                        //         oDate1  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])    //转换为12-18-2002格式
-                        //         aDate  =  row.nextInspectionTime.split("-")
-                        //         oDate2  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])
-                        //         iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24)    //把相差的毫秒数转换为天数
-                        //         if((oDate2  -  oDate1)<0){
-                        //             return '检测过期';
-                        //         }else{
-                        //         if (iDays < 10) {
-                        //             return '临近检测';
-                        //         } else if(row.lastInspection=='不合格'){
-                        //             return '检测不合格';
-                        //         }
-                        //
-                        //     }
-                        //     }
-                        // },
+
+                    },
+                    {
+                        name: "warnDescribe",
+                        type: 'string',
+                        des: "预警描述",
+
                     },
 
                 ],
-                formColumns:{}
+                formColumns:[
+                    {
+                    name: "type",
+                    type: 'string',
+                    des: "预警类型",
+
+                },
+                    {
+                        name: "typeId",
+                        type: 'string',
+                        des: "预警项目注册代码",
+
+                    },
+                    {
+                        name: "warnDescribe",
+                        type: 'string',
+                        des: "预警描述",
+
+                    },
+                ]
 
             }
         },
