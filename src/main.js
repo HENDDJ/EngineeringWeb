@@ -3,7 +3,8 @@
 import 'babel-polyfill';
 // import '@/utils/browser-polyfill.min.js';
 import '@/utils/proxy-poyfill';
-import '@/utils/sessionStorage'
+import '@/utils/sessionStorage';
+import isIE from '@/utils/getBrowserInfo';
 import Vue from 'vue';
 import App from './App';
 import router from './router';
@@ -11,7 +12,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import './style/index.scss';
 import Icon from 'vue-svg-icon/Icon.vue';
-import { generate, common, getRouter ,ht } from '@/api';
+import { generate, common, getRouter, ht } from '@/api';
 import store from '@/store';
 import DynamicRoutes from '@/utils/dynamic-routes';
 
@@ -21,7 +22,11 @@ Vue.use(ElementUI, {size: 'mini'});
 Vue.use(store);
 Vue.component('icon', Icon);
 
-Vue.prototype.$http = common.http;
+if (isIE()) {
+    Vue.prototype.$http = ht;
+} else {
+    Vue.prototype.$http = common.http;
+}
 Vue.prototype.$genHttp = generate;
 Vue.prototype.$copy = (target) => Object.assign({}, target);
 Vue.prototype.$validate = (selected) => {
