@@ -1,9 +1,9 @@
 <template>
     <el-scrollbar wrapClass="scrollbar-wrapper" viewClass="scrollbar_view">
-        <el-menu background-color="#363C42" text-color="#fff" active-text-color="#409EFF" router  unique-opened  class="el-menu-personal">
+        <el-menu background-color="#363C42" text-color="#fff" active-text-color="#409EFF" router  :default-active="$store.state.routerIndex" unique-opened  class="el-menu-personal">
             <div v-for="item in routes" :key="item.name">
                 <!-- 有子菜单 -->
-                <el-submenu :index="item.path" v-if="item.children&&item.children.length">
+                <el-submenu :index="item.path" v-if="item.children&&item.children.length" :key="item.id">
                     <template slot="title">
                         <icon :name="item.meta.icon" scale="1.5"></icon>
                         <span slot="title">{{item.meta && item.meta.title}}</span>

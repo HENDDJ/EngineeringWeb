@@ -13,7 +13,9 @@ export default new Vuex.Store({
         classInfo: {},
         //跳入扬尘界面默认工程
         projectId: '',
-        projectName: ''
+        projectName: '',
+        routerKey: '',
+        routerIndex: ''
     },
     mutations: {
         getMenu(state, data) {
@@ -27,7 +29,12 @@ export default new Vuex.Store({
         },
         getProjectName(state, data) {
             state.projectName = data;
+        },
+        getRouterKey(state, data){
+            state.routerKey = data;
+        },
+        getRouterIndex(state, data){
+            state.routerIndex = data;
         }
-
     }
 })

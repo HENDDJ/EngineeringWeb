@@ -39,6 +39,17 @@ Vue.prototype.$screen = () => {
     let screenWidth = window.screen.width;
     return screenWidth/1920;
 };
+function initTouristScreen() {
+    Vue.prototype.$touristScreenWid = () => {
+        let screenWidth = document.documentElement.clientWidth ;
+        return screenWidth/1920;
+    };
+    Vue.prototype.$touristScreenHei = () => {
+        let screenHeight = document.documentElement.clientHeight ;
+        return screenHeight/1080;
+    };
+}
+initTouristScreen();
 
 getRouter(router);
 

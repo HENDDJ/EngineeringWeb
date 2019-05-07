@@ -4,6 +4,7 @@ import NotFound from '@/layout/components/NotFound';
 import Login from '@/views/menu/Login';
 import NProgress from "nprogress";
 import 'nprogress/nprogress.css';
+import MainView from '@/layout/MainView';
 
 Vue.use(Router);
 
@@ -19,6 +20,11 @@ const router = new Router({
             path: '/login',
             name: 'Login',
             component: Login
+        },
+        {
+            path: '/mainView',
+            name: 'MainView',
+            component: MainView
         },
         {
             path: '*',

@@ -69,5 +69,16 @@ export default {
             value :'female',
             label :'女'
         }
+    ],
+    'CheckResult': [
+        {
+            value : 'false',
+            label : '不合格'
+        },
+        {
+            value : 'true',
+            label : '合格'
+        },
     ]
+
 }

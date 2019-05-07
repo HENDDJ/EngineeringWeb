@@ -28,11 +28,10 @@
     </div>
 </template>
 
-<script>
+<script type="text/babel">
 import regex from '@/utils/regex';
 import DynamicRoutes from '@/utils/dynamic-routes';
 import cache from "../../utils/cache";
-
 export default {
     name: 'login',
     data () {
@@ -62,21 +61,21 @@ export default {
             this.passwordType = this.passwordType === 'password' ? '' : 'password';
         },
         handleLogin () {
-            this.$http('POST', `/identity/principal/login`, this.loginForm).then(data => {
+            this.$http('POST', '/identity/principal/login', this.loginForm).then(data => {
                 let token = data.split("$")[0];
                 sessionStorage.setItem('token', token);
                 sessionStorage.setItem('user', this.loginForm.code);
                 return data.split("$")[1];
             }).then((userId) => {
-                this.$http('GET',`/identity/principal/${userId}id`,false).then(data => {
+                this.$http('GET','/identity/principal/'+userId+'id',false).then(data => {
                     sessionStorage.setItem('userInfo',JSON.stringify(data));
                 });
-                this.$http('GET', `/identity/roleMenu/menu`, false).then(data => {
+                this.$http('GET', '/identity/roleMenu/menu', false).then(data => {
                     sessionStorage.setItem("menu",JSON.stringify(data));
                     this.$store.commit("getMenu",data);
                     DynamicRoutes.transfer(data);
                     this.$router.addRoutes(data);
-                    this.$router.push({path: 'Home'});
+                    this.$router.push({path: 'MainView'});
                     this.loading = false;
                 });
             });

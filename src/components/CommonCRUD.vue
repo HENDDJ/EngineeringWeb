@@ -53,8 +53,15 @@
                 width="55"
                 align="center">
             </el-table-column>
-            <el-table-column v-for="item in columns" v-if="item.notShow !== 'true'" :key="item.name" :prop="item.aliasName || item.name" :label="item.des"
-                             :width="item.width || ''" :formatter="item.formatter" align="center"></el-table-column>
+            <el-table-column v-for="item in columns" v-if="item.notShow !== 'true' && !item.slot" :key="item.name" :prop="item.aliasName || item.name" :label="item.des"
+                             :width="item.width || ''" :formatter="item.formatter" align="center" ></el-table-column>
+            <el-table-column v-for="item in columns" v-if="item.slot" :label="item.des" :key="item.name" align="center" >
+                <template slot-scope="scope">
+                    <slot :name="item.slotName" :row="scope.row"></slot>
+                </template>
+            </el-table-column>
+
+
         </el-table>
         <el-pagination style="text-align: right;margin-top: 20px;"
                        background
@@ -83,6 +90,7 @@
                                 v-model="form[item.name]"
                                 type="date"
                                 :disabled="item.disabled || disabled"
+                                value-format="yyyy-MM-dd"
                                 placeholder="选择日期"
                                 >
                 </el-date-picker>
@@ -142,7 +150,7 @@
                 default: () => {
                     return [];
                 }
-            }
+            },
         },
         data () {
             return {
@@ -326,7 +334,7 @@
                         }
                     }
                 });
-            }
+            },
         },
         created() {
             let path = `${this.apiRoot}/page?page=${this.pageable.currentPage - 1}&size=${this.pageable.pageSize}`;

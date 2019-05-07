@@ -4,7 +4,7 @@
             <div class="fl">
                 <!-- 面包屑导航 -->
                 <el-breadcrumb separator-class="el-icon-arrow-right">
-                    <el-breadcrumb-item :to="{ path: '/' }"><icon name="list" scale="2.3" style="margin: 0 8px -5px 2px"></icon> 首页</el-breadcrumb-item>
+                    <el-breadcrumb-item :to="{path: '/MainView'}"><icon name="list" scale="2.3" style="margin: 0 8px -5px 2px"></icon> 首页</el-breadcrumb-item>
                     <transition-group name="breadcrumb">
                         <el-breadcrumb-item v-for="item in breadList" :key="item.path">
                             <span style="margin-top: 4px;display: inline-block;font-weight: 400;transition: none">{{item.meta.title}}</span>

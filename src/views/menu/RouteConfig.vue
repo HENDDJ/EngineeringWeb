@@ -62,9 +62,11 @@
         methods: {
             addFirstClassMenu() {
                 this.handlerVis = true;
-                this.$refs.handlerForm.resetFields();
-                this.handlerForm = {};
-                this.handlerForm.meta = {};
+                this.$nextTick(()=>{
+                    this.$refs.handlerForm.resetFields();
+                    this.handlerForm = {};
+                    this.handlerForm.meta = {};
+                })
             },
             /**
              * 过滤节点
