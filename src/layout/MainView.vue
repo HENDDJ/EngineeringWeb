@@ -22,7 +22,7 @@
                     {src:"/static/img/menu/监管监控.png",alt:"监管监控",path:"/siteSupervision/actualMonitor"},
                     {src:"/static/img/menu/综合.png",alt:"综合",path:""},
                     {src:"/static/img/menu/运维管理.png",alt:"运维管理",path:"/home/user"},
-                    {src:"/static/img/menu/重大危险.png",alt:"重大危险",path:""}]
+                    {src:"/static/img/menu/重大危险.png",alt:"重大危险",path:"/hazards/majorHazards"}]
 
             }
         },
