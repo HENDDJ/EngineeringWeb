@@ -2,7 +2,7 @@
     <div class="bg">
         <div class="title"><h1 style="color:white;font-size: 300%;letter-spacing:8px">句容市建筑工程智慧安监</h1></div>
         <div  class="choose">
-            <a v-for="item in picMenu"  class="jump"><img :src=item.src :alt=item.alt :style="picSty" @click="router(item.path)"></a>
+            <div v-for="item in picMenu"  class="jump"><img :src=item.src :alt=item.alt :style="picSty" @click="router(item.path)"></div>
         </div>
     </div>
 </template>
@@ -34,10 +34,9 @@
         methods: {
             resize(){
                 this.picSty = {
-                    width:  `${300 * this.$touristScreenWid()}px`,
+                    width:  `${275 * this.$touristScreenWid()}px`,
                     height :`${250 * this.$touristScreenHei()}px`,
-                    margin : '0 1% 4% 0',
-                    float :'left'
+                    margin : '30px 10px',
                 }
             },
             router(path){
@@ -56,24 +55,34 @@
 
 <style scoped>
     .bg{
-    position: absolute;
-    background: url("/static/img/mainback.png") center no-repeat ;
-    background-size: 100% 100%;
-    width: 100%;
-    height: 100%;;
+        position: absolute;
+        background: url("/static/img/mainback.png") center no-repeat ;
+        background-size: 100% 100%;
+        width: 100%;
+        height: 100%;
     }
     .title{
         margin: 3% auto 0 auto ;
-top:5%;
+        top:5%;
     }
     .choose{
         overflow: hidden;
         margin: 4% auto 0 auto;
-        width:82.5%;
+        width:85%;
         height:70%;
+    }
+    .jump {
+        width: calc(315 * 100vw/1920);
+        height: calc(290 * 100vw/1920);
+        display: inline-block;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: middle;
     }
     .jump :hover{
         box-shadow: 0 0 10px grey;
-
+        transform: scale(1.1) translateY(-15px);
+        transition: all .5s;
+        cursor: pointer;
     }
 </style>
