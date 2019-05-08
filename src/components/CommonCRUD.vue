@@ -1,5 +1,5 @@
 <template>
-    <div class="common-crud">
+    <el-card class="common-crud">
         <div class="common-query">
             <slot name="query"></slot>
             <el-form :inline="true" :model="queryForm" ref="form" class="demo-form-inline" label-width="75px">
@@ -113,7 +113,7 @@
             <el-button @click="handleClose">取 消</el-button>
         </div>
     </el-dialog>
-    </div>
+    </el-card>
 </template>
 
 <script>
@@ -369,10 +369,7 @@
     .common-crud {
         width: 99.5%;
         padding: 2%;
-        background-color: rgba(255, 255, 255, .9);
-        border: 1px #dcdcdc82 solid;
         border-radius: 2px;
-        box-shadow: #e0e0e0 2px 2px 3px;
         margin: 20px 0;
     }
     .btn-right {

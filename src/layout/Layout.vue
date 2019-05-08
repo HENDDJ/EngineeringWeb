@@ -24,6 +24,15 @@
         computed: {
         },
         methods: {
+        },
+        mounted() {
+            if (this.$store.state.isCollapse) {
+                // 折叠
+                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 86}px`;
+            } else {
+                // 不折叠
+                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 222}px`;
+            }
         }
     }
 </script>

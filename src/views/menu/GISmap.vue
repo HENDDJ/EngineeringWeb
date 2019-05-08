@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section id="gis-map">
         <el-select v-model="region" size="large" filterable placeholder="输入工程名以筛选" class="search-input" @change="queryProject">
             <el-option
                 v-for="(item,index) in options"
@@ -10,36 +10,46 @@
         </el-select>
         <el-button size="large" plain class="search-input reset-button" @click="reset">重置</el-button>
         <div id="allmap"></div>
-        <el-dialog
-            title="工程信息"
-            :visible.sync="dialogVisible"
-            width="700px"
-            align="left"
-            :before-close="handleClose">
-            <div style="position: relative;left: 65%;margin-top: -20px">
-                <el-button type="text" @click="toDustView">查看扬尘数据</el-button>
-                <el-button type="text" @click="toCameraView">查看视频监控</el-button>
-            </div>
-            <el-form :inline="true" :model="form" ref="form" class="demo-form-inline" label-width="110px">
-                <el-form-item v-for="item in formColumns" :key="item.des" :label="item.des">
-                    <el-input v-model="form[item.name]" v-if="item.type === 'string'" disabled></el-input>
-                    <el-select v-model="form[item.name]" v-else-if="item.type === 'select'" disabled>
-                        <el-option v-for="opItem in item.options" :value="opItem.value" :label="opItem.label" :key="opItem.value"></el-option>
-                    </el-select>
-                    <el-radio-group style="width: 178px" v-if="item.type === 'radio'" v-model="form[item.name]" disabled>
-                        <el-radio :label="1">是</el-radio>
-                        <el-radio :label="0">否</el-radio>
-                    </el-radio-group>
-                    <el-date-picker style="width: 178px" v-if="item.type === 'date'" v-model="form[item.name]" type="date"
-                                    placeholder="选择日期" disabled>
-                    </el-date-picker>
-                </el-form-item>
-            </el-form>
-        </el-dialog>
+        <vs-sidebar parent="#gis-map" default-index="1" click-not-close
+                    hidden-background position-right color="primary" class="sidebarx"
+                    spacer v-model="active">
+            <vs-collapse type="default" open style="text-align: left;font-size: 14px;padding: 0">
+                <vs-collapse-item open>
+                    <div slot="header">
+                        工程信息
+                    </div>
+                    <div v-for="item in formColumns" v-if="item.mapVis">
+                        <p style="font-size: 12px">{{item.des}}：{{form[item.name] === 0 ? '否' : (form[item.name] === 1 ? '是' : form[item.name])}}</p>
+                    </div>
+                </vs-collapse-item>
+                <vs-collapse-item open>
+                    <div slot="header">
+                        PM2.5实时监测
+                    </div>
+                    <div id="pm25">
+                    </div>
+                </vs-collapse-item>
+                <vs-collapse-item>
+                    <div slot="header">
+                        工程信息
+                    </div>
+                    <div>
+                        22343
+                    </div>
+                </vs-collapse-item>
+            </vs-collapse>
+
+            <!--<div style="position: relative;left: 65%;margin-top: -20px">-->
+                <!--<el-button type="text" @click="toDustView">查看扬尘数据</el-button>-->
+                <!--<el-button type="text" @click="toCameraView">查看视频监控</el-button>-->
+            <!--</div>-->
+        </vs-sidebar>
     </section>
 </template>
 
 <script>
+    import echarts from 'echarts';
+    import axios from 'axios';
     export default {
         name: "GISmap",
         data () {
@@ -48,13 +58,15 @@
                 formColumns: [
                     {
                         name: 'name',
-                        des: '工程名',
-                        type: 'string'
+                        des: '工程名称',
+                        type: 'string',
+                        mapVis: true
                     },
                     {
                         name: 'number',
                         des: '工程编号',
                         type: 'string',
+                        mapVis: true
                     },
                     {
                         name:'longitude',
@@ -71,11 +83,7 @@
                         des:'部门',
                         type: 'string'
                     },
-                    {
-                        name:' responsibility',
-                        des:'负责项目组',
-                        type: 'string',
-                    },
+
                     {
                         name:'address',
                         des:'地址',
@@ -87,43 +95,56 @@
                         type: 'string'
                     },
                     {
-                        name:'licenseNumber',
-                        des:'立项批准文号',
-                        type: 'string'
+                        name:'property',
+                        des:'建设性质',
+                        type: 'string',
+                        mapVis: true
                     },
                     {
                         name:'type',
                         des:'工程类别',
-                        type: 'string'
+                        type: 'string',
+                        mapVis: true
                     },
                     {
-                        name:'isHazard',
-                        des:'是否是可能存在重大危险源',
-                        type:'radio'
+                        name:' responsibility',
+                        des:'负责项目组',
+                        type: 'string',
+                        mapVis: true
                     },
                     {
-                        name:'isFormwork',
-                        des:'是否是模板工程',
-                        type:'radio'
-                    },
-                    {
-                        name:'isDeepExcavation',
-                        des:'是否是深基坑',
-                        type:'radio'
-                    },
-                    {
-                        name:'property',
-                        des:'建设性质',
-                        type: 'string'
-                    },
-                    {
-                        name:'size',
-                        des:'工程规模',
-                        type: 'string'
+                        name:'licenseNumber',
+                        des:'立项批准文号',
+                        type: 'string',
+                        mapVis: true
                     },
                     {
                         name:'license',
                         des:'建设用地许可证',
+                        type: 'string',
+                        mapVis: true
+                    },
+                    {
+                        name:'isDeepExcavation',
+                        des:'是否是深基坑',
+                        type:'radio',
+                        mapVis: true
+                    },
+                    {
+                        name:'isHazard',
+                        des:'存在重大危险源',
+                        type:'radio',
+                        mapVis: true
+                    },
+                    {
+                        name:'isFormwork',
+                        des:'是否为模板工程',
+                        type:'radio',
+                        mapVis: true
+                    },
+                    {
+                        name:'size',
+                        des:'工程规模',
                         type: 'string'
                     },
                     {
@@ -148,7 +169,8 @@
                 markers: [],
                 map: {},
                 markerClusterer: {},
-                optionsCopy: {}
+                optionsCopy: {},
+                active: false
             }
         },
         methods: {
@@ -215,8 +237,78 @@
                 //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
             },
             showProjectInfo(row) {
-                this.dialogVisible = true;
+                this.active = true;
                 this.form = row;
+                this.initPM25(row.id);
+            },
+            initPM25(projectId) {
+                axios.get(`http://122.97.218.162:18008/JRPSuperviseService/ThirdParty.svc/getRaiseDustNow?id=${projectId}`, false).then(
+                    res => {
+                        let dataX = [];
+                        let dataY = [];
+                        res.data.data2.forEach( item => {
+                            dataY.push(item.value);
+                            dataX.push(item.time);
+                        });
+                        let myChart = echarts.init(document.getElementById('pm25'));
+                        let option = {
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                data: ['PM2.5']
+                            },
+                            grid:{
+                                x:0,
+                                y:35,
+                                x2:30,
+                                y2:0,
+                                containLabel: true
+                            },
+                            calculable: true,
+                            xAxis: [
+                                {
+                                    type: 'category',
+                                    boundaryGap: false,
+                                    data: dataX,
+                                    axisLabel: {
+                                        formatter: (value) => {
+                                            let time = new Date(value);
+                                            return time.getHours() + ':' + time.getMinutes();
+                                        }
+                                    }
+                                }
+                            ],
+                            yAxis: [
+                                {
+                                    type: 'value',
+                                    name: 'μg/m³'
+                                }
+                            ],
+                            series: [
+                                {
+                                    name: 'PM2.5值',
+                                    type: 'line',
+                                    data: dataY,
+                                    markPoint: {
+                                        data: [
+                                            { type: 'max', name: '最大值' },
+                                            { type: 'min', name: '最小值' }
+                                        ]
+                                    },
+                                    markLine: {
+                                        data: [
+                                            { type: 'average', name: '平均值' }
+                                        ]
+                                    }
+                                }
+                            ]
+                        };
+                        myChart.setOption(option);
+                        myChart.resize();
+                    }
+                )
+
             }
         },
         mounted() {
@@ -239,9 +331,27 @@
     .reset-button {
         left: 460px;
     }
+    .sidebarx {
+        z-index: 9999;
+    }
+    .vs-sidebar.vs-sidebar-parent {
+        margin-top: 55px;
+        height: calc(100% - 55px) !important;
+    }
+    #pm25 {
+        width: 100%;
+        height: 180px;
+    }
 </style>
 <style>
     .el-dialog__body {
         padding: 10px 20px !important;
+    }
+    .vs-sidebar--items {
+        padding: 0 !important;
+    }
+    .vs-sidebar {
+        max-width: 300px !important;
+        background-color: rgba(255, 255, 255, .8) !important;
     }
 </style>

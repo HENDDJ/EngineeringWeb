@@ -9,7 +9,10 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import ElementUI from 'element-ui';
+import vuesax from 'vuesax';
+import 'vuesax/dist/vuesax.css'
 import 'element-ui/lib/theme-chalk/index.css';
+import 'material-icons/iconfont/material-icons.css';
 import './style/index.scss';
 import Icon from 'vue-svg-icon/Icon.vue';
 import { generate, common, getRouter, ht } from '@/api';
@@ -19,6 +22,7 @@ import DynamicRoutes from '@/utils/dynamic-routes';
 Vue.config.productionTip = false;
 
 Vue.use(ElementUI, {size: 'mini'});
+Vue.use(vuesax);
 Vue.use(store);
 Vue.component('icon', Icon);
 
