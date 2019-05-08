@@ -79,6 +79,16 @@ export default {
             value : 'true',
             label : '合格'
         },
+    ],
+    'State': [
+        {
+            value : 'TO_BE_CONFIRMED',
+            label : '待确认'
+        },
+        {
+            value : 'CONFIRMED',
+            label : '已确认'
+        },
     ]
 
 }

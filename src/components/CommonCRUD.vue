@@ -60,8 +60,6 @@
                     <slot :name="item.slotName" :row="scope.row"></slot>
                 </template>
             </el-table-column>
-
-
         </el-table>
         <el-pagination style="text-align: right;margin-top: 20px;"
                        background
@@ -348,11 +346,14 @@
                     }
                 });
             },
+            refreshTableData() {
+                let path = `${this.apiRoot}/page?page=${this.pageable.currentPage - 1}&size=${this.pageable.pageSize}`;
+                this.defaultRequestConfig(path);
+                this.loadTableData(path);
+            }
         },
         created() {
-            let path = `${this.apiRoot}/page?page=${this.pageable.currentPage - 1}&size=${this.pageable.pageSize}`;
-            this.defaultRequestConfig(path);
-            this.loadTableData(path);
+            this.refreshTableData();
             this.validationRules();
         },
         mounted() {
