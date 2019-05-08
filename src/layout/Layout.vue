@@ -46,7 +46,6 @@
     }
 
     .sidebar-container {
-        transition: width 0.5s;
         height: 100%;
         position: relative;
         top: 0;

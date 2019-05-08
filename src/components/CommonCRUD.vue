@@ -367,12 +367,13 @@
 
 <style scoped>
     .common-crud {
-        width: 95%;
-        margin: 1% 2.5%;
+        width: 99.5%;
         padding: 2%;
         background-color: rgba(255, 255, 255, .9);
+        border: 1px #dcdcdc82 solid;
         border-radius: 2px;
-        box-shadow: #e0e0e0 1px 1px 3px;
+        box-shadow: #e0e0e0 2px 2px 3px;
+        margin: 20px 0;
     }
     .btn-right {
         float: right;
