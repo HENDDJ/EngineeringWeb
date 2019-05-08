@@ -1,6 +1,6 @@
 <template>
     <div class="app-wrapper">
-        <sidebar class="sidebar-container "></sidebar>
+        <sidebar class="sidebar-container"></sidebar>
         <div class="main-container">
             <nav-bar></nav-bar>
             <!--<tags-view></tags-view>-->
@@ -24,6 +24,15 @@
         computed: {
         },
         methods: {
+        },
+        mounted() {
+            if (this.$store.state.isCollapse) {
+                // 折叠
+                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 86}px`;
+            } else {
+                // 不折叠
+                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 222}px`;
+            }
         }
     }
 </script>
@@ -46,21 +55,26 @@
     }
 
     .sidebar-container {
-        transition: width 0.28s;
-        width: 200px !important;
         height: 100%;
-        position: fixed;
+        position: relative;
         top: 0;
         bottom: 0;
         left: 0;
         z-index: 1001;
         overflow: hidden;
+        max-width: 200px;
+        display: inline-block;
+        vertical-align: top;
+        float: left;
     }
 
     // 主体区域
     .main-container {
+        float: right;
         min-height: 100%;
-        transition: margin-left .28s;
-        margin-left: 200px;
+        transition: margin-left .28s, width .5s;
+        display: inline-block;
+        vertical-align: top;
+        width: calc(100% - 205px);
     }
 </style>

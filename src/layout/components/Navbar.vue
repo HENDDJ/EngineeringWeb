@@ -3,13 +3,13 @@
         <div class="menu-bar">
             <div class="fl">
                 <!-- 面包屑导航 -->
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                    <el-breadcrumb-item :to="{path: '/MainView'}"><icon name="list" scale="2.3" style="margin: 0 8px -5px 2px"></icon> 首页</el-breadcrumb-item>
-                    <transition-group name="breadcrumb">
-                        <el-breadcrumb-item v-for="item in breadList" :key="item.path">
-                            <span style="margin-top: 4px;display: inline-block;font-weight: 400;transition: none">{{item.meta.title}}</span>
-                        </el-breadcrumb-item>
-                    </transition-group>
+                <span @click="toggleMenu">
+                    <icon name="list" scale="2.3" style="margin: 17px 8px -5px 2px;vertical-align: top; cursor: pointer"></icon>
+                </span>
+                <el-breadcrumb separator-class="el-icon-arrow-right"  style="display: inline-block">
+                    <el-breadcrumb-item :to="{path: '/MainView'}"> 首页</el-breadcrumb-item>
+                    <el-breadcrumb-item v-for="item in breadList" :key="item.path">{{item.meta.title}}
+                    </el-breadcrumb-item>
                 </el-breadcrumb>
            </div>
 
@@ -46,7 +46,7 @@
 
 <script>
 export default {
-    data() {
+    data () {
         return {
             msgVisible: false,
             user: {},
@@ -57,52 +57,59 @@ export default {
                 url: '/component/test?id=12-123-sda&status=List',
                 msg: '列表组件测试'
             }]
-        }
+        };
     },
     computed: {
-        breadList() {
+        breadList () {
             let arr = [];
             // 如果有重定向，则是由于没有子菜单(因此过滤掉)
-            let matched = this.$route.matched.filter(route => !route.redirect)
-            console.log("123",this.$store.state.menuList,this.$route.matched)
+            let matched = this.$route.matched.filter(route => !route.redirect);
+            console.log('123', this.$store.state.menuList, this.$route.matched);
             this.$store.state.menuList.map(item => {
-                if(item.name === matched[0].name) {
+                if (item.name === matched[0].name) {
                     arr.push(item);
                 }
                 item.children.map(subItem => {
                     if (matched[1] && subItem.name === matched[1].name) {
                         arr.push(subItem);
                     }
-                })
+                });
             });
             return arr;
         }
     },
     methods: {
         // 改变左侧菜单收缩
-        changeCollapse() {
-            this.$store.commit('SET_COLLAPSE', !this.$store.state.collapse)
+        toggleMenu () {
+            this.$store.commit('getIsCollapse', !this.$store.state.isCollapse);
+            if (this.$store.state.isCollapse) {
+                // 折叠
+                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 86}px`;
+            } else {
+                // 不折叠
+                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 222}px`;
+            }
         },
         // 我的消息
-        myMessage() {
-            this.msgVisible = true
+        myMessage () {
+            this.msgVisible = true;
         },
         // 跳转到我的消息
-        goMsg(url) {
+        goMsg (url) {
             this.$router.push(url);
-            this.msgVisible = false
+            this.msgVisible = false;
         },
         // 退出登录
-        logOut() {
+        logOut () {
             sessionStorage.removeItem('menu');
             sessionStorage.removeItem('token');
             location.reload();
         }
     },
-    mounted() {
+    mounted () {
         this.user = sessionStorage.getItem('user');
     }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -116,8 +123,6 @@ export default {
     overflow: hidden;
     padding: 0 12px;
     .fl {
-        float: left;
-        margin-top: 16px;
         vertical-align: center;
     }
     .fa {
@@ -146,4 +151,9 @@ export default {
         line-height: 18px;
     }
 }
+</style>
+<style>
+    .el-breadcrumb {
+        line-height: 4;
+    }
 </style>

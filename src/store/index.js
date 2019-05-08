@@ -15,7 +15,8 @@ export default new Vuex.Store({
         projectId: '',
         projectName: '',
         routerKey: '',
-        routerIndex: ''
+        routerIndex: '',
+        isCollapse: false
     },
     mutations: {
         getMenu(state, data) {
@@ -30,11 +31,14 @@ export default new Vuex.Store({
         getProjectName(state, data) {
             state.projectName = data;
         },
-        getRouterKey(state, data){
+        getRouterKey(state, data) {
             state.routerKey = data;
         },
-        getRouterIndex(state, data){
+        getRouterIndex(state, data) {
             state.routerIndex = data;
+        },
+        getIsCollapse(state, data) {
+            state.isCollapse = data;
         }
     }
-})
+});
