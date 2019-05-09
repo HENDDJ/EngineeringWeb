@@ -1,6 +1,6 @@
 <template>
     <section>
-        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/emergencyPrevention" :columns="Columns" >
+        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/emergencyPrevention" :columns="Columns"  >
         </CommonCRUD>
     </section>
 </template>
@@ -57,7 +57,7 @@
                     {value:'岗位和地点',label:'岗位和地点'},
                     {value:'薄弱环节',label:'薄弱环节'},
                     {value:'重要工程',label:'重要工程'},
-            ]
+                ],
             }
         },
         methods: {
@@ -65,7 +65,7 @@
                 this.formColumns.filter(item => item.name === 'type')[0].options = this.typeOptions
             }
         },
-        components :{
+        components:{
             CommonCRUD
         },
         created () {

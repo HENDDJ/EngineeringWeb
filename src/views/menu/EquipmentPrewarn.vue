@@ -1,6 +1,12 @@
 <template>
     <section>
-        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/preWarning" :columns="Columns" :addBtnVis="false" :editBtnVis="false">
+        <CommonCRUD
+            :formColumns="formColumns"
+            apiRoot="/identity/preWarning"
+            :columns="Columns"
+            :queryFormColumns="queryFormColumns"
+            :addBtnVis="false"
+            :editBtnVis="false">
         </CommonCRUD>
     </section>
 </template>
@@ -18,7 +24,6 @@
                         name: "registrationCode",
                         type: 'string',
                         des: "注册代码",
-
                 },
                     {
                         name: "equipmentType",
@@ -46,7 +51,8 @@
                         name: "type",
                         type: 'string',
                         des: "预警类型",
-
+                        transferType: 'lookup',
+                        lookupKey: 'WarningType'
                     },
                     {
                         name: "warnDescribe",
@@ -58,11 +64,12 @@
                 ],
                 formColumns:[
                     {
-                    name: "type",
-                    type: 'string',
-                    des: "预警类型",
-
-                },
+                        name: "type",
+                        type: 'string',
+                        des: "预警类型",
+                        transferType: 'lookup',
+                        lookupKey: 'WarningType',
+                    },
                     {
                         name: "typeId",
                         type: 'string',
@@ -75,6 +82,14 @@
                         des: "预警描述",
 
                     },
+                ],
+                queryFormColumns:[
+                    {
+                        name: 'type',
+                        type: 'string',
+                        value: 'SPECIAL_EQUIPMENT',
+                        visible: false
+                    }
                 ]
 
             }

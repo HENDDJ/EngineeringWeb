@@ -131,6 +131,7 @@
         },
         methods: {
             showPropertyConfig(data) {
+
                 if (data.length !== 1) {
                     this.$message({
                         type: 'warning',

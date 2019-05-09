@@ -89,6 +89,16 @@ export default {
             value : 'CONFIRMED',
             label : '已确认'
         },
+    ],
+    'WarningType': [
+        {
+            value : 'MAJOR_HAZARDS',
+            label : '重大危险源'
+        },
+        {
+            value : 'SPECIAL_EQUIPMENT',
+            label : '特种设备'
+        }
     ]
 
 
