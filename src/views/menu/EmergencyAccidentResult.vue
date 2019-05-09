@@ -1,6 +1,6 @@
 <template>
     <section>
-        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/emergencyAccidentResult" :columns="$store.state.classInfo.properties"></CommonCRUD>
+        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/emergencyAccidentResult" :columns="columns"></CommonCRUD>
     </section>
 </template>
 
@@ -10,8 +10,20 @@
         name: 'EmergencyAccidentResult',
         data() {
             return {
-                formColumns :{}
-
+                formColumns :[],
+                columns: []
+            }
+        },
+        methods: {
+            timeTransfer() {
+                this.columns.forEach(item => {
+                    if(item.name == 'createdAt'){
+                        item.formatter = (row, cell,val,index) => {
+                            var timeF =  row.modifiedAt.substr(0,10)
+                            return timeF
+                        }
+                    }
+                });
             }
         },
         components :{
@@ -19,6 +31,8 @@
         },
         created () {
             this.formColumns =this.$store.state.classInfo.properties;
+            this.columns = this.$store.state.classInfo.properties;
+            this.timeTransfer();
         }
     };
 </script>

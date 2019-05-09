@@ -36,6 +36,7 @@
         </div>
         <div class="handler-btn">
             <el-button type="success" plain @click="$router.go(-1)" class="self-back self-btn">&nbsp;</el-button>
+            <slot name="header-btn0" :selected="selected" ></slot>
             <el-button v-if="addBtnVis" type="primary" plain @click="add" class="self-add self-btn">&nbsp;</el-button>
             <el-button v-if="editBtnVis" type="success" plain class="self-btn self-edit" @click="edit">&nbsp;</el-button>
             <el-button v-if="lookBtnVis" type="success" plain class="self-btn self-look" @click="look">&nbsp;</el-button>

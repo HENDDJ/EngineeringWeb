@@ -1,7 +1,7 @@
 <template>
     <section>
         <CommonCRUD  :columns="columns" apiRoot="/identity/emergencyAccident"
-                    :formColumns="formColumns" >
+                    :formColumns="formColumns" :addBtnVis="false" ref="table">
             <template slot="Handle" slot-scope="scope">
                 <el-tag v-if="scope.row.emergencyAccidentHandle==='0'"
                         close-transition type="danger">未派发</el-tag>
@@ -13,6 +13,9 @@
                         close-transition type="danger">未完成</el-tag>
                 <el-tag v-if="scope.row.emergencyAccidentResult==='1'"
                         close-transition>完成</el-tag>
+            </template>
+            <template slot="header-btn0" slot-scope="slotProps">
+                <el-button type="primary"  @click="addUp(slotProps.selected)">上报</el-button>
             </template>
         </CommonCRUD>
         <!--<CommonCRUD :columns="$store.state.classInfo.properties" apiRoot="/identity/sysClass" :formColumns="$store.state.classInfo.properties"></CommonCRUD>-->
@@ -49,6 +52,9 @@
                         this.formColumns.filter( item => item.name === 'organizationId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
                     }
                 )
+            },
+            addUp(val){
+                this.$refs.table.add(val)
             }
         },
         components: {
@@ -56,9 +62,11 @@
         },
         created() {
             this.columns = []
-            this.columns.length = 0
-            this.formColumns = this.$store.state.classInfo.properties;
-            this.columns = this.$store.state.classInfo.properties;
+            this.columns.length = 0;
+            let temp = JSON.parse(JSON.stringify(this.$store.state.classInfo.properties));
+            let temp1 = JSON.parse(JSON.stringify(this.$store.state.classInfo.properties));
+            this.formColumns = temp1
+            this.columns = temp
             var columsItems1 = {slot:true,name:'emergencyAccidentHandle',des:'有无方案',slotName:'Handle'}
             var columsItems2 = {slot:true,name:'emergencyAccidentResult',des:'是否处理完成',slotName:'ResultMsg'}
             this.columns.push(columsItems1,columsItems2)

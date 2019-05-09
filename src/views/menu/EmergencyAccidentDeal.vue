@@ -90,13 +90,6 @@
                 )
                 tansfer(this.columns);
             },
-            itemStatus() {
-                this.$http('POST', '/identity/emergencyAccident', false).then(
-                    data => {
-                        this.formColumns.filter( item => item.name === 'organizationId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
-                    }
-                )
-            },
             handleClose (done) {
                 this.$confirm('确认关闭？')
                     .then(_ => {
@@ -109,6 +102,20 @@
                     .catch(_ => {});
             },
             showDeal(val) {
+                if (val.length !== 1) {
+                    this.$message({
+                        type: 'warning',
+                        message: val.length > 1 ? '仅能选择一行记录' : '请选择一行记录'
+                    });
+                    return false;
+                }
+                if(val[0].emergencyAccidentHandle == 1){
+                        this.$message({
+                            type: 'warning',
+                            message: '已存在方案'
+                        });
+                        return false;
+                }
                 this.selectedForm = val[0]
                 this.form.accidentId = val[0].id
                 this.dialogVisibleDeal = true
@@ -125,7 +132,7 @@
                                 this.dialogVisibleDeal = false;
                                 this.$refs.table.refreshTableData();
 
-                                this.from = {};
+                                this.form = {};
                             });
                         })
                     } else {
@@ -142,10 +149,10 @@
         },
         created() {
             this.columns = []
-
             this.columns.length = 0;
             let temp = JSON.parse(JSON.stringify(this.$store.state.classInfo.properties));
-            this.formColumns = temp
+            let temp1 = JSON.parse(JSON.stringify(this.$store.state.classInfo.properties));
+            this.formColumns = temp1
             this.columns = temp
             var columsItems1 = {slot:true,name:'emergencyAccidentHandle',des:'有无方案',slotName:'Handle'}
             var columsItems2 = {slot:true,name:'emergencyAccidentResult',des:'是否处理完成',slotName:'ResultMsg'}
