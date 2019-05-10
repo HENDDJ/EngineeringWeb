@@ -10,6 +10,44 @@
         </el-select>
         <el-button size="large" plain class="search-input reset-button" @click="reset">重置</el-button>
         <div id="allmap"></div>
+        <div :class="bottomBarClass" :style="bottomBar">
+            <vs-row>
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
+                    <el-card shadow="never" style="width: 100%;height: 100%">
+                        <div slot="header">
+                            <span>工程信息</span>
+                            <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                        </div>
+                        <span v-for="item in formColumns" v-if="item.mapVis" style="width: 50%;font-size: 14px;line-height: 28px;">{{item.des}}：{{form[item.name] === 0 ? '否' : (form[item.name] === 1 ? '是' : form[item.name])}}</span>
+                    </el-card>
+                </vs-col>
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
+                    <el-card shadow="never" style="width: 100%;height: 100%">
+                        <div slot="header">
+                            <span>PM2.5实时监测</span>
+                            <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                        </div>
+                        <div id="pm25"></div>
+                    </el-card>
+                </vs-col>
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
+                    <el-card shadow="never" style="width: 100%;height: 100%">
+                        <div slot="header" class="clearfix">
+                            <span>预警信息</span>
+                            <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                        </div>
+                    </el-card>
+                </vs-col>
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
+                    <el-card shadow="never" style="width: 100%;height: 100%">
+                        <div slot="header" class="clearfix">
+                            <span>设备信息</span>
+                            <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                        </div>
+                    </el-card>
+                </vs-col>
+            </vs-row>
+        </div>
         <vs-sidebar parent="#gis-map" default-index="1" click-not-close
                     hidden-background position-right color="primary" class="sidebarx"
                     spacer v-model="active">
@@ -18,15 +56,11 @@
                     <div slot="header">
                         工程信息
                     </div>
-                    <div v-for="item in formColumns" v-if="item.mapVis">
-                        <p style="font-size: 12px">{{item.des}}：{{form[item.name] === 0 ? '否' : (form[item.name] === 1 ? '是' : form[item.name])}}</p>
-                    </div>
+
                 </vs-collapse-item>
                 <vs-collapse-item open>
                     <div slot="header">
                         PM2.5实时监测
-                    </div>
-                    <div id="pm25">
                     </div>
                 </vs-collapse-item>
                 <vs-collapse-item>
@@ -170,7 +204,21 @@
                 map: {},
                 markerClusterer: {},
                 optionsCopy: {},
-                active: false
+                active: false,
+                bottomBarClass: 'bottom-bar'
+            }
+        },
+        computed: {
+            bottomBar() {
+                let leftSiderBarWidth = 200;
+                if (this.$store.state.isCollapse) {
+                    leftSiderBarWidth = 64;
+                }
+                // 20px为纵向滚动条宽度
+                return {
+                    width: `${window.screen.width - leftSiderBarWidth - 20}px`,
+                    textAlign: 'left'
+                }
             }
         },
         methods: {
@@ -240,6 +288,9 @@
                 this.active = true;
                 this.form = row;
                 this.initPM25(row.id);
+                this.bottomBarClass += " bottom-bar-active";
+                this.$store.commit("getIsCollapse", true);
+                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 86}px`;
             },
             initPM25(projectId) {
                 axios.get(`http://122.97.218.162:18008/JRPSuperviseService/ThirdParty.svc/getRaiseDustNow?id=${projectId}`, false).then(
@@ -260,8 +311,8 @@
                             },
                             grid:{
                                 x:0,
-                                y:35,
-                                x2:30,
+                                y:30,
+                                x2:20,
                                 y2:0,
                                 containLabel: true
                             },
@@ -318,9 +369,13 @@
 </script>
 
 <style>
+    #gis-map {
+        height: calc(100vh - 50px);
+        overflow: hidden;
+    }
     #allmap {
         width: 100%;
-        height: 610px;
+        height: calc(100vh - 50px);
     }
     .search-input {
         position: absolute !important;
@@ -336,7 +391,7 @@
     }
     .vs-sidebar.vs-sidebar-parent {
         margin-top: 55px;
-        height: calc(100% - 55px) !important;
+        height: calc(100% - 310px) !important;
     }
     #pm25 {
         width: 100%;
@@ -353,5 +408,37 @@
     .vs-sidebar {
         max-width: 300px !important;
         background-color: rgba(255, 255, 255, .8) !important;
+    }
+    .bottom-bar {
+        transition: all .5s;
+        height: 250px;
+    }
+    .bottom-bar-active {
+        transform: translateY(-250px);
+    }
+    @media screen and (max-width: 1400px){
+        .bottom-bar {
+            transition: all .5s;
+            height: 200px;
+        }
+        .bottom-bar-active {
+            transform: translateY(-200px);
+            display: block;
+        }
+        .vs-sidebar.vs-sidebar-parent {
+            margin-top: 55px;
+            height: calc(100% - 260px) !important;
+        }
+    }
+    .el-card__header {
+        padding: 10px 20px !important
+    }
+    .el-card {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        background-color: #ffffffe8;
+    }
+    .el-card__body {
+
     }
 </style>
