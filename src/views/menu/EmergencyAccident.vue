@@ -55,7 +55,24 @@
             },
             addUp(val){
                 this.$refs.table.add(val)
-            }
+            },
+            controlAuthority(){
+                this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
+                //  console.log(JSON.parse(sessionStorage.getItem('userInfo')));
+                if( this.roleCode === 'MAJOR_HAZARDS_DECLARE'){
+                    this.queryFormColumns[0].value = JSON.parse(sessionStorage.getItem('userInfo')).id;
+                    this.addBtnVis = true;
+                    this.editBtnVis = true;
+                    this.delBtnVis = true;
+                    this.conBtnVis = false;
+                }
+                if(this.roleCode === 'MAJOR_HAZARDS_CONFIRM'){
+                    this.addBtnVis = false;
+                    this.editBtnVis = false;
+                    this.delBtnVis = false;
+                    this.conBtnVis = true;
+                }
+            },
         },
         components: {
             CommonCRUD

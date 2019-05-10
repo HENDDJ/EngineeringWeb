@@ -21,6 +21,11 @@
             return {
                 Columns :[
                     {
+                        name: "projectName",
+                        type: 'string',
+                        des: "工程名称",
+                    },
+                    {
                         name: "registrationCode",
                         type: 'string',
                         des: "注册代码",
@@ -58,7 +63,6 @@
                         name: "warnDescribe",
                         type: 'string',
                         des: "预警描述",
-
                     },
 
                 ],
