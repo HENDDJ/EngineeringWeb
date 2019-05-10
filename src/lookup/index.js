@@ -99,6 +99,20 @@ export default {
             value : 'SPECIAL_EQUIPMENT',
             label : '特种设备'
         }
+    ],
+    'IssueType': [
+        {
+            value : 'A',
+            label : '重大隐患(A)'
+        },
+        {
+            value : 'B',
+            label : '较大隐患(B)'
+        },
+        {
+            value : 'C',
+            label : '一般隐患(C)'
+        }
     ]
 
 
