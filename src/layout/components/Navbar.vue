@@ -84,10 +84,10 @@ export default {
             this.$store.commit('getIsCollapse', !this.$store.state.isCollapse);
             if (this.$store.state.isCollapse) {
                 // 折叠
-                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 86}px`;
+                document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 66}px`;
             } else {
                 // 不折叠
-                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 222}px`;
+                document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 202}px`;
             }
         },
         // 我的消息

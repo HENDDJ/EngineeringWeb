@@ -45,7 +45,7 @@ Vue.prototype.$validate = (selected) => {
 };
 
 Vue.prototype.$screen = () => {
-    let screenWidth = window.screen.width;
+    let screenWidth = document.body.clientWidth;
     return screenWidth/1920;
 };
 function initTouristScreen() {

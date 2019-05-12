@@ -12,13 +12,20 @@
         <div id="allmap"></div>
         <div :class="bottomBarClass" :style="bottomBar">
             <vs-row>
-                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3.7">
                     <el-card shadow="never" style="width: 100%;height: 100%">
                         <div slot="header">
                             <span>工程信息</span>
                             <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
                         </div>
-                        <span v-for="item in formColumns" v-if="item.mapVis" style="width: 50%;font-size: 14px;line-height: 28px;">{{item.des}}：{{form[item.name] === 0 ? '否' : (form[item.name] === 1 ? '是' : form[item.name])}}</span>
+                        <vs-row>
+                            <vs-col vs-justify="center" vs-align="center" vs-w="6">
+                                <p v-for="(item, index) in formColumns" v-if="item.mapVis && index <= mapVisSize" style="font-size: 12px;line-height: 28px;">{{item.des}}：{{form[item.name] === 0 ? '否' : (form[item.name] === 1 ? '是' : form[item.name])}}</p>
+                            </vs-col>
+                            <vs-col vs-justify="center" vs-align="center" vs-w="6">
+                                <p v-for="(item, index) in formColumns" v-if="item.mapVis && index > mapVisSize" style="font-size: 12px;line-height: 28px;">{{item.des}}：{{form[item.name] === 0 ? '否' : (form[item.name] === 1 ? '是' : form[item.name])}}</p>
+                            </vs-col>
+                        </vs-row>
                     </el-card>
                 </vs-col>
                 <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
@@ -33,16 +40,64 @@
                 <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
                     <el-card shadow="never" style="width: 100%;height: 100%">
                         <div slot="header" class="clearfix">
-                            <span>预警信息</span>
-                            <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                            <span>设备信息</span>
+                            <el-button style="float: right; padding: 3px 0" type="text">更多</el-button>
+                        </div>
+                        <div>
+                            <vs-table stripe :data="equipmentList">
+                                <template slot="thead">
+                                    <vs-th>
+                                        设备名称
+                                    </vs-th>
+                                    <vs-th>
+                                        注册编号
+                                    </vs-th>
+                                    <vs-th>
+                                        安装日期
+                                    </vs-th>
+                                    <vs-th>
+                                        最新检查结果
+                                    </vs-th>
+                                </template>
+
+                                <template slot-scope="{data}">
+                                    <vs-tr :key="indextr" v-for="(tr, indextr) in equipmentList" >
+                                        <vs-td :data="equipmentList[indextr].installAddress">
+                                            {{`${tr.installAddress}-${tr.equipmentType}`}}
+                                        </vs-td>
+
+                                        <vs-td :data="equipmentList[indextr].registrationCode">
+                                            {{tr.registrationCode}}
+                                        </vs-td>
+
+                                        <vs-td :data="equipmentList[indextr].installDate">
+                                            {{tr.installDate}}
+                                        </vs-td>
+
+                                        <vs-td :data="equipmentList[indextr].lastInspection" style="text-align: center">
+                                            <template v-if="tr.lastInspection == 'true'">
+                                                <p style="color: green;"><vs-icon style="vertical-align: sub" icon="done" size="14px" color="green"></vs-icon> 合格</p>
+                                            </template>
+                                            <template v-else>
+                                                <p style="color: red;"><vs-icon style="vertical-align: sub" icon="clear" size="14px" color="red"></vs-icon> 不合格</p>
+                                            </template>
+                                        </vs-td>
+                                    </vs-tr>
+                                </template>
+                            </vs-table>
                         </div>
                     </el-card>
                 </vs-col>
-                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="2.3">
                     <el-card shadow="never" style="width: 100%;height: 100%">
                         <div slot="header" class="clearfix">
-                            <span>设备信息</span>
+                            <span>预警信息</span>
                             <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                        </div>
+                        <div style="font-size: 12px;">
+                            <vs-list>
+                                <vs-list-item v-for="(item,index) in warningList" icon="warning" color="warning" :title="item.warnDescribe"></vs-list-item>
+                            </vs-list>
                         </div>
                     </el-card>
                 </vs-col>
@@ -103,32 +158,6 @@
                         mapVis: true
                     },
                     {
-                        name:'longitude',
-                        des: '经度',
-                        type: 'string'
-                    },
-                    {
-                        name:'latitude',
-                        des:'纬度',
-                        type: 'string'
-                    },
-                    {
-                        name:'department',
-                        des:'部门',
-                        type: 'string'
-                    },
-
-                    {
-                        name:'address',
-                        des:'地址',
-                        type: 'string'
-                    },
-                    {
-                        name:'investment',
-                        des:'计划总投资',
-                        type: 'string'
-                    },
-                    {
                         name:'property',
                         des:'建设性质',
                         type: 'string',
@@ -177,6 +206,32 @@
                         mapVis: true
                     },
                     {
+                        name:'longitude',
+                        des: '经度',
+                        type: 'string'
+                    },
+                    {
+                        name:'latitude',
+                        des:'纬度',
+                        type: 'string'
+                    },
+                    {
+                        name:'department',
+                        des:'部门',
+                        type: 'string'
+                    },
+
+                    {
+                        name:'address',
+                        des:'地址',
+                        type: 'string'
+                    },
+                    {
+                        name:'investment',
+                        des:'计划总投资',
+                        type: 'string'
+                    },
+                    {
                         name:'size',
                         des:'工程规模',
                         type: 'string'
@@ -205,10 +260,15 @@
                 markerClusterer: {},
                 optionsCopy: {},
                 active: false,
-                bottomBarClass: 'bottom-bar'
+                bottomBarClass: 'bottom-bar',
+                equipmentList: [],
+                warningList: [],
             }
         },
         computed: {
+            mapVisSize() {
+                return this.formColumns.filter(item => item.mapVis === true).length / 2;
+            },
             bottomBar() {
                 let leftSiderBarWidth = 200;
                 if (this.$store.state.isCollapse) {
@@ -216,7 +276,7 @@
                 }
                 // 20px为纵向滚动条宽度
                 return {
-                    width: `${window.screen.width - leftSiderBarWidth - 20}px`,
+                    width: `${document.body.clientWidth - leftSiderBarWidth}px`,
                     textAlign: 'left'
                 }
             }
@@ -288,9 +348,11 @@
                 this.active = true;
                 this.form = row;
                 this.initPM25(row.id);
+                this.loadEquipment(row.id);
+                this.loadWarning(row.id);
                 this.bottomBarClass += " bottom-bar-active";
                 this.$store.commit("getIsCollapse", true);
-                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 86}px`;
+                document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 66}px`;
             },
             initPM25(projectId) {
                 axios.get(`http://122.97.218.162:18008/JRPSuperviseService/ThirdParty.svc/getRaiseDustNow?id=${projectId}`, false).then(
@@ -360,6 +422,27 @@
                     }
                 )
 
+            },
+            loadEquipment(projectId) {
+                let param = {
+                    projectId: projectId,
+                    type: "SPECIAL_EQUIPMENT"
+                };
+                this.$http('POST',`/identity/safetyEquipment/page?page=0&size=5`, param, false).then(
+                    data => {
+                        this.equipmentList = data.content;
+                    }
+                )
+            },
+            loadWarning(projectId) {
+                let param = {
+                    proId: projectId,
+                };
+                this.$http('POST',`/identity/preWarning/page?page=0&size=5`, param, false).then(
+                    data => {
+                        this.warningList = data.content;
+                    }
+                )
             }
         },
         mounted() {
@@ -393,10 +476,6 @@
         margin-top: 55px;
         height: calc(100% - 310px) !important;
     }
-    #pm25 {
-        width: 100%;
-        height: 180px;
-    }
 </style>
 <style>
     .el-dialog__body {
@@ -410,11 +489,35 @@
         background-color: rgba(255, 255, 255, .8) !important;
     }
     .bottom-bar {
-        transition: all .5s;
         height: 250px;
     }
-    .bottom-bar-active {
+    .bottom-bar .vs-col:nth-child(1) {
+        transition: all .4s;
+    }
+    .bottom-bar .vs-col:nth-child(2) {
+        transition: all .6s;
+    }
+    .bottom-bar .vs-col:nth-child(3) {
+        transition: all .8s;
+    }
+    .bottom-bar .vs-col:nth-child(4) {
+        transition: all 1s;
+    }
+    .bottom-bar-active > .vs-row > .vs-col {
         transform: translateY(-250px);
+    }
+    .el-card {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        background-color: #ffffffe8;
+    }
+    .el-card__body {
+        padding: 10px 20px !important;
+        max-height: 210px;
+    }
+    #pm25 {
+        width: 100%;
+        height: 190px;
     }
     @media screen and (max-width: 1400px){
         .bottom-bar {
@@ -429,16 +532,27 @@
             margin-top: 55px;
             height: calc(100% - 260px) !important;
         }
+        .el-card {
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            background-color: #ffffffe8;
+            max-height: 200px !important;
+        }
+        .el-card__body {
+            padding: 10px 20px !important;
+            max-height: 160px;
+        }
+        #pm25 {
+            width: 100%;
+            height: 140px;
+        }
     }
     .el-card__header {
-        padding: 10px 20px !important
+        padding: 10px 20px !important;
+        font-size: 14px;
     }
-    .el-card {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        background-color: #ffffffe8;
+    .vs-list--icon {
+        color: #ffbd26;
     }
-    .el-card__body {
 
-    }
 </style>
