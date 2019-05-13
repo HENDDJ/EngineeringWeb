@@ -74,7 +74,7 @@
                 <el-form-item label="具体描述">
                     <el-input v-model="form.description" :disabled="disabled"></el-input>
                 </el-form-item>
-                <el-form-item label="具体描述">
+                <el-form-item label="开始时间">
                     <el-date-picker v-model="form.startTime" type="date" placeholder="选择日期" :disabled="disabled"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="结束时间">
@@ -142,13 +142,16 @@
             controlAuthority(){
                 this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
               //  console.log(JSON.parse(sessionStorage.getItem('userInfo')));
+                //上报人显示增删改查按钮
                 if( this.roleCode === 'MAJOR_HAZARDS_DECLARE'){
+                    //显示自己上报的内容
                     this.queryFormColumns[0].value = JSON.parse(sessionStorage.getItem('userInfo')).id;
                     this.addBtnVis = true;
                     this.editBtnVis = true;
                     this.delBtnVis = true;
                     this.conBtnVis = false;
                 }
+                //确认人显示查看和确认按钮
                 if(this.roleCode === 'MAJOR_HAZARDS_CONFIRM'){
                     this.addBtnVis = false;
                     this.editBtnVis = false;

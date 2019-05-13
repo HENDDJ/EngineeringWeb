@@ -122,14 +122,14 @@
         },
         computed: {
             leftStyle() {
-                let ra = window.screen.width/1920;
+                let ra = document.body.clientWidth/1920;
                 return {
                     width: `${900 * ra}px`,
                     height: `${600 * ra}px`,
                 }
             },
             rightStyle() {
-                let ra = window.screen.width/1920;
+                let ra = document.body.clientWidth/1920;
                 return {
                     width: `${600 * ra}px`,
                     height: `${500 * ra}px`,

@@ -12,20 +12,27 @@
         <div id="allmap"></div>
         <div :class="bottomBarClass" :style="bottomBar">
             <vs-row>
-                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3.7">
                     <el-card shadow="never" style="width: 100%;height: 100%">
                         <div slot="header">
                             <span>工程信息</span>
                             <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
                         </div>
-                        <span v-for="item in formColumns" v-if="item.mapVis" style="width: 50%;font-size: 14px;line-height: 28px;">{{item.des}}：{{form[item.name] === 0 ? '否' : (form[item.name] === 1 ? '是' : form[item.name])}}</span>
+                        <vs-row>
+                            <vs-col vs-justify="center" vs-align="center" vs-w="6">
+                                <p v-for="(item, index) in formColumns" v-if="item.mapVis && index <= mapVisSize" style="font-size: 12px;line-height: 28px;">{{item.des}}：{{form[item.name] === 0 ? '否' : (form[item.name] === 1 ? '是' : form[item.name])}}</p>
+                            </vs-col>
+                            <vs-col vs-justify="center" vs-align="center" vs-w="6">
+                                <p v-for="(item, index) in formColumns" v-if="item.mapVis && index > mapVisSize" style="font-size: 12px;line-height: 28px;">{{item.des}}：{{form[item.name] === 0 ? '否' : (form[item.name] === 1 ? '是' : form[item.name])}}</p>
+                            </vs-col>
+                        </vs-row>
                     </el-card>
                 </vs-col>
                 <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
                     <el-card shadow="never" style="width: 100%;height: 100%">
                         <div slot="header">
                             <span>PM2.5实时监测</span>
-                            <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                            <el-button @click="toDustView" style="float: right; padding: 3px 0" type="text">详情</el-button>
                         </div>
                         <div id="pm25"></div>
                     </el-card>
@@ -33,16 +40,64 @@
                 <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
                     <el-card shadow="never" style="width: 100%;height: 100%">
                         <div slot="header" class="clearfix">
-                            <span>预警信息</span>
-                            <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                            <span>设备信息</span>
+                            <el-button style="float: right; padding: 3px 0" type="text">更多</el-button>
+                        </div>
+                        <div>
+                            <vs-table stripe :data="equipmentList">
+                                <template slot="thead">
+                                    <vs-th>
+                                        设备名称
+                                    </vs-th>
+                                    <vs-th>
+                                        注册编号
+                                    </vs-th>
+                                    <vs-th>
+                                        安装日期
+                                    </vs-th>
+                                    <vs-th>
+                                        最新检查结果
+                                    </vs-th>
+                                </template>
+
+                                <template slot-scope="{data}">
+                                    <vs-tr :key="indextr" v-for="(tr, indextr) in equipmentList" >
+                                        <vs-td :data="equipmentList[indextr].installAddress">
+                                            {{`${tr.installAddress}-${tr.equipmentType}`}}
+                                        </vs-td>
+
+                                        <vs-td :data="equipmentList[indextr].registrationCode">
+                                            {{tr.registrationCode}}
+                                        </vs-td>
+
+                                        <vs-td :data="equipmentList[indextr].installDate">
+                                            {{tr.installDate}}
+                                        </vs-td>
+
+                                        <vs-td :data="equipmentList[indextr].lastInspection" style="text-align: center">
+                                            <template v-if="tr.lastInspection == 'true'">
+                                                <p style="color: green;"><vs-icon style="vertical-align: sub" icon="done" size="14px" color="green"></vs-icon> 合格</p>
+                                            </template>
+                                            <template v-else>
+                                                <p style="color: red;"><vs-icon style="vertical-align: sub" icon="clear" size="14px" color="red"></vs-icon> 不合格</p>
+                                            </template>
+                                        </vs-td>
+                                    </vs-tr>
+                                </template>
+                            </vs-table>
                         </div>
                     </el-card>
                 </vs-col>
-                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="2.3">
                     <el-card shadow="never" style="width: 100%;height: 100%">
                         <div slot="header" class="clearfix">
-                            <span>设备信息</span>
+                            <span>预警信息</span>
                             <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                        </div>
+                        <div style="font-size: 12px;">
+                            <vs-list>
+                                <vs-list-item v-for="(item,index) in warningList" icon="warning" color="warning" :title="item.warnDescribe"></vs-list-item>
+                            </vs-list>
                         </div>
                     </el-card>
                 </vs-col>
@@ -51,27 +106,18 @@
         <vs-sidebar parent="#gis-map" default-index="1" click-not-close
                     hidden-background position-right color="primary" class="sidebarx"
                     spacer v-model="active">
-            <vs-collapse type="default" open style="text-align: left;font-size: 14px;padding: 0">
-                <vs-collapse-item open>
-                    <div slot="header">
-                        工程信息
-                    </div>
-
-                </vs-collapse-item>
-                <vs-collapse-item open>
-                    <div slot="header">
-                        PM2.5实时监测
-                    </div>
-                </vs-collapse-item>
-                <vs-collapse-item>
-                    <div slot="header">
-                        工程信息
-                    </div>
-                    <div>
-                        22343
-                    </div>
-                </vs-collapse-item>
-            </vs-collapse>
+            <div slot="header">
+                实时监控
+            </div>
+            <div class="ActiveX" style="padding: 15px 0">
+                <object classid="clsid:9ECD2A40-1222-432E-A4D4-154C7CAB9DE3" id="spv" class="video-realtime"></object>
+            </div>
+            <ul class="leftx">
+                <p style="color: #3A3A3A;font-weight: 700">监控列表:</p>
+                <li v-for="(item, index) in cameraList" :key="item.id">
+                    <el-radio v-model="currentCamera" :label="item.cameraName" fill="#79FF40" text-color="#79FF40">{{item.cameraName}}</el-radio>
+                </li>
+            </ul>
 
             <!--<div style="position: relative;left: 65%;margin-top: -20px">-->
                 <!--<el-button type="text" @click="toDustView">查看扬尘数据</el-button>-->
@@ -84,6 +130,7 @@
 <script>
     import echarts from 'echarts';
     import axios from 'axios';
+    import md5 from '@/utils/md5';
     export default {
         name: "GISmap",
         data () {
@@ -101,32 +148,6 @@
                         des: '工程编号',
                         type: 'string',
                         mapVis: true
-                    },
-                    {
-                        name:'longitude',
-                        des: '经度',
-                        type: 'string'
-                    },
-                    {
-                        name:'latitude',
-                        des:'纬度',
-                        type: 'string'
-                    },
-                    {
-                        name:'department',
-                        des:'部门',
-                        type: 'string'
-                    },
-
-                    {
-                        name:'address',
-                        des:'地址',
-                        type: 'string'
-                    },
-                    {
-                        name:'investment',
-                        des:'计划总投资',
-                        type: 'string'
                     },
                     {
                         name:'property',
@@ -177,6 +198,32 @@
                         mapVis: true
                     },
                     {
+                        name:'longitude',
+                        des: '经度',
+                        type: 'string'
+                    },
+                    {
+                        name:'latitude',
+                        des:'纬度',
+                        type: 'string'
+                    },
+                    {
+                        name:'department',
+                        des:'部门',
+                        type: 'string'
+                    },
+
+                    {
+                        name:'address',
+                        des:'地址',
+                        type: 'string'
+                    },
+                    {
+                        name:'investment',
+                        des:'计划总投资',
+                        type: 'string'
+                    },
+                    {
                         name:'size',
                         des:'工程规模',
                         type: 'string'
@@ -205,10 +252,28 @@
                 markerClusterer: {},
                 optionsCopy: {},
                 active: false,
-                bottomBarClass: 'bottom-bar'
+                bottomBarClass: 'bottom-bar',
+                equipmentList: [],
+                warningList: [],
+                cameraList: [],
+                spv: {}, //海康监控视频播放插件对象
+                currentCamera: ''
+            }
+        },
+        watch: {
+            currentCamera: {
+                handler: function (n,o) {
+                    if (n!==o) {
+                        let temp = this.cameraList.filter(item => item.cameraName === n)[0];
+                        this.startPreviewByCameraUuid(temp.cameraUuid)
+                    }
+                }
             }
         },
         computed: {
+            mapVisSize() {
+                return this.formColumns.filter(item => item.mapVis === true).length / 2;
+            },
             bottomBar() {
                 let leftSiderBarWidth = 200;
                 if (this.$store.state.isCollapse) {
@@ -216,7 +281,7 @@
                 }
                 // 20px为纵向滚动条宽度
                 return {
-                    width: `${window.screen.width - leftSiderBarWidth - 20}px`,
+                    width: `${document.body.clientWidth - leftSiderBarWidth}px`,
                     textAlign: 'left'
                 }
             }
@@ -288,9 +353,12 @@
                 this.active = true;
                 this.form = row;
                 this.initPM25(row.id);
+                this.loadEquipment(row.id);
+                this.loadWarning(row.id);
+                this.loadCamera(row.id);
                 this.bottomBarClass += " bottom-bar-active";
                 this.$store.commit("getIsCollapse", true);
-                document.getElementsByClassName('main-container')[0].style.width = `${window.screen.width - 86}px`;
+                document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 66}px`;
             },
             initPM25(projectId) {
                 axios.get(`http://122.97.218.162:18008/JRPSuperviseService/ThirdParty.svc/getRaiseDustNow?id=${projectId}`, false).then(
@@ -360,10 +428,108 @@
                     }
                 )
 
+            },
+            loadEquipment(projectId) {
+                let param = {
+                    projectId: projectId,
+                    type: "SPECIAL_EQUIPMENT"
+                };
+                this.$http('POST',`/identity/safetyEquipment/page?page=0&size=5`, param, false).then(
+                    data => {
+                        this.equipmentList = data.content;
+                    }
+                )
+            },
+            loadWarning(projectId) {
+                let param = {
+                    proId: projectId,
+                };
+                this.$http('POST',`/identity/preWarning/page?page=0&size=5`, param, false).then(
+                    data => {
+                        this.warningList = data.content;
+                    }
+                )
+            },
+            /**  视频处理部分
+             */
+            loadCamera(projectId) {
+                let param = {
+                    pId: projectId
+                };
+                this.$http("POST", `/identity/camera/list`, param, false).then(
+                    data => {
+                        this.cameraList = data;
+                        this.startPreviewByCameraUuid(this.cameraList[0].cameraUuid);
+                        this.currentCamera = this.cameraList[0].cameraName;
+                    }
+                )
+            },
+            startPreviewByCameraUuid(cameraUuid) {
+                let time = new Date().getTime();
+                const IP_PORT = "http://122.97.218.162:18080";
+                const APP_KEY = "a592d676";
+                const opUserUuid = 'c26a811c141a11e79aeeb32ef95273f2';
+                // const netZoneUuid = 'f5816cf43fcc41d880d9f636fa8bc443';
+                const netZoneUuid = '5b994421aced4e2d9a76179e8cc70734';
+                this.$http('POST', IP_PORT + "/openapi/service/vss/preview/getPreviewParamByCameraUuid?token=" + this.getSinglePreviewToken(time, cameraUuid),
+                    {appkey: APP_KEY, time: time, pageNo: 1, pageSize: 10, opUserUuid: opUserUuid, cameraUuid: cameraUuid, netZoneUuid: netZoneUuid}).then(
+                    data => {
+                        this.startPreview(data.data);
+                    })
+            },
+            initSpvx(spv) {
+                let ret = spv.MPV_Init(1);
+                if (ret !== 0) {
+                    alert("单路预览初始化失败");
+                }
+            },
+            setLocalParam(spv) {
+                let xml = '<?xml version="1.0" encoding="UTF-8"?> ' +
+                    '<localParam> ' +
+                    '<width>600</width> ' +
+                    '<height>500</height> ' +
+                    '<picType>1</picType> ' +
+                    '<capturePath>C:\\Hikvision</capturePath> ' +
+                    '<recordSize>2</recordSize> ' +
+                    '<recordPath>C:\\Hikvision</recordPath> ' +
+                    '<limitPreviewTime>1800</limitPreviewTime> ' +
+                    '</localParam>';
+                let ret = spv.MPV_SetLocalParam(xml);
+                if (ret !== 0) {
+                    alert("单路预览设置本地参数失败");
+                }
+            },
+            startPreview(xml) {
+                this.spv.MPV_SetPlayWndCount(1);
+                this.spv.MPV_StartPreview(xml);
+            },
+            getSinglePreviewToken(time, uuid) {
+                const APP_KEY = "a592d676";
+                const SECRET = "69681c3587194a50a2b11f1335ad6f41";
+                const opUserUuid = 'c26a811c141a11e79aeeb32ef95273f2';
+                const netZoneUuid = '5b994421aced4e2d9a76179e8cc70734';
+                let uri = "/openapi/service/vss/preview/getPreviewParamByCameraUuid";
+                let strParam = {
+                    appkey: APP_KEY,
+                    time: time,
+                    pageNo: 1,
+                    pageSize: 10,
+                    opUserUuid: opUserUuid,
+                    cameraUuid: uuid,
+                    netZoneUuid: netZoneUuid
+                };
+                return this.genToken(uri, JSON.stringify(strParam), SECRET);
+            },
+            genToken(uri, strParam, mySecret) {
+                let srcStr = uri + strParam + mySecret;
+                return md5.hex_md5(srcStr).toUpperCase();
             }
         },
         mounted() {
             this.initMap();
+            this.spv = document.getElementById('spv');
+            this.initSpvx(this.spv);
+            this.setLocalParam(this.spv);
         }
     }
 </script>
@@ -393,9 +559,9 @@
         margin-top: 55px;
         height: calc(100% - 310px) !important;
     }
-    #pm25 {
-        width: 100%;
-        height: 180px;
+    .video-realtime {
+        width: 95%;
+        height: 300px;
     }
 </style>
 <style>
@@ -406,32 +572,25 @@
         padding: 0 !important;
     }
     .vs-sidebar {
-        max-width: 300px !important;
-        background-color: rgba(255, 255, 255, .8) !important;
+        max-width: 400px !important;
     }
     .bottom-bar {
-        transition: all .5s;
         height: 250px;
     }
-    .bottom-bar-active {
+    .bottom-bar .vs-col:nth-child(1) {
+        transition: all .4s;
+    }
+    .bottom-bar .vs-col:nth-child(2) {
+        transition: all .6s;
+    }
+    .bottom-bar .vs-col:nth-child(3) {
+        transition: all .8s;
+    }
+    .bottom-bar .vs-col:nth-child(4) {
+        transition: all 1s;
+    }
+    .bottom-bar-active > .vs-row > .vs-col {
         transform: translateY(-250px);
-    }
-    @media screen and (max-width: 1400px){
-        .bottom-bar {
-            transition: all .5s;
-            height: 200px;
-        }
-        .bottom-bar-active {
-            transform: translateY(-200px);
-            display: block;
-        }
-        .vs-sidebar.vs-sidebar-parent {
-            margin-top: 55px;
-            height: calc(100% - 260px) !important;
-        }
-    }
-    .el-card__header {
-        padding: 10px 20px !important
     }
     .el-card {
         box-shadow: none !important;
@@ -439,6 +598,55 @@
         background-color: #ffffffe8;
     }
     .el-card__body {
-
+        padding: 10px 20px !important;
+        max-height: 210px;
+    }
+    #pm25 {
+        width: 100%;
+        height: 190px;
+    }
+    @media screen and (max-width: 1400px){
+        .bottom-bar {
+            transition: all .5s;
+            height: 200px;
+        }
+        .bottom-bar-active > .vs-row > .vs-col {
+            transform: translateY(-200px);
+        }
+        .vs-sidebar.vs-sidebar-parent {
+            margin-top: 55px;
+            height: calc(100% - 260px) !important;
+        }
+        .el-card {
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            background-color: #ffffffe8;
+            max-height: 200px !important;
+        }
+        .el-card__body {
+            padding: 10px 20px !important;
+            max-height: 160px;
+        }
+        #pm25 {
+            width: 100%;
+            height: 140px;
+        }
+    }
+    .el-card__header {
+        padding: 10px 20px !important;
+        font-size: 14px;
+    }
+    .leftx {
+        padding: 0 30px;
+        text-align: left;
+        background: transparent;
+    }
+    .leftx li {
+        list-style: none;
+        margin: 10px 0;
+        padding: 0 60px;
+    }
+    .vs-list--icon i {
+        color: gold;
     }
 </style>

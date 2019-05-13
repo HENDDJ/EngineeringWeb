@@ -25,6 +25,7 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
+        word-break: break-all;
     }
     .fade-enter-active {
         transition: opacity 2.2s;
@@ -58,4 +59,5 @@
         overflow-x: hidden !important;
         overflow-y: scroll !important;
     }
+
 </style>
