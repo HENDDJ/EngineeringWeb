@@ -1,13 +1,57 @@
 <template>
     <section>
         <CommonCRUD
-            :formColumns="formColumns"
             apiRoot="/identity/preWarning"
             :columns="columns"
             :queryFormColumns="queryFormColumns"
             :addBtnVis=false
-            :editBtnVis=false>
+            :editBtnVis=false
+            :lookBtnVis = false>
+            <template slot="header-btn" slot-scope="slotProps">
+                <el-button type="success" plain @click="look(slotProps.selected)" >查看</el-button>
+            </template>
         </CommonCRUD>
+        <el-dialog
+            v-if="lookDia"
+            title="查看"
+            :visible.sync="lookDia"
+            width="60%"
+            align="left"
+            :modal-append-to-body='false'
+            :append-to-body="true"
+            :before-close="handleClose">
+            <el-form :inline="true" :model="form"  ref="form" class="demo-form-inline" label-width="100px" >
+                <el-form-item label="工程名称">
+                    <!--<el-select v-model="form.proId" placeholder="请选择" disabled>
+                        <el-option  :label="form.projectName" :value="form.ProI">
+                        </el-option>
+                    </el-select>-->
+                    <el-input v-model="form.projectName" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="工作类型">
+                    <el-input v-model="form.majorWorkType" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="具体描述">
+                    <el-input v-model="form.majorDescription" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="开始时间">
+                    <el-date-picker v-model="form.majorStartTime" type="date" placeholder="选择日期" disabled></el-date-picker>
+                </el-form-item>
+                <el-form-item label="结束时间">
+                    <el-date-picker v-model="form.majorEndTime" type="date" placeholder="选择日期" disabled></el-date-picker>
+                </el-form-item>
+                <el-form-item label="危害">
+                    <el-input v-model="form.majorDamage" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="预警描述">
+                    <el-input v-model="form.warnDescribe" disabled></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary"  @click="submit(form)">确 定</el-button>
+                <el-button @click="handleClose">取 消</el-button>
+            </div>
+        </el-dialog>
     </section>
 </template>
 
@@ -18,7 +62,16 @@
         name: "MajorHazardsWarning",
         data() {
             return {
-                formColumns:{},
+                form:{
+                    proId:'',
+                    projectName:'',
+                    majorWorkType:'',
+                    majorDescription:'',
+                    majorStartTime:'',
+                    majorEndTime:'',
+                    majorDamage:'',
+                    warnDescribe:''
+                },
                 columns:[
                     {
                         name: "projectName",
@@ -70,16 +123,48 @@
                         value: 'MAJOR_HAZARDS',
                         visible: false
                     }
-                ]
+                ],
+                lookDia:false,
             }
         },
         methods: {
+            look(data){
+                console.log(data);
+                if (data.length !== 1) {
+                    this.$message({
+                        type: 'warning',
+                        message: data.length > 1 ? '仅能选择一行记录' : '请选择一行记录'
+                    });
+                    return;
+                }
+                this.title = "查看";
+                this.lookDia = true;
+                this.form = data[0];
+            },
+            submit(form){
+                this.lookDia= false;
+                this.form={};
+            },
+            //关闭确认dialog
+            handleClose (done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        this.from = {};
+                        this.$refs['form'].resetFields();
+                        this.disabled = false;
+                        this.lookDia = false;
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+
+
         },
         components:{
             CommonCRUD
         },
         created () {
-            this.formColumns =this.$store.state.classInfo.properties;
+           // this.formColumns =this.$store.state.classInfo.properties;
             tansfer(this.columns);//表格字段显示中文
         }
     }

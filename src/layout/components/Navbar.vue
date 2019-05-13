@@ -107,7 +107,9 @@ export default {
         }
     },
     mounted () {
-        this.user = sessionStorage.getItem('user');
+       // console.log(sessionStorage.getItem('userInfo'));
+        this.user=JSON.parse(sessionStorage.getItem('userInfo')).name;
+       // this.user = sessionStorage.getItem('user');
     }
 };
 </script>
