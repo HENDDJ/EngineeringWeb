@@ -32,7 +32,7 @@
                     <el-card shadow="never" style="width: 100%;height: 100%">
                         <div slot="header">
                             <span>PM2.5实时监测</span>
-                            <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                            <el-button @click="toDustView" style="float: right; padding: 3px 0" type="text">详情</el-button>
                         </div>
                         <div id="pm25"></div>
                     </el-card>
@@ -106,27 +106,18 @@
         <vs-sidebar parent="#gis-map" default-index="1" click-not-close
                     hidden-background position-right color="primary" class="sidebarx"
                     spacer v-model="active">
-            <vs-collapse type="default" open style="text-align: left;font-size: 14px;padding: 0">
-                <vs-collapse-item open>
-                    <div slot="header">
-                        工程信息
-                    </div>
-
-                </vs-collapse-item>
-                <vs-collapse-item open>
-                    <div slot="header">
-                        PM2.5实时监测
-                    </div>
-                </vs-collapse-item>
-                <vs-collapse-item>
-                    <div slot="header">
-                        工程信息
-                    </div>
-                    <div>
-                        22343
-                    </div>
-                </vs-collapse-item>
-            </vs-collapse>
+            <div slot="header">
+                实时监控
+            </div>
+            <div class="ActiveX" style="padding: 15px 0">
+                <object classid="clsid:9ECD2A40-1222-432E-A4D4-154C7CAB9DE3" id="spv" class="video-realtime"></object>
+            </div>
+            <ul class="leftx">
+                <p style="color: #3A3A3A;font-weight: 700">监控列表:</p>
+                <li v-for="(item, index) in cameraList" :key="item.id">
+                    <el-radio v-model="currentCamera" :label="item.cameraName" fill="#79FF40" text-color="#79FF40">{{item.cameraName}}</el-radio>
+                </li>
+            </ul>
 
             <!--<div style="position: relative;left: 65%;margin-top: -20px">-->
                 <!--<el-button type="text" @click="toDustView">查看扬尘数据</el-button>-->
@@ -139,6 +130,7 @@
 <script>
     import echarts from 'echarts';
     import axios from 'axios';
+    import md5 from '@/utils/md5';
     export default {
         name: "GISmap",
         data () {
@@ -263,6 +255,19 @@
                 bottomBarClass: 'bottom-bar',
                 equipmentList: [],
                 warningList: [],
+                cameraList: [],
+                spv: {}, //海康监控视频播放插件对象
+                currentCamera: ''
+            }
+        },
+        watch: {
+            currentCamera: {
+                handler: function (n,o) {
+                    if (n!==o) {
+                        let temp = this.cameraList.filter(item => item.cameraName === n)[0];
+                        this.startPreviewByCameraUuid(temp.cameraUuid)
+                    }
+                }
             }
         },
         computed: {
@@ -350,6 +355,7 @@
                 this.initPM25(row.id);
                 this.loadEquipment(row.id);
                 this.loadWarning(row.id);
+                this.loadCamera(row.id);
                 this.bottomBarClass += " bottom-bar-active";
                 this.$store.commit("getIsCollapse", true);
                 document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 66}px`;
@@ -443,10 +449,87 @@
                         this.warningList = data.content;
                     }
                 )
+            },
+            /**  视频处理部分
+             */
+            loadCamera(projectId) {
+                let param = {
+                    pId: projectId
+                };
+                this.$http("POST", `/identity/camera/list`, param, false).then(
+                    data => {
+                        this.cameraList = data;
+                        this.startPreviewByCameraUuid(this.cameraList[0].cameraUuid);
+                        this.currentCamera = this.cameraList[0].cameraName;
+                    }
+                )
+            },
+            startPreviewByCameraUuid(cameraUuid) {
+                let time = new Date().getTime();
+                const IP_PORT = "http://122.97.218.162:18080";
+                const APP_KEY = "a592d676";
+                const opUserUuid = 'c26a811c141a11e79aeeb32ef95273f2';
+                // const netZoneUuid = 'f5816cf43fcc41d880d9f636fa8bc443';
+                const netZoneUuid = '5b994421aced4e2d9a76179e8cc70734';
+                this.$http('POST', IP_PORT + "/openapi/service/vss/preview/getPreviewParamByCameraUuid?token=" + this.getSinglePreviewToken(time, cameraUuid),
+                    {appkey: APP_KEY, time: time, pageNo: 1, pageSize: 10, opUserUuid: opUserUuid, cameraUuid: cameraUuid, netZoneUuid: netZoneUuid}).then(
+                    data => {
+                        this.startPreview(data.data);
+                    })
+            },
+            initSpvx(spv) {
+                let ret = spv.MPV_Init(1);
+                if (ret !== 0) {
+                    alert("单路预览初始化失败");
+                }
+            },
+            setLocalParam(spv) {
+                let xml = '<?xml version="1.0" encoding="UTF-8"?> ' +
+                    '<localParam> ' +
+                    '<width>600</width> ' +
+                    '<height>500</height> ' +
+                    '<picType>1</picType> ' +
+                    '<capturePath>C:\\Hikvision</capturePath> ' +
+                    '<recordSize>2</recordSize> ' +
+                    '<recordPath>C:\\Hikvision</recordPath> ' +
+                    '<limitPreviewTime>1800</limitPreviewTime> ' +
+                    '</localParam>';
+                let ret = spv.MPV_SetLocalParam(xml);
+                if (ret !== 0) {
+                    alert("单路预览设置本地参数失败");
+                }
+            },
+            startPreview(xml) {
+                this.spv.MPV_SetPlayWndCount(1);
+                this.spv.MPV_StartPreview(xml);
+            },
+            getSinglePreviewToken(time, uuid) {
+                const APP_KEY = "a592d676";
+                const SECRET = "69681c3587194a50a2b11f1335ad6f41";
+                const opUserUuid = 'c26a811c141a11e79aeeb32ef95273f2';
+                const netZoneUuid = '5b994421aced4e2d9a76179e8cc70734';
+                let uri = "/openapi/service/vss/preview/getPreviewParamByCameraUuid";
+                let strParam = {
+                    appkey: APP_KEY,
+                    time: time,
+                    pageNo: 1,
+                    pageSize: 10,
+                    opUserUuid: opUserUuid,
+                    cameraUuid: uuid,
+                    netZoneUuid: netZoneUuid
+                };
+                return this.genToken(uri, JSON.stringify(strParam), SECRET);
+            },
+            genToken(uri, strParam, mySecret) {
+                let srcStr = uri + strParam + mySecret;
+                return md5.hex_md5(srcStr).toUpperCase();
             }
         },
         mounted() {
             this.initMap();
+            this.spv = document.getElementById('spv');
+            this.initSpvx(this.spv);
+            this.setLocalParam(this.spv);
         }
     }
 </script>
@@ -476,6 +559,10 @@
         margin-top: 55px;
         height: calc(100% - 310px) !important;
     }
+    .video-realtime {
+        width: 95%;
+        height: 300px;
+    }
 </style>
 <style>
     .el-dialog__body {
@@ -485,8 +572,7 @@
         padding: 0 !important;
     }
     .vs-sidebar {
-        max-width: 300px !important;
-        background-color: rgba(255, 255, 255, .8) !important;
+        max-width: 400px !important;
     }
     .bottom-bar {
         height: 250px;
@@ -524,9 +610,8 @@
             transition: all .5s;
             height: 200px;
         }
-        .bottom-bar-active {
+        .bottom-bar-active > .vs-row > .vs-col {
             transform: translateY(-200px);
-            display: block;
         }
         .vs-sidebar.vs-sidebar-parent {
             margin-top: 55px;
@@ -551,8 +636,17 @@
         padding: 10px 20px !important;
         font-size: 14px;
     }
-    .vs-list--icon {
-        color: #ffbd26;
+    .leftx {
+        padding: 0 30px;
+        text-align: left;
+        background: transparent;
     }
-
+    .leftx li {
+        list-style: none;
+        margin: 10px 0;
+        padding: 0 60px;
+    }
+    .vs-list--icon i {
+        color: gold;
+    }
 </style>
