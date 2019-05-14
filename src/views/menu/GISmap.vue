@@ -379,7 +379,7 @@
                             },
                             grid:{
                                 x:0,
-                                y:30,
+                                y:40,
                                 x2:20,
                                 y2:0,
                                 containLabel: true
@@ -546,17 +546,17 @@
     }
     .search-input {
         position: relative !important;
-        z-index: 2000;
+        z-index: 1889;
         top: 10px;
         left: 10px;
         float: left;
     }
     .sidebarx {
-        z-index: 9999;
+        z-index: 1888;
     }
     .vs-sidebar.vs-sidebar-parent {
         margin-top: 55px;
-        height: calc(100% - 310px) !important;
+        height: calc(100% - 320px) !important;
     }
     .video-realtime {
         width: 95%;
@@ -589,7 +589,7 @@
         transition: all 1s;
     }
     .bottom-bar-active > .vs-row > .vs-col {
-        transform: translateY(-250px);
+        transform: translateY(-303px);
     }
     #gis-map .el-card {
         box-shadow: none !important;
@@ -610,7 +610,7 @@
             height: 200px;
         }
         .bottom-bar-active > .vs-row > .vs-col {
-            transform: translateY(-200px);
+            transform: translateY(-253px);
         }
         .vs-sidebar.vs-sidebar-parent {
             margin-top: 55px;
@@ -630,9 +630,6 @@
             width: 100%;
             height: 140px;
         }
-        .reset-button {
-            margin-left: 10px;
-        }
     }
     .el-card__header {
         padding: 10px 20px !important;
@@ -650,5 +647,8 @@
     }
     .vs-list--icon i {
         color: gold;
+    }
+    .reset-button {
+        margin-left: 10px;
     }
 </style>

@@ -80,6 +80,9 @@
     .el-submenu__icon-arrow {
         color: #fff !important;
     }
+    .side-menu .el-icon-arrow-right {
+        display: none;
+    }
     .el-menu--vertical ul {
         background: url("/static/img/menu-background-img.png") !important;
         background-size: cover !important;
