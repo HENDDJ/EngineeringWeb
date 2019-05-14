@@ -173,6 +173,24 @@
                         return false;
                     }
                 });
+            },
+            loadDepartmentOptions() {
+                this.$http('POST', 'identity/organization/list', false).then(
+                    data => {
+                        this.formColumns.filter( item => item.name === 'departmentId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
+                this.$http('POST', 'identity/projectInfo/list', false).then(
+                    data => {
+                        this.formColumns.filter( item => item.name === 'projectId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
+                this.$http('POST', 'identity/principal/list', false).then(
+                    data => {
+                        this.formColumns.filter( item => item.name === 'userId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
+
             }
         },
         components :{
@@ -189,6 +207,7 @@
             this.columns.push(columsItems1)
             this.handleSelectOptions();
             this.controlAuthority();
+            this.loadDepartmentOptions();
         }
     };
 </script>
