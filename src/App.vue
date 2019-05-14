@@ -58,6 +58,7 @@
     body {
         overflow-x: hidden !important;
         overflow-y: scroll !important;
+        padding-right: 0 !important;
     }
 
 </style>

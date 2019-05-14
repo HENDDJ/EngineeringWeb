@@ -542,15 +542,14 @@
     #allmap {
         width: 100%;
         height: calc(100vh - 50px);
+        top: -50px;
     }
     .search-input {
-        position: absolute !important;
+        position: relative !important;
         z-index: 2000;
-        top: 80px;
-        left: 230px;
-    }
-    .reset-button {
-        left: 460px;
+        top: 10px;
+        left: 10px;
+        float: left;
     }
     .sidebarx {
         z-index: 9999;
@@ -592,12 +591,12 @@
     .bottom-bar-active > .vs-row > .vs-col {
         transform: translateY(-250px);
     }
-    .el-card {
+    #gis-map .el-card {
         box-shadow: none !important;
         border-radius: 0 !important;
         background-color: #ffffffe8;
     }
-    .el-card__body {
+    #gis-map .el-card__body {
         padding: 10px 20px !important;
         max-height: 210px;
     }
@@ -617,19 +616,22 @@
             margin-top: 55px;
             height: calc(100% - 260px) !important;
         }
-        .el-card {
+        #gis-map .el-card {
             box-shadow: none !important;
             border-radius: 0 !important;
             background-color: #ffffffe8;
             max-height: 200px !important;
         }
-        .el-card__body {
+        #gis-map .el-card__body {
             padding: 10px 20px !important;
             max-height: 160px;
         }
         #pm25 {
             width: 100%;
             height: 140px;
+        }
+        .reset-button {
+            margin-left: 10px;
         }
     }
     .el-card__header {

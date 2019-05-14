@@ -150,7 +150,7 @@ export default {
     }
     .person-name {
         cursor: pointer;
-        line-height: 18px;
+        line-height: 48px;
     }
 }
 </style>
