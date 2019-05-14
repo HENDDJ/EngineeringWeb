@@ -5,7 +5,7 @@
                 v-for="(item,index) in options"
                 :key="index"
                 :label="item.name"
-                :value="item.name">
+                :value="JSON.stringify(item)">
             </el-option>
         </el-select>
         <el-button size="large" plain class="search-input reset-button" @click="reset">重置</el-button>
@@ -34,7 +34,10 @@
                             <span>PM2.5实时监测</span>
                             <el-button @click="toDustView" style="float: right; padding: 3px 0" type="text">详情</el-button>
                         </div>
-                        <div id="pm25"></div>
+                        <div id="pm25" v-show="hasData"></div>
+                        <div id="noData" v-if="!hasData">
+                            <p style="margin: 80px 0;text-align: center">暂无数据</p>
+                        </div>
                     </el-card>
                 </vs-col>
                 <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
@@ -257,7 +260,8 @@
                 warningList: [],
                 cameraList: [],
                 spv: {}, //海康监控视频播放插件对象
-                currentCamera: ''
+                currentCamera: '',
+                hasData: false, //PM2.5是否有数据
             }
         },
         watch: {
@@ -316,7 +320,8 @@
                 if (!this.region) {
                     return;
                 }
-                let arr = this.optionsCopy.filter(item => item.name == name);
+                name = JSON.parse(name);
+                let arr = this.optionsCopy.filter(item => item.name == name.name);
                 this.map.clearOverlays();
                 this.markerClusterer.clearMarkers(this.markers);
                 this.addOverlays(arr);
@@ -324,6 +329,7 @@
                     return;
                 }
                 this.map.centerAndZoom(new BMap.Point(arr[0].longitude,arr[0].latitude), 16);
+                this.showProjectInfo(name)
             },
             handleClose(done) {
                 this.dialogVisible = false;
@@ -350,6 +356,7 @@
                 //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
             },
             showProjectInfo(row) {
+                this.hasData = false;
                 this.active = true;
                 this.form = row;
                 this.initPM25(row.id);
@@ -365,66 +372,70 @@
                     res => {
                         let dataX = [];
                         let dataY = [];
-                        res.data.data2.forEach( item => {
-                            dataY.push(item.value);
-                            dataX.push(item.time);
-                        });
-                        let myChart = echarts.init(document.getElementById('pm25'));
-                        let option = {
-                            tooltip: {
-                                trigger: 'axis'
-                            },
-                            legend: {
-                                data: ['PM2.5']
-                            },
-                            grid:{
-                                x:0,
-                                y:40,
-                                x2:20,
-                                y2:0,
-                                containLabel: true
-                            },
-                            calculable: true,
-                            xAxis: [
-                                {
-                                    type: 'category',
-                                    boundaryGap: false,
-                                    data: dataX,
-                                    axisLabel: {
-                                        formatter: (value) => {
-                                            let time = new Date(value);
-                                            return time.getHours() + ':' + time.getMinutes();
+                        if (res.data.data1) {
+                            this.hasData = true;
+                            res.data.data2.forEach( item => {
+                                dataY.push(item.value);
+                                dataX.push(item.time);
+                            });
+                        }
+                        this.$nextTick(() => {
+                            let myChart = echarts.init(document.getElementById('pm25'));
+                            let option = {
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['PM2.5']
+                                },
+                                grid:{
+                                    x:0,
+                                    y:40,
+                                    x2:20,
+                                    y2:0,
+                                    containLabel: true
+                                },
+                                calculable: true,
+                                xAxis: [
+                                    {
+                                        type: 'category',
+                                        boundaryGap: false,
+                                        data: dataX,
+                                        axisLabel: {
+                                            formatter: (value) => {
+                                                let time = new Date(value);
+                                                return time.getHours() + ':' + time.getMinutes();
+                                            }
                                         }
                                     }
-                                }
-                            ],
-                            yAxis: [
-                                {
-                                    type: 'value',
-                                    name: 'μg/m³'
-                                }
-                            ],
-                            series: [
-                                {
-                                    name: 'PM2.5值',
-                                    type: 'line',
-                                    data: dataY,
-                                    markPoint: {
-                                        data: [
-                                            { type: 'max', name: '最大值' },
-                                            { type: 'min', name: '最小值' }
-                                        ]
-                                    },
-                                    markLine: {
-                                        data: [
-                                            { type: 'average', name: '平均值' }
-                                        ]
+                                ],
+                                yAxis: [
+                                    {
+                                        type: 'value',
+                                        name: 'μg/m³'
                                     }
-                                }
-                            ]
-                        };
-                        myChart.setOption(option);
-                        myChart.resize();
+                                ],
+                                series: [
+                                    {
+                                        name: 'PM2.5值',
+                                        type: 'line',
+                                        data: dataY,
+                                        markPoint: {
+                                            data: [
+                                                { type: 'max', name: '最大值' },
+                                                { type: 'min', name: '最小值' }
+                                            ]
+                                        },
+                                        markLine: {
+                                            data: [
+                                                { type: 'average', name: '平均值' }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option);
+                        })
                     }
                 )
 
@@ -603,6 +614,11 @@
     #pm25 {
         width: 100%;
         height: 190px;
+    }
+    #noData {
+        width: 100%;
+        height: 190px;
+        vertical-align: middle;
     }
     @media screen and (max-width: 1400px){
         .bottom-bar {

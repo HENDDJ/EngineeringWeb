@@ -71,12 +71,12 @@
         v-if="dialogVisible"
         :title="title"
         :visible.sync="dialogVisible"
-        width="60%"
+        width="880px"
         align="left"
         :modal-append-to-body='false'
         :append-to-body="true"
         :before-close="handleClose">
-        <el-form :inline="true" :model="form" :rules="rules" ref="form" class="demo-form-inline" label-width="100px" >
+        <el-form :inline="true" :model="form" :rules="rules" ref="form" class="demo-form-inline" label-width="170px" >
             <el-form-item v-for="item in formColumns"  :key="item.des" :label="item.des" :prop="item.name" v-if="item.formShow !== 'false'">
                 <el-input v-model="form[item.name]" v-if="item.type === 'string'" :disabled="item.disabled || disabled"></el-input>
                 <el-select v-model="form[item.name]" v-else-if="item.type === 'select'" filterable :disabled="item.disabled || disabled">
@@ -107,7 +107,7 @@
                 <CommonUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
             </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div slot="footer" class="dialog-footer footer-position">
             <el-button type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>
             <el-button @click="handleClose">取 消</el-button>
         </div>
@@ -369,10 +369,10 @@
 
 <style scoped>
     .common-crud {
-        width: 99.5%;
-        padding: 2%;
+        width: 97.5%;
+        padding: 1%;
         border-radius: 2px;
-        margin: 20px 0;
+        margin: 20px 15px;
     }
     .btn-right {
         float: right;
@@ -429,5 +429,8 @@
     .self-look {
         background: url('../../static/img/look.png') !important;
         background-size: cover !important;
+    }
+    .footer-position {
+        margin-right: 84px;
     }
 </style>
