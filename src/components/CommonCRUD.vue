@@ -104,7 +104,8 @@
                 <el-input v-model="form[item.name]" type="textarea" :rows="2" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
                 <!--预留富文本编辑-->
                 <Tinymce v-if="item.type === 'rich-editor'" v-model="form[item.name]"></Tinymce>
-                <CommonUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
+                <CommonFileUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonFileUpload>
+                <CommonUpload v-if="item.type === 'image'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer footer-position">
@@ -117,6 +118,7 @@
 
 <script>
     import reqType from '@/api/reqType';
+    import CommonFileUpload from '@/components/FileUpLoad';
     import CommonUpload from '@/components/UpLoad';
     import Tinymce from '@/components/Tinymce';
     export default {
@@ -192,6 +194,7 @@
             }
         },
         components: {
+           CommonFileUpload,
             CommonUpload,
             Tinymce
         },
@@ -324,7 +327,7 @@
             },
             //生成验证策略
             validationRules(){
-                console.log(this.formColumns)
+              //  console.log(this.formColumns)
                 this.formColumns.forEach((item) => {
                     this.rules[item.name] = [];
                     if (item.triggerCheck) {
