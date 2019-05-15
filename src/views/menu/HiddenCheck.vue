@@ -5,7 +5,7 @@
         apiRoot="/identity/hiddenHandle"
         :columns="columns" :addBtnVis="false" :editBtnVis="false" :delBtnVis="false" ref="table">
         <template slot="header-btn" slot-scope="slotProps">
-            <el-button type="info" v-if="checkVis" plain @click="check(slotProps.selected)">审核</el-button>
+            <el-button type="info" v-if="checkVis" plain  class="self-btn self-examine" @click="check(slotProps.selected)"></el-button>
             <!--<el-button type="info" v-if="checkResVis" plain @click="checkResult(slotProps.selected)">查看审核结果</el-button>-->
         </template>
         <template slot="hiddenStatus" slot-scope="scope">
@@ -26,7 +26,7 @@
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form"  label-width="100px" class="demo-ruleForm">
+            <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
                 <el-form-item >
                     <el-input v-model="form.issueId" type="hidden"></el-input>
                 </el-form-item>
@@ -55,7 +55,7 @@
                     <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="checkRes"></el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer footer-position">
                 <el-button @click="handleClose">取 消</el-button>
             </div>
         </el-dialog>

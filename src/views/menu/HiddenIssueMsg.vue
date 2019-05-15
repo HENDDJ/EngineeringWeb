@@ -22,8 +22,11 @@
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-collapse v-model="activeNames" @change="handleChange">
+            <el-collapse v-model="activeNames" @change="handleChange"  id="M1">
                 <el-collapse-item title="隐患基本信息" name="1">
+                    <template slot="title">
+                        <i class="header-icon el-icon-tickets"></i> 隐患基本信息
+                    </template>
                     <el-form :inline="true" :model="form" :rules="rules" ref="form" class="demo-form-inline" label-width="170px" >
                         <el-form-item v-for="item in formItems0"  :key="item.des" :label="item.des" :prop="item.name" v-if="item.formShow !== 'false'">
                             <el-input v-model="form[item.aliasName]||form[item.name]" v-if="item.type === 'string'" :disabled=disabled></el-input>
@@ -39,13 +42,17 @@
                             >
                             </el-date-picker>
                             <el-input v-model="form[item.name]" type="textarea" :rows="2" v-if="item.type === 'textarea'" :disabled=disabled></el-input>
-                            <CommonUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
+                            <CommonFileUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonFileUpload>
+                            <CommonUpload v-if="item.type === 'image'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
                         </el-form-item>
                     </el-form>
                 </el-collapse-item>
                 <el-collapse-item title="处理方案" name="2">
+                    <template slot="title">
+                        <i class="header-icon el-icon-tickets"></i> 处理方案
+                    </template>
                     <el-form :inline="true"  ref="form"  label-width="170px" class="demo-ruleForm">
-                        <el-form-item label="处理结果描述" >
+                        <el-form-item label="结果描述" >
                             <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solveDes" :disabled=disabled></el-input>
                         </el-form-item>
                         <el-form-item label="图片" >
@@ -61,21 +68,31 @@
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="附件" >
-                            <CommonUpload :value="form.enclosure" @getValue="form.enclosure = $event" :disabled=disabled></CommonUpload>
+                            <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event" :disabled=disabled></CommonFileUpload>
                         </el-form-item>
                     </el-form>
                 </el-collapse-item>
-                <el-collapse-item title="效率 Efficiency" name="3">
-                    <div>简化流程：设计简洁直观的操作流程；</div>
-                    <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
-                    <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
+                <el-collapse-item title="隐患流程记录" name="3">
+                    <template slot="title">
+                        <i class="header-icon el-icon-tickets"></i> 隐患流程记录
+                    </template>
+                    <div style="float: left;margin-left: 150px">
+                    <el-steps  direction="vertical" :space="80"  align-center>
+                        <template v-for="items in recordsForm">
+                            <el-step  v-if="items.actionType === 'UPLOAD'" status='wait' :title="'['+items.createdByName+']在'+items.createdAt.substr(0,10) +'上报了该隐患'":description="'描述:'+items.des"></el-step>
+                            <el-step  v-if="items.actionType === 'HANDLE'" status="finish" :title="'['+items.createdByName+']在'+items.createdAt.substr(0,10) +'处理了该隐患'":description="'描述:'+items.des"></el-step>
+                            <el-step  v-if="items.actionType === 'UNCHECKED'"  status='error' :title="'['+items.createdByName+']在'+items.createdAt.substr(0,10) +'驳回了该隐患'":description="'驳回原因:'+items.des"></el-step>
+                            <el-step  v-if="items.actionType === 'CHECKED'" status='success' :title="'['+items.createdByName+']在'+items.createdAt.substr(0,10) +'完成了该隐患'":description="'描述:'+items.des"></el-step>
+                        </template>
+                       </el-steps>
+                    </div>
                 </el-collapse-item>
             </el-collapse>
 
 
 
 
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>
                 <el-button @click="handleClose">取 消</el-button>
             </div>
@@ -86,6 +103,7 @@
 <script>
     import CommonCRUD from '@/components/CommonCRUD';
     import CommonUpload from '@/components/UpLoad';
+    import CommonFileUpload from '@/components/FileUpLoad';
     import LookUp from '@/lookup';
     import { tansfer } from "../../lookup/transfer";
     export default {
@@ -108,6 +126,8 @@
                 self: this,
                 activeNames: ['1','2','3'],
                 formItems0:[],
+                recordsForm:Array
+
 
             }
 
@@ -137,14 +157,29 @@
             },
             show() {
                 this.form = Object.assign({}, this.$refs.table.selected[0]);
-                console.log(this.form,111)
+                this.showRecords()
                 this.dialogVisible = true
+            },
+            showRecords() {
+                this.$nextTick(() => {
+                    var query = {issueId: this.form.id}
+                    console.log(query)
+                    let type = 'Post'
+                    let path = '/identity/hiddenRecords/list?sort=createdAt,asc'
+                    this.$http(type,path,query, false).then((data)=>{
+                        this.recordsForm = data
+                        console.log(data)
+                    })
+                })
+
+
             }
 
         },
         components :{
             CommonUpload,
-            CommonCRUD
+            CommonCRUD,
+            CommonFileUpload
         },
         created () {
             this.columns = []
@@ -158,10 +193,7 @@
             this.formItems0 = temp1
             this.formItems0.filter(item=>item.name === 'status')[0].notShow = null
             this.formItems0.filter(item=>item.name === 'status')[0].formShow = 'true'
-
             this.handleSelectOptions();
-
-
     }
     };
 </script>
@@ -169,6 +201,16 @@
 <style>
     .result_area .el-textarea__inner{
         width: 580px !important;
+    }
+    .el-step__description.is-wait{
+        width: 580px !important;
+    }
+    .footer-position {
+        margin-right: 86px;
+    }
+    #M1 .el-collapse-item__header{
+        font-size: 14px !important;
+        margin-left: 37px !important;
     }
 </style>
 
