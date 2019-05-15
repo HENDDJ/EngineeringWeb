@@ -113,7 +113,7 @@
             <el-button @click="handleClose">取 消</el-button>
         </div>
     </el-dialog>
-    </el-card>
+    </div>
 </template>
 
 <script>
