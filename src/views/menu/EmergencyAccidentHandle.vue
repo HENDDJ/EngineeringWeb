@@ -16,14 +16,14 @@
             v-if="dialogVisibleDeal"
             :title="Dealtitle"
             :visible.sync="dialogVisibleDeal"
-            width="50%"
+            width="880px"
             align="left"
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form"  label-width="100px" class="demo-ruleForm">
-                <el-form-item >
-                    <el-input v-model="form.accidentId" type="hidden"></el-input>
+            <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
+                <el-form-item style="display: none">
+                    <el-input v-model="form.accidentId" ></el-input>
                 </el-form-item>
                 <el-form-item label="处理完成情况"  id="t1">
 
@@ -34,13 +34,13 @@
                     <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solutionResult" style="width: 400px;"></el-input>
                 </el-form-item>
                 <el-form-item label="附件" >
-                    <CommonUpload :value="form.enclosure" @getValue="form.enclosure = $event"></CommonUpload>
+                    <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event"></CommonFileUpload>
 
                 </el-form-item>
 
 
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>
                 <el-button @click="handleClose">取 消</el-button>
             </div>
@@ -51,6 +51,7 @@
 <script>
     import CommonCRUD from '@/components/CommonCRUD';
     import CommonUpload from '@/components/UpLoad';
+    import CommonFileUpload from '@/components/FileUpLoad';
     export default {
         name: 'EmergencyAccidentHandle',
         data() {
@@ -130,7 +131,8 @@
         },
         components: {
             CommonUpload,
-            CommonCRUD
+            CommonCRUD,
+            CommonFileUpload
         },
         created () {
             this.columns = []

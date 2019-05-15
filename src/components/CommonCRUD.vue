@@ -39,7 +39,7 @@
             <slot name="header-btn0" :selected="selected" ></slot>
             <el-button v-if="addBtnVis" type="primary" plain @click="add" class="self-add self-btn">&nbsp;</el-button>
             <el-button v-if="editBtnVis" type="success" plain class="self-btn self-edit" @click="edit">&nbsp;</el-button>
-            <el-button v-if="lookBtnVis" type="success" plain class="self-btn self-look" @click="look">&nbsp;</el-button>
+            <el-button v-if="lookBtnVis" type="success" plain class="self-btn self-look" @click="look(self)">&nbsp;</el-button>
             <el-button v-if="delBtnVis" type="danger" plain @click="deleteRow" class="self-del self-btn">&nbsp;</el-button>
             <slot name="header-btn" :selected="selected"></slot>
         </div>

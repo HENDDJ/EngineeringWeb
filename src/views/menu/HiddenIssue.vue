@@ -44,12 +44,12 @@
                 </el-date-picker>
                 </el-form-item>
                 <el-form-item label="附件" >
-                    <CommonUpload :value="form.enclosure" @getValue="form.enclosure = $event"></CommonUpload>
+                    <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event"></CommonFileUpload>
                 </el-form-item>
 
 
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>
                 <el-button @click="handleClose">取 消</el-button>
             </div>
@@ -60,6 +60,7 @@
 <script>
     import CommonCRUD from '@/components/CommonCRUD';
     import CommonUpload from '@/components/UpLoad';
+    import CommonFileUpload from '@/components/FileUpLoad';
     import LookUp from '@/lookup';
     import { tansfer } from "../../lookup/transfer";
     export default {
@@ -209,7 +210,8 @@
         },
         components :{
             CommonUpload,
-            CommonCRUD
+            CommonCRUD,
+            CommonFileUpload
         },
         created () {
             this.columns = []
