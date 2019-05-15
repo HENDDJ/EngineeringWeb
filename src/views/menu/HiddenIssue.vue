@@ -5,7 +5,7 @@
             apiRoot="/identity/hiddenIssue"
             :columns="columns" :addBtnVis="false" :editBtnVis="false" :delBtnVis="false" ref="table">
             <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="info" v-if="dealBtn" plain @click="deal(slotProps.selected)">处理</el-button>
+                <el-button type="info" v-if="dealBtn" plain  class="self-btn self-deal" @click="deal(slotProps.selected)"></el-button>
             </template>
             <template slot="hiddenStatus" slot-scope="scope">
                 <el-tag v-if="scope.row.statusName==='完成'"

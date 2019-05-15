@@ -418,6 +418,11 @@
         height: 28px !important;
         border-radius: 5px !important;
     }
+    .self-btn-max {
+        width: 84px !important;
+        height: 28px !important;
+        border-radius: 5px !important;
+    }
     .self-add {
         background: url('../../static/img/add.png') !important;
         background-size: cover !important;
@@ -436,6 +441,42 @@
     }
     .self-look {
         background: url('../../static/img/look.png') !important;
+        background-size: cover !important;
+    }
+    .self-attribute {
+        background: url('../../static/img/attribute.png') !important;
+        background-size: cover !important;
+    }
+    .self-change {
+        background: url('../../static/img/change.png') !important;
+        background-size: cover !important;
+    }
+    .self-confirm {
+        background: url('../../static/img/confirm.png') !important;
+        background-size: cover !important;
+    }
+    .self-deal {
+        background: url('../../static/img/deal.png') !important;
+        background-size: cover !important;
+    }
+    .self-examine {
+        background: url('../../static/img/examine.png') !important;
+        background-size: cover !important;
+    }
+    .self-feedback {
+        background: url('../../static/img/feedback.png') !important;
+        background-size: cover !important;
+    }
+    .self-jurisdiction {
+        background: url('../../static/img/jurisdiction.png') !important;
+        background-size: cover !important;
+    }
+    .self-programme {
+        background: url('../../static/img/programme.png') !important;
+        background-size: cover !important;
+    }
+    .self-report {
+        background: url('../../static/img/report.png') !important;
         background-size: cover !important;
     }
     .footer-position {

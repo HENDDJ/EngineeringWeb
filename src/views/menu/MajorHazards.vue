@@ -11,11 +11,11 @@
             :lookBtnVis = false
             :delBtnVis=false>
             <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="primary" v-if="addBtnVis" plain @click="add()" >上报</el-button>
-                <el-button type="warning" v-if="editBtnVis" plain @click="edit(slotProps.selected)" >变更</el-button>
+                <el-button type="primary" v-if="addBtnVis" plain  class="self-btn self-report" @click="add()" ></el-button>
+                <el-button type="warning" v-if="editBtnVis" plain  class="self-btn self-change" @click="edit(slotProps.selected)" ></el-button>
                 <el-button type="success" plain  class="self-btn self-look" @click="look(slotProps.selected)" ></el-button>
                 <el-button type="danger" v-if="delBtnVis" plain class="self-del self-btn" @click="del(slotProps.selected)" ></el-button>
-                <el-button type="primary" v-if="conBtnVis" plain @click="showMajorHazards(slotProps.selected)" >确认</el-button>
+                <el-button type="primary" v-if="conBtnVis" plain  class="self-btn self-confirm" @click="showMajorHazards(slotProps.selected)" ></el-button>
             </template>
         </CommonCRUD>
         <!--确认-->
@@ -128,7 +128,7 @@
                 addBtnVis:true,//
                 editBtnVis:true,
                 delBtnVis:true,
-                conBtnVis:false,
+                conBtnVis:true,
                 conDia: false,//确认弹出框
                 submitLoading: false,//按钮加载
                 columns:[],
