@@ -434,6 +434,6 @@
         background-size: cover !important;
     }
     .footer-position {
-        margin-right: 84px;
+        margin-right: 86px;
     }
 </style>

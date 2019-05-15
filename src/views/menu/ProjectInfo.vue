@@ -154,7 +154,7 @@
                     },
                     {
                         name:'isHazard',
-                        des:'是否是可能存在重大危险源',
+                        des:'是否存在重大危险源',
                         type:'radio'
                     },
                     {
