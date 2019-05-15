@@ -104,8 +104,8 @@
                 <el-input v-model="form[item.name]" type="textarea" :rows="3" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
                 <!--预留富文本编辑-->
                 <Tinymce v-if="item.type === 'rich-editor'" v-model="form[item.name]"></Tinymce>
-                <CommonFileUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonFileUpload>
-                <CommonUpload v-if="item.type === 'image'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
+                <CommonFileUpload v-if="item.type === 'file'" :value="form[item.name]" :disabled="item.disabled || disabled" @getValue="form[item.name] = $event"></CommonFileUpload>
+                <CommonUpload v-if="item.type === 'image'" :value="form[item.name]" :disabled="item.disabled || disabled" @getValue="form[item.name] = $event"></CommonUpload>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer  footer-position">

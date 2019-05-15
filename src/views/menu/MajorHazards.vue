@@ -56,12 +56,12 @@
             v-if="dialogVisible"
             :title="title"
             :visible.sync="dialogVisible"
-            width="60%"
+            width="880px"
             align="left"
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form" class="demo-form-inline" label-width="100px" >
+            <el-form :inline="true" :model="form"  ref="form" class="demo-form-inline" label-width="170px" >
                 <el-form-item label="工程名称">
                     <el-select v-model="form.proId" placeholder="请选择" :disabled="disabled">
                         <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id">
@@ -84,7 +84,7 @@
                     <el-input v-model="form.damage" :disabled="disabled"></el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary" :loading="submitLoading" @click="submit(form)">确 定</el-button>
                 <el-button @click="handleClose">取 消</el-button>
             </div>
@@ -293,5 +293,7 @@
 </script>
 
 <style scoped>
-
+    .footer-position {
+        margin-right: 84px;
+    }
 </style>

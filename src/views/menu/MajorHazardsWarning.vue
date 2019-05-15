@@ -15,12 +15,12 @@
             v-if="lookDia"
             title="查看"
             :visible.sync="lookDia"
-            width="60%"
+            width="880px"
             align="left"
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form" class="demo-form-inline" label-width="100px" >
+            <el-form :inline="true" :model="form"  ref="form" class="demo-form-inline" label-width="170px" >
                 <el-form-item label="工程名称">
                     <!--<el-select v-model="form.proId" placeholder="请选择" disabled>
                         <el-option  :label="form.projectName" :value="form.ProI">
@@ -47,7 +47,7 @@
                     <el-input v-model="form.warnDescribe" disabled></el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary"  @click="submit(form)">确 定</el-button>
                 <el-button @click="handleClose">取 消</el-button>
             </div>
@@ -171,5 +171,7 @@
 </script>
 
 <style scoped>
-
+    .footer-position {
+        margin-right: 84px;
+    }
 </style>
