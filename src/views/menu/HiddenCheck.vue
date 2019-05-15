@@ -5,7 +5,8 @@
         apiRoot="/identity/hiddenHandle"
         :columns="columns" :addBtnVis="false" :editBtnVis="false" :delBtnVis="false" ref="table">
         <template slot="header-btn" slot-scope="slotProps">
-            <el-button type="info" v-if="dealBtn" plain @click="check(slotProps.selected)">审核</el-button>
+            <el-button type="info" v-if="checkVis" plain @click="check(slotProps.selected)">审核</el-button>
+            <!--<el-button type="info" v-if="checkResVis" plain @click="checkResult(slotProps.selected)">查看审核结果</el-button>-->
         </template>
         <template slot="hiddenStatus" slot-scope="scope">
             <el-tag v-if="scope.row.statusName==='完成'"
@@ -30,7 +31,7 @@
                     <el-input v-model="form.issueId" type="hidden"></el-input>
                 </el-form-item>
                 <el-form-item label="理由与评价" >
-                    <el-input type="textarea" cols="20" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.des"></el-input>
+                    <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.des"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -39,6 +40,27 @@
                 <el-button @click="handleClose">取 消</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog
+            v-if="CRdialogVisible"
+            :title="CRtitle"
+            :visible.sync="CRdialogVisible"
+            width="880px"
+            align="left"
+            :modal-append-to-body='false'
+            :append-to-body="true"
+            :before-close="handleClose">
+            <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
+                <el-form-item label="理由与评价" >
+                    <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="checkRes"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="handleClose">取 消</el-button>
+            </div>
+        </el-dialog>
+
+
         </section>
 </template>
 
@@ -54,8 +76,14 @@
                 form:{issueId:'',des:'',actionType:'',preNodeId:'',nextNodeId:''},
                 dialogVisible:false,
                 submitLoading:false,
-                title:'审核'
-
+                title:'审核',
+                roleCode:'',
+                checkVis:true,
+                checkResVis:true,
+                CRdialogVisible:false,
+                CRtitle:'查看审核结果',
+                checkRes:'',
+                queryResult:{issueId:''}
             }
         },
         methods:{
@@ -84,6 +112,17 @@
                 this.form.issueId = val[0].issueId
                 this.dialogVisible = true
             },
+            checkResult(val){
+                this.$nextTick(() => {
+                    this.queryResult.issueId = val[0].issueId
+                    let type = 'Post'
+                    let path = '/identity/hiddenRecords/list'
+                    this.$http(type,path,this.queryResult, false).then((data)=>{
+                        this.checkRes = data[0].des
+
+                    })
+                })
+            },
             handleClose (done) {
                 this.$confirm('确认关闭？')
                     .then(_ => {
@@ -102,7 +141,7 @@
                             let type = 'Post'
                             let path = '/identity/hiddenRecords/'
                             this.form.actionType='CHECKED'
-                            this.form.preNodeId='3dfa705b-c5ec-4e95-9838-0045022358bb'
+                            this.form.preNodeId='86427b26-b4c3-462c-8ce0-4992098534eb'
                             this.form.nextNodeId='91d3f401-ecad-4a83-9d61-9d22480dc296'
                             this.$http(type,path,this.form).then(()=>{
                                 this.submitLoading = false;
@@ -126,7 +165,7 @@
                             let type = 'Post'
                             let path = '/identity/hiddenRecords/'
                             this.form.actionType='UNCHECKED'
-                            this.form.preNodeId='3dfa705b-c5ec-4e95-9838-0045022358bb'
+                            this.form.preNodeId='86427b26-b4c3-462c-8ce0-4992098534eb'
                             this.form.nextNodeId='3dfa705b-c5ec-4e95-9838-0045022358bb'
                             this.$http(type,path,this.form).then(()=>{
                                 this.submitLoading = false;
@@ -141,7 +180,19 @@
                         return false;
                     }
                 })
-            }
+            },
+            controlAuthority(){
+                this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
+                //  console.log(JSON.parse(sessionStorage.getItem('userInfo')));
+                if( this.roleCode === 'PROJECT_MANAGER'){
+                    this.checkVis = false
+                    this.checkResVis = true;
+                }
+                if(this.roleCode === 'JGC_MANAGER'){
+                    this.checkVis = true;
+                    this.checkResVis = true;
+                }
+            },
 
         },
         components: {
@@ -160,6 +211,8 @@
     };
 </script>
 
-<style scoped>
-
+<style>
+    .result_area .el-textarea__inner{
+        width: 580px !important;
+    }
 </style>

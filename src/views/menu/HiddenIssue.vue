@@ -20,17 +20,17 @@
             v-if="dialogVisible"
             :title="title"
             :visible.sync="dialogVisible"
-            width="60%"
+            width="880px"
             align="left"
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form"  label-width="100px" class="demo-ruleForm">
+            <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
                 <el-form-item >
                     <el-input v-model="form.issueId" type="hidden"></el-input>
                 </el-form-item>
                 <el-form-item label="处理结果描述" >
-                    <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solveDes"></el-input>
+                    <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solveDes"></el-input>
                 </el-form-item>
                 <el-form-item label="图片" >
                     <CommonUpload :value="form.solveImage" @getValue="form.solveImage = $event"></CommonUpload>
@@ -132,7 +132,7 @@
                                             this.recordsForm.issueId = data1.issueId
                                             this.recordsForm.actionType='HANDLE'
                                             this.recordsForm.preNodeId='3dfa705b-c5ec-4e95-9838-0045022358bb'
-                                            this.recordsForm.nextNodeId='91d3f401-ecad-4a83-9d61-9d22480dc296'
+                                            this.recordsForm.nextNodeId='86427b26-b4c3-462c-8ce0-4992098534eb'
                                             this.recordsForm.des='隐患处理'
                                             this.$http(type,path,this.recordsForm).then(()=>{
                                                 this.recordsForm = {};
@@ -154,7 +154,7 @@
                                                 this.recordsForm.issueId = data1.issueId
                                                 this.recordsForm.actionType='HANDLE'
                                                 this.recordsForm.preNodeId='3dfa705b-c5ec-4e95-9838-0045022358bb'
-                                                this.recordsForm.nextNodeId='91d3f401-ecad-4a83-9d61-9d22480dc296'
+                                                this.recordsForm.nextNodeId='86427b26-b4c3-462c-8ce0-4992098534eb'
                                                 this.recordsForm.des='隐患处理'
                                                 this.$http(type,path,this.recordsForm).then(()=>{
                                                     this.recordsForm = {};
@@ -226,6 +226,8 @@
     };
 </script>
 
-<style scoped>
-
+<style>
+    .result_area .el-textarea__inner{
+        width: 580px !important;
+    }
 </style>

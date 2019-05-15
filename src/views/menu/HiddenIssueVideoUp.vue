@@ -15,20 +15,17 @@
                 <el-tag v-if="scope.row.statusName==='待审核'"
                         close-transition type="warning">待审核</el-tag>
             </template>
-            <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="info" v-if="dealBtn" plain @click="deal(slotProps.selected)">处理</el-button>
-            </template>
         </CommonCRUD>
         <el-dialog
             v-if="dialogVisible"
             :title="title"
             :visible.sync="dialogVisible"
-            width="60%"
+            width="880px"
             align="left"
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form" :rules="rules" ref="form" class="demo-form-inline" label-width="100px" >
+            <el-form :inline="true" :model="form" :rules="rules" ref="form" class="demo-form-inline" label-width="170px" >
                 <el-form-item v-for="item in formColumns"  :key="item.des" :label="item.des" :prop="item.name" v-if="item.formShow !== 'false'">
                     <el-input v-model="form[item.name]" v-if="item.type === 'string'" :disabled="item.disabled || disabled"></el-input>
                     <el-select v-model="form[item.name]" v-else-if="item.type === 'select'" filterable :disabled="item.disabled || disabled">
@@ -53,7 +50,7 @@
                                     placeholder="选择日期"
                     >
                     </el-date-picker>
-                    <el-input v-model="form[item.name]" type="textarea" :rows="2" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
+                    <el-input v-model="form[item.name]" type="textarea" class="result_area" :rows="3" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
                     <!--预留富文本编辑-->
                     <Tinymce v-if="item.type === 'rich-editor'" v-model="form[item.name]"></Tinymce>
                     <CommonUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
@@ -71,6 +68,7 @@
 <script>
     import CommonCRUD from '@/components/CommonCRUD';
     import LookUp from '@/lookup';
+    import CommonUpload from '@/components/UpLoad';
     import { tansfer } from "../../lookup/transfer";
     export default {
         name: 'HiddenIssueVideoUp',
@@ -84,7 +82,7 @@
                 dialogVisible: false,
                 form:{},
                 submitLoading: false,
-                title: '',
+                title: '隐患上报',
                 disabled: false,
                 selected: [],
                 rules: {},
@@ -116,19 +114,10 @@
 
                 this.dialogVisible = true
             },
-            deal(val) {
-                if (val.length !== 1) {
-                    this.$message({
-                        type: 'warning',
-                        message: val.length > 1 ? '仅能选择一行记录' : '请选择一行记录'
-                    });
-                    return false;
-                }
-            },
             controlAuthority(){
                 this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
                 //  console.log(JSON.parse(sessionStorage.getItem('userInfo')));
-                if( this.roleCode === 'MAJOR_HAZARDS_DECLARE'){
+                if( this.roleCode === 'PROJECT_MANAGER'){
                     this.queryFormColumns[0].value = JSON.parse(sessionStorage.getItem('userInfo')).id;
                     this.dealBtn = false
                     this.uploadBtn = true;
@@ -154,7 +143,7 @@
                                     this.recordsForm.issueId = data.id
                                     this.recordsForm.actionType='UPLOAD'
                                     this.recordsForm.preNodeId=''
-                                    this.recordsForm.nextNodeId='86427b26-b4c3-462c-8ce0-4992098534eb'
+                                    this.recordsForm.nextNodeId='3dfa705b-c5ec-4e95-9838-0045022358bb'
                                     this.recordsForm.des='隐患上报'
                                     this.$http(type,path,this.recordsForm).then(()=>{
                                         this.recordsForm = {};
@@ -194,7 +183,8 @@
             }
         },
         components :{
-            CommonCRUD
+            CommonCRUD,
+            CommonUpload
         },
         created () {
             this.columns = []
@@ -206,13 +196,15 @@
             var columsItems1 = {slot:true,name:'hiddenStatus',des:'状态',slotName:'hiddenStatus'}
             this.columns.push(columsItems1)
             this.handleSelectOptions();
-            this.controlAuthority();
+            //this.controlAuthority();
             this.loadDepartmentOptions();
         }
     };
 </script>
 
-<style scoped>
-
+<style>
+    .result_area .el-textarea__inner{
+        width: 580px !important;
+    }
 </style>
 

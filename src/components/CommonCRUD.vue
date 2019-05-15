@@ -39,7 +39,7 @@
             <slot name="header-btn0" :selected="selected" ></slot>
             <el-button v-if="addBtnVis" type="primary" plain @click="add" class="self-add self-btn">&nbsp;</el-button>
             <el-button v-if="editBtnVis" type="success" plain class="self-btn self-edit" @click="edit">&nbsp;</el-button>
-            <el-button v-if="lookBtnVis" type="success" plain class="self-btn self-look" @click="look">&nbsp;</el-button>
+            <el-button v-if="lookBtnVis" type="success" plain class="self-btn self-look" @click="look(self)">&nbsp;</el-button>
             <el-button v-if="delBtnVis" type="danger" plain @click="deleteRow" class="self-del self-btn">&nbsp;</el-button>
             <slot name="header-btn" :selected="selected"></slot>
         </div>
@@ -78,8 +78,8 @@
         :before-close="handleClose">
         <el-form :inline="true" :model="form" :rules="rules" ref="form" class="demo-form-inline" label-width="100px" >
             <el-form-item v-for="item in formColumns"  :key="item.des" :label="item.des" :prop="item.name" v-if="item.formShow !== 'false'">
-                <el-input v-model="form[item.name]" v-if="item.type === 'string'" :disabled="item.disabled || disabled"></el-input>
-                <el-select v-model="form[item.name]" v-else-if="item.type === 'select'" filterable :disabled="item.disabled || disabled">
+                <el-input v-model="form[item.aliasName]||form[item.name]" v-if="item.type === 'string'" :disabled="item.disabled || disabled"></el-input>
+                <el-select v-model="form[item.aliasName]||form[item.name]" v-else-if="item.type === 'select'" filterable :disabled="item.disabled || disabled">
                     <el-option v-for="opItem in item.options" :value="opItem.value" :label="opItem.label" :key="opItem.value"></el-option>
                 </el-select>
                 <el-radio-group v-if="item.type === 'radio'" v-model="form[item.name]" :disabled="item.disabled || disabled" style="width: 178px" >
@@ -101,14 +101,14 @@
                                 placeholder="选择日期"
                 >
                 </el-date-picker>
-                <el-input v-model="form[item.name]" type="textarea" :rows="2" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
+                <el-input v-model="form[item.name]" type="textarea" result_area :rows="3" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
                 <!--预留富文本编辑-->
                 <Tinymce v-if="item.type === 'rich-editor'" v-model="form[item.name]"></Tinymce>
                 <CommonUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>
+            <el-button type="primary" v-if="!disabled" :loading="submitLoading" @click="submit('form')">确 定</el-button>
             <el-button @click="handleClose">取 消</el-button>
         </div>
     </el-dialog>
@@ -163,6 +163,15 @@
                     return [];
                 }
             },
+            look: {
+                type: Function,
+                default: (data)=>{
+                    data.title = '查看';
+                    data.disabled = true;
+                    data.form = Object.assign({}, data.selected[0]);
+                    data.dialogVisible = true;
+                }
+            },
         },
         data () {
             return {
@@ -183,9 +192,13 @@
                 submitLoading: false,
                 rules: {},
                 title: '',
-                disabled: false
+                disabled: false,
+                self: this
             };
         },
+        // created() {
+        //     this.self = this.parentIns || this.self;
+        // },
         computed: {
             path() {
                 return `${this.apiRoot}/page?page=${this.pageable.currentPage - 1}&size=${this.pageable.pageSize}`;
@@ -250,12 +263,7 @@
                     this.dialogVisible = true;
                 }
             },
-            look() {
-                this.title = '查看';
-                this.disabled = true;
-                this.form = Object.assign({}, this.selected[0]);
-                this.dialogVisible = true;
-            },
+
             deleteRow() {
                 if (!this.validateRows()) {
                     return;
@@ -324,7 +332,6 @@
             },
             //生成验证策略
             validationRules(){
-                console.log(this.formColumns)
                 this.formColumns.forEach((item) => {
                     this.rules[item.name] = [];
                     if (item.triggerCheck) {
@@ -389,6 +396,9 @@
     }
 </style>
 <style>
+    .result_area .el-textarea__inner{
+        width: 600px !important;
+    }
     .common-query .el-form--inline .el-form-item {
         margin: 0;
     }

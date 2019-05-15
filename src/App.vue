@@ -53,7 +53,7 @@
         font-size: 16px !important;
     }
     .el-textarea__inner{
-        width:200px !important;
+        width:580px !important;
     }
     body {
         overflow-x: hidden !important;
