@@ -15,11 +15,15 @@
 
             <!-- 右侧菜单项 -->
             <div class="fr menu-right">
-
+                <div class="btn-fullscreen" @click="handleFullScreen">
+                    <el-tooltip effect="dark" :content="fullscreen ? '取消全屏' : '全屏'" placement="bottom">
+                        <icon :name="fullscreen ? 'cancel_fullscreen' : 'fullscreen'" scale="2"></icon>
+                    </el-tooltip>
+                </div>
                 <el-dropdown trigger="click">
                     <span class="el-dropdown-link">
-                        <img class="person-img fl"  alt="" src="../../assets/logo.png">
-                        <i class="person-name fl">{{user}}</i>
+                        <img class="person-img fl"  alt="" :src="userInfo.photo">
+                        <vs-button type="line" style="padding: 5px 10px">{{user}} ▼</vs-button>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="myMessage">我的消息</el-dropdown-item>
@@ -50,13 +54,15 @@ export default {
         return {
             msgVisible: false,
             user: {},
+            fullscreen: false,
             msgList: [{
                 url: '/component/test?id=12-123-sda&status=Handle',
                 msg: '新增组件测试'
             }, {
                 url: '/component/test?id=12-123-sda&status=List',
                 msg: '列表组件测试'
-            }]
+            }],
+            userInfo: JSON.parse(sessionStorage.getItem('userInfo'))
         };
     },
     computed: {
@@ -104,6 +110,33 @@ export default {
             sessionStorage.removeItem('menu');
             sessionStorage.removeItem('token');
             location.reload();
+        },
+        //全屏
+        handleFullScreen(){
+            let element = document.documentElement;
+            if (this.fullscreen) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitCancelFullScreen) {
+                    document.webkitCancelFullScreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            } else {
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.webkitRequestFullScreen) {
+                    element.webkitRequestFullScreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.msRequestFullscreen) {
+                    // IE11
+                    element.msRequestFullscreen();
+                }
+            }
+            this.fullscreen = !this.fullscreen;
         }
     },
     mounted () {
@@ -141,16 +174,11 @@ export default {
         margin-right: 20px;
     }
     .person-img {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
-        margin: 5px 10px;
-        border: 1px solid #888888;
-        box-shadow: 1px 1px 1px #999;
-    }
-    .person-name {
-        cursor: pointer;
-        line-height: 48px;
+        margin: 10px 10px;
+        border: 1px solid rgba(153, 159, 255, 0.36);
     }
 }
 </style>
@@ -165,5 +193,17 @@ export default {
         transform: scale(1.2);
         transition: all .5s;
 
+    }
+    .btn-fullscreen{
+        width: 26px;
+        display: inline-block;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        vertical-align: top;
+    }
+    .btn-fullscreen:hover{
+        transform: scale(1.2);
+        transition: all .5s;
     }
 </style>
