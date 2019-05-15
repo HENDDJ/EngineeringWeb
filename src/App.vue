@@ -54,11 +54,11 @@
     }
     .el-textarea__inner{
         width:580px !important;
-
     }
     body {
         overflow-x: hidden !important;
         overflow-y: scroll !important;
+        padding-right: 0 !important;
     }
 
 </style>

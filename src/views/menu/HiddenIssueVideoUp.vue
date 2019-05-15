@@ -53,10 +53,11 @@
                     <el-input v-model="form[item.name]" type="textarea" class="result_area" :rows="3" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
                     <!--预留富文本编辑-->
                     <Tinymce v-if="item.type === 'rich-editor'" v-model="form[item.name]"></Tinymce>
-                    <CommonUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
+                    <CommonFileUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonFileUpload>
+                    <CommonUpload v-if="item.type === 'image'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>
                 <el-button @click="handleClose">取 消</el-button>
             </div>
@@ -69,6 +70,7 @@
     import CommonCRUD from '@/components/CommonCRUD';
     import LookUp from '@/lookup';
     import CommonUpload from '@/components/UpLoad';
+    import CommonFileUpload from '@/components/FileUpLoad';
     import { tansfer } from "../../lookup/transfer";
     export default {
         name: 'HiddenIssueVideoUp',
@@ -184,7 +186,8 @@
         },
         components :{
             CommonCRUD,
-            CommonUpload
+            CommonUpload,
+            CommonFileUpload
         },
         created () {
             this.columns = []

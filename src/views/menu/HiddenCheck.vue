@@ -26,7 +26,7 @@
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form"  label-width="100px" class="demo-ruleForm">
+            <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
                 <el-form-item >
                     <el-input v-model="form.issueId" type="hidden"></el-input>
                 </el-form-item>
@@ -55,7 +55,7 @@
                     <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="checkRes"></el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer footer-position">
                 <el-button @click="handleClose">取 消</el-button>
             </div>
         </el-dialog>

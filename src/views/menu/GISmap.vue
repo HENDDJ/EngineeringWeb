@@ -583,6 +583,7 @@
     }
     .vs-sidebar {
         max-width: 400px !important;
+        z-index: 1500 !important;
     }
     .bottom-bar {
         height: 250px;
