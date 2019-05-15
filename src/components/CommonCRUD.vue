@@ -101,7 +101,7 @@
                                 placeholder="选择日期"
                 >
                 </el-date-picker>
-                <el-input v-model="form[item.name]" type="textarea" result_area :rows="3" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
+                <el-input v-model="form[item.name]" type="textarea" :rows="3" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
                 <!--预留富文本编辑-->
                 <Tinymce v-if="item.type === 'rich-editor'" v-model="form[item.name]"></Tinymce>
                 <CommonUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
@@ -396,9 +396,6 @@
     }
 </style>
 <style>
-    .result_area .el-textarea__inner{
-        width: 600px !important;
-    }
     .common-query .el-form--inline .el-form-item {
         margin: 0;
     }
