@@ -21,7 +21,7 @@
             v-if="dialogVisible"
             :title="title"
             :visible.sync="dialogVisible"
-            width="60%"
+            width="880px"
             align="left"
             :modal-append-to-body='false'
             :append-to-body="true"
