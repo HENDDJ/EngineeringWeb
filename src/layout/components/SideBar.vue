@@ -1,4 +1,5 @@
 <template>
+    <section class="side-menu">
         <el-menu background-color="#363C42" text-color="#fff" collapse-transition
                  active-text-color="yellow" router  :default-active="$store.state.routerIndex" unique-opened  class="el-menu-personal" :collapse="$store.state.isCollapse">
             <div v-for="item in routes" :key="item.name" class="menu-container">
@@ -20,6 +21,7 @@
                 </el-menu-item>
             </div>
         </el-menu>
+    </section>
 </template>
 <script>
     export default {
@@ -66,10 +68,10 @@
     .menu-container {
         transition: width .5s;
     }
-    ul ul {
+    .side-menu ul ul {
         background: transparent !important;
     }
-    ul li {
+    .side-menu ul li {
         background: transparent !important;
     }
     .el-submenu__title {
@@ -77,6 +79,9 @@
     }
     .el-submenu__icon-arrow {
         color: #fff !important;
+    }
+    .side-menu .el-icon-arrow-right {
+        display: none;
     }
     .el-menu--vertical ul {
         background: url("/static/img/menu-background-img.png") !important;

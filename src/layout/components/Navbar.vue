@@ -4,7 +4,7 @@
             <div class="fl">
                 <!-- 面包屑导航 -->
                 <span @click="toggleMenu">
-                    <icon name="list" scale="2.3" style="margin: 17px 8px -5px 2px;vertical-align: top; cursor: pointer"></icon>
+                    <icon class="menu-icon" name="list" scale="2.3" style="margin: 17px 8px -5px 2px;vertical-align: top; cursor: pointer"></icon>
                 </span>
                 <el-breadcrumb separator-class="el-icon-arrow-right"  style="display: inline-block">
                     <el-breadcrumb-item :to="{path: '/MainView'}"> 首页</el-breadcrumb-item>
@@ -150,12 +150,20 @@ export default {
     }
     .person-name {
         cursor: pointer;
-        line-height: 18px;
+        line-height: 48px;
     }
 }
 </style>
 <style>
     .el-breadcrumb {
         line-height: 4;
+    }
+    .el-dropdown-menu {
+        z-index: 99999 !important;
+    }
+    .menu-icon:hover {
+        transform: scale(1.2);
+        transition: all .5s;
+
     }
 </style>

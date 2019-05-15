@@ -12,9 +12,9 @@
             :delBtnVis=false>
             <template slot="header-btn" slot-scope="slotProps">
                 <el-button type="primary" v-if="addBtnVis" plain @click="add()" >上报</el-button>
-                <el-button type="warning" v-if="editBtnVis" plain @click="edit(slotProps.selected)" >编辑</el-button>
-                <el-button type="success" plain @click="look(slotProps.selected)" >查看</el-button>
-                <el-button type="danger" v-if="delBtnVis" plain @click="del(slotProps.selected)" >删除</el-button>
+                <el-button type="warning" v-if="editBtnVis" plain @click="edit(slotProps.selected)" >变更</el-button>
+                <el-button type="success" plain  class="self-btn self-look" @click="look(slotProps.selected)" ></el-button>
+                <el-button type="danger" v-if="delBtnVis" plain class="self-del self-btn" @click="del(slotProps.selected)" ></el-button>
                 <el-button type="primary" v-if="conBtnVis" plain @click="showMajorHazards(slotProps.selected)" >确认</el-button>
             </template>
         </CommonCRUD>
@@ -143,7 +143,7 @@
                 this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
               //  console.log(JSON.parse(sessionStorage.getItem('userInfo')));
                 //上报人显示增删改查按钮
-                if( this.roleCode === 'MAJOR_HAZARDS_DECLARE'){
+                if( this.roleCode === 'PROJECT_MANAGER'){
                     //显示自己上报的内容
                     this.queryFormColumns[0].value = JSON.parse(sessionStorage.getItem('userInfo')).id;
                     this.addBtnVis = true;
@@ -152,7 +152,7 @@
                     this.conBtnVis = false;
                 }
                 //确认人显示查看和确认按钮
-                if(this.roleCode === 'MAJOR_HAZARDS_CONFIRM'){
+                if(this.roleCode === 'JGC_MANAGER'){
                     this.addBtnVis = false;
                     this.editBtnVis = false;
                     this.delBtnVis = false;

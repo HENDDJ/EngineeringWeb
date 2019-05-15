@@ -154,23 +154,45 @@
                     },
                     {
                         name:'isHazard',
-                        des:'是否是可能存在重大危险源',
-                        type:'radio'
+                        des:'是否存在重大危险源',
+                        type:'radio',
+                        options: [{
+                            value: 0,
+                            label: '否'
+                        },{
+                            value: 1,
+                            label: '是'
+                        }]
                     },
                     {
                         name:'isFormwork',
                         des:'是否是模板工程',
-                        type:'radio'
+                        type:'radio',
+                        options: [{
+                            value: 0,
+                            label: '否'
+                        },{
+                            value: 1,
+                            label: '是'
+                        }]
                     },
                     {
                         name:'isDeepExcavation',
                         des:'是否是深基坑',
-                        type:'radio'
+                        type:'radio',
+                        options: [{
+                            value: 0,
+                            label: '否'
+                        },{
+                            value: 1,
+                            label: '是'
+                        }]
                     },
                     {
                         name:'startTime',
                         des:'开始时间',
-                        type: 'date'
+                        type: 'date',
+
                     }
                 ]
             }

@@ -54,6 +54,7 @@
     }
     .el-textarea__inner{
         width:580px !important;
+
     }
     body {
         overflow-x: hidden !important;

@@ -12,7 +12,7 @@ export default new Vuex.Store({
         menuList: [],
         classInfo: {},
         //跳入扬尘界面默认工程
-        projectId: '',
+        projectId: '278c0a09-e990-448a-931f-62b1d252e4c6',
         projectName: '',
         routerKey: '',
         routerIndex: '',

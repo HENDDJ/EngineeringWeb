@@ -1,5 +1,5 @@
 <template>
-    <el-card class="common-crud">
+    <div style="padding: 30px;">
         <div class="common-query">
             <slot name="query"></slot>
             <el-form :inline="true" :model="queryForm" ref="form" class="demo-form-inline" label-width="75px">
@@ -39,7 +39,7 @@
             <slot name="header-btn0" :selected="selected" ></slot>
             <el-button v-if="addBtnVis" type="primary" plain @click="add" class="self-add self-btn">&nbsp;</el-button>
             <el-button v-if="editBtnVis" type="success" plain class="self-btn self-edit" @click="edit">&nbsp;</el-button>
-            <el-button v-if="lookBtnVis" type="success" plain class="self-btn self-look" @click="look(self)">&nbsp;</el-button>
+            <el-button v-if="lookBtnVis" type="success" plain class="self-btn self-look" @click="look">&nbsp;</el-button>
             <el-button v-if="delBtnVis" type="danger" plain @click="deleteRow" class="self-del self-btn">&nbsp;</el-button>
             <slot name="header-btn" :selected="selected"></slot>
         </div>
@@ -71,12 +71,12 @@
         v-if="dialogVisible"
         :title="title"
         :visible.sync="dialogVisible"
-        width="60%"
+        width="880px"
         align="left"
         :modal-append-to-body='false'
         :append-to-body="true"
         :before-close="handleClose">
-        <el-form :inline="true" :model="form" :rules="rules" ref="form" class="demo-form-inline" label-width="100px" >
+        <el-form :inline="true" :model="form" :rules="rules" ref="form" class="demo-form-inline" label-width="170px" >
             <el-form-item v-for="item in formColumns"  :key="item.des" :label="item.des" :prop="item.name" v-if="item.formShow !== 'false'">
                 <el-input v-model="form[item.aliasName]||form[item.name]" v-if="item.type === 'string'" :disabled="item.disabled || disabled"></el-input>
                 <el-select v-model="form[item.aliasName]||form[item.name]" v-else-if="item.type === 'select'" filterable :disabled="item.disabled || disabled">
@@ -104,11 +104,12 @@
                 <el-input v-model="form[item.name]" type="textarea" :rows="3" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
                 <!--预留富文本编辑-->
                 <Tinymce v-if="item.type === 'rich-editor'" v-model="form[item.name]"></Tinymce>
-                <CommonUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
+                <CommonFileUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonFileUpload>
+                <CommonUpload v-if="item.type === 'image'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
             </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-            <el-button type="primary" v-if="!disabled" :loading="submitLoading" @click="submit('form')">确 定</el-button>
+        <div slot="footer" class="dialog-footer  footer-position">
+            <el-button  v-if="!disabled" type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>
             <el-button @click="handleClose">取 消</el-button>
         </div>
     </el-dialog>
@@ -117,6 +118,7 @@
 
 <script>
     import reqType from '@/api/reqType';
+    import CommonFileUpload from '@/components/FileUpLoad';
     import CommonUpload from '@/components/UpLoad';
     import Tinymce from '@/components/Tinymce';
     export default {
@@ -196,15 +198,13 @@
                 self: this
             };
         },
-        // created() {
-        //     this.self = this.parentIns || this.self;
-        // },
         computed: {
             path() {
                 return `${this.apiRoot}/page?page=${this.pageable.currentPage - 1}&size=${this.pageable.pageSize}`;
             }
         },
         components: {
+           CommonFileUpload,
             CommonUpload,
             Tinymce
         },
@@ -263,7 +263,6 @@
                     this.dialogVisible = true;
                 }
             },
-
             deleteRow() {
                 if (!this.validateRows()) {
                     return;
@@ -332,6 +331,7 @@
             },
             //生成验证策略
             validationRules(){
+              //  console.log(this.formColumns)
                 this.formColumns.forEach((item) => {
                     this.rules[item.name] = [];
                     if (item.triggerCheck) {
@@ -376,10 +376,10 @@
 
 <style scoped>
     .common-crud {
-        width: 99.5%;
-        padding: 2%;
+        width: 97.5%;
+        padding: 1%;
         border-radius: 2px;
-        margin: 20px 0;
+        margin: 20px 15px;
     }
     .btn-right {
         float: right;
@@ -390,6 +390,7 @@
     }
     .handler-btn {
         float: left;
+        margin-bottom: 5px;
     }
     .common-query {
         float: right;
@@ -436,5 +437,8 @@
     .self-look {
         background: url('../../static/img/look.png') !important;
         background-size: cover !important;
+    }
+    .footer-position {
+        margin-right: 86px;
     }
 </style>
