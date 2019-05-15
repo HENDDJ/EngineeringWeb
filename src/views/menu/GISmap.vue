@@ -36,7 +36,7 @@
                         </div>
                         <div id="pm25" v-show="hasData"></div>
                         <div id="noData" v-if="!hasData">
-                            <p style="margin: 80px 0;text-align: center">暂无数据</p>
+                            <p style="margin: 50px 0;text-align: center">暂无数据</p>
                         </div>
                     </el-card>
                 </vs-col>
@@ -612,7 +612,7 @@
         max-height: 210px;
     }
     #pm25 {
-        width: 100%;
+        width: 420px;
         height: 190px;
     }
     #noData {
@@ -643,7 +643,7 @@
             max-height: 160px;
         }
         #pm25 {
-            width: 100%;
+            width: 275px;
             height: 140px;
         }
     }

@@ -1,5 +1,5 @@
 <template>
-    <el-card class="common-crud">
+    <div style="padding: 30px;">
         <div class="common-query">
             <slot name="query"></slot>
             <el-form :inline="true" :model="queryForm" ref="form" class="demo-form-inline" label-width="75px">
@@ -113,7 +113,7 @@
             <el-button @click="handleClose">取 消</el-button>
         </div>
     </el-dialog>
-    </el-card>
+    </div>
 </template>
 
 <script>
@@ -386,6 +386,7 @@
     }
     .handler-btn {
         float: left;
+        margin-bottom: 5px;
     }
     .common-query {
         float: right;
