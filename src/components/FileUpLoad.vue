@@ -5,7 +5,9 @@
             action=""
             :file-list="files"
             :on-remove="remove"
-            :http-request="uploadFile">
+            :on-preview="downLoad"
+            :http-request="uploadFile"
+            :disabled="disabled">
             <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
     </div>
@@ -56,6 +58,10 @@
             },
             remove(file, files) {
                 this.$emit('getValue', files.map(item => item.path + '&' +item.name).join(','));
+            },
+            downLoad(file){
+                console.log(file);
+                window.open(file.res,'_blank');
             }
         }
     }

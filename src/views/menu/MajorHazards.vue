@@ -11,11 +11,11 @@
             :lookBtnVis = false
             :delBtnVis=false>
             <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="primary" v-if="addBtnVis" plain @click="add()" >上报</el-button>
-                <el-button type="warning" v-if="editBtnVis" plain @click="edit(slotProps.selected)" >变更</el-button>
+                <el-button type="primary" v-if="addBtnVis" plain  class="self-btn self-report" @click="add()" ></el-button>
+                <el-button type="warning" v-if="editBtnVis" plain  class="self-btn self-change" @click="edit(slotProps.selected)" ></el-button>
                 <el-button type="success" plain  class="self-btn self-look" @click="look(slotProps.selected)" ></el-button>
                 <el-button type="danger" v-if="delBtnVis" plain class="self-del self-btn" @click="del(slotProps.selected)" ></el-button>
-                <el-button type="primary" v-if="conBtnVis" plain @click="showMajorHazards(slotProps.selected)" >确认</el-button>
+                <el-button type="primary" v-if="conBtnVis" plain  class="self-btn self-confirm" @click="showMajorHazards(slotProps.selected)" ></el-button>
             </template>
         </CommonCRUD>
         <!--确认-->
@@ -56,12 +56,12 @@
             v-if="dialogVisible"
             :title="title"
             :visible.sync="dialogVisible"
-            width="60%"
+            width="880px"
             align="left"
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form" class="demo-form-inline" label-width="100px" >
+            <el-form :inline="true" :model="form"  ref="form" class="demo-form-inline" label-width="170px" >
                 <el-form-item label="工程名称">
                     <el-select v-model="form.proId" placeholder="请选择" :disabled="disabled">
                         <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id">
@@ -84,7 +84,7 @@
                     <el-input v-model="form.damage" :disabled="disabled"></el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary" :loading="submitLoading" @click="submit(form)">确 定</el-button>
                 <el-button @click="handleClose">取 消</el-button>
             </div>
@@ -128,7 +128,7 @@
                 addBtnVis:true,//
                 editBtnVis:true,
                 delBtnVis:true,
-                conBtnVis:false,
+                conBtnVis:true,
                 conDia: false,//确认弹出框
                 submitLoading: false,//按钮加载
                 columns:[],
@@ -293,5 +293,7 @@
 </script>
 
 <style scoped>
-
+    .footer-position {
+        margin-right: 84px;
+    }
 </style>

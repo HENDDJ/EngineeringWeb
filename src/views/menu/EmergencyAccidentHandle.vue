@@ -2,7 +2,7 @@
     <section>
         <CommonCRUD :formColumns="formColumns" apiRoot="/identity/emergencyAccidentHandle" :columns="columns" ref="table">
             <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="info" plain @click="showDeal(slotProps.selected)">反馈</el-button>
+                <el-button type="info" plain  class="self-btn self-feedback" @click="showDeal(slotProps.selected)"></el-button>
             </template>
             <template slot="ResultMsg" slot-scope="scope">
                 <el-tag v-if="scope.row.accidentResult==='0'"

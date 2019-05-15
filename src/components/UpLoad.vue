@@ -5,7 +5,8 @@
             action=""
             :show-file-list="false"
             :auto-upload="true"
-            :http-request="uploadFile">
+            :http-request="uploadFile"
+            :disabled="disabled">
             <div v-for="(item,index) in images" class="img-container" @click.stop="stopEvent" @mouseover="moveIn(item)" @mouseout="moveOut(item)">
                 <img class="img-pre" :src="item.path">
                 <div v-show="item.active" style="background-color: rgba(255,255,255,.6);position: relative;top: -77px;width: 70px;height: 70px">
@@ -23,6 +24,7 @@
             style="text-align: center">
             <img :src="dialogUrl" style="max-width: 500px"/>
         </el-dialog>
+
     </div>
 </template>
 
@@ -48,6 +50,7 @@
             this.value.split(',').forEach(item => {
                 this.images.push({path: item, active: false})
             })
+
         },
         data() {
             return {
@@ -58,9 +61,9 @@
         },
         methods: {
             uploadFile(http) {
-                let file = http.file;
+                let image = http.file;
                 let formData = new FormData();
-                formData.append('file', file);
+                formData.append('file', image);
                 this.$http('POST', '/identity/accessory/', formData, false).then(
                     res => {
                         this.images.push({path: res.path, active: false});
@@ -68,6 +71,7 @@
                     }
                 )
             },
+
             moveIn(item) {
                 item.active = true;
             },

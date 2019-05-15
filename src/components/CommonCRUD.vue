@@ -104,8 +104,8 @@
                 <el-input v-model="form[item.name]" type="textarea" :rows="3" v-if="item.type === 'textarea'" :disabled="item.disabled || disabled"></el-input>
                 <!--预留富文本编辑-->
                 <Tinymce v-if="item.type === 'rich-editor'" v-model="form[item.name]"></Tinymce>
-                <CommonFileUpload v-if="item.type === 'file'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonFileUpload>
-                <CommonUpload v-if="item.type === 'image'" :value="form[item.name]" @getValue="form[item.name] = $event"></CommonUpload>
+                <CommonFileUpload v-if="item.type === 'file'" :value="form[item.name]" :disabled="item.disabled || disabled" @getValue="form[item.name] = $event"></CommonFileUpload>
+                <CommonUpload v-if="item.type === 'image'" :value="form[item.name]" :disabled="item.disabled || disabled" @getValue="form[item.name] = $event"></CommonUpload>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer  footer-position">
@@ -418,6 +418,11 @@
         height: 28px !important;
         border-radius: 5px !important;
     }
+    .self-btn-max {
+        width: 84px !important;
+        height: 28px !important;
+        border-radius: 5px !important;
+    }
     .self-add {
         background: url('../../static/img/add.png') !important;
         background-size: cover !important;
@@ -436,6 +441,42 @@
     }
     .self-look {
         background: url('../../static/img/look.png') !important;
+        background-size: cover !important;
+    }
+    .self-attribute {
+        background: url('../../static/img/attribute.png') !important;
+        background-size: cover !important;
+    }
+    .self-change {
+        background: url('../../static/img/change.png') !important;
+        background-size: cover !important;
+    }
+    .self-confirm {
+        background: url('../../static/img/confirm.png') !important;
+        background-size: cover !important;
+    }
+    .self-deal {
+        background: url('../../static/img/deal.png') !important;
+        background-size: cover !important;
+    }
+    .self-examine {
+        background: url('../../static/img/examine.png') !important;
+        background-size: cover !important;
+    }
+    .self-feedback {
+        background: url('../../static/img/feedback.png') !important;
+        background-size: cover !important;
+    }
+    .self-jurisdiction {
+        background: url('../../static/img/jurisdiction.png') !important;
+        background-size: cover !important;
+    }
+    .self-programme {
+        background: url('../../static/img/programme.png') !important;
+        background-size: cover !important;
+    }
+    .self-report {
+        background: url('../../static/img/report.png') !important;
         background-size: cover !important;
     }
     .footer-position {
