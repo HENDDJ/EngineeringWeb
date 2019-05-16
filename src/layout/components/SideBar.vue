@@ -35,12 +35,6 @@
                 return this.$store.state.menuList;
             }
         },
-        watch: {
-            '$route.name' : function () {
-                let matched = this.$route.matched;
-                this.$store.commit("getClassInfo", matched[matched.length-1].meta.classInfo);
-            }
-        },
         methods: {
         }
     }
@@ -58,7 +52,13 @@
         transition: all .5s;
         background: url("/static/img/menu-background-img.png");
         background-size: cover;
+        overflow-y: scroll;
+        -ms-overflow-style:none;/*ie滚动条隐藏*/
     }
+    .el-menu-personal::-webkit-scrollbar {
+        width: 0;
+    }
+
     svg {
         margin: 0 16px 0 5px;
     }

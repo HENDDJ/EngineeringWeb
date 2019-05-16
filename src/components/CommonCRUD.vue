@@ -35,7 +35,7 @@
             </el-form>
         </div>
         <div class="handler-btn">
-            <el-button type="success" plain @click="$router.go(-1)" class="self-back self-btn">&nbsp;</el-button>
+            <el-button type="success" plain @click="$router.go(-1)" class="self-btn self-back ">&nbsp;</el-button>
             <slot name="header-btn0" :selected="selected" ></slot>
             <el-button v-if="addBtnVis" type="primary" plain @click="add" class="self-add self-btn">&nbsp;</el-button>
             <el-button v-if="editBtnVis" type="success" plain class="self-btn self-edit" @click="edit">&nbsp;</el-button>
@@ -55,7 +55,7 @@
                 align="center">
             </el-table-column>
             <el-table-column v-for="item in columns" v-if="item.notShow !== 'true' && !item.slot" :key="item.name" :prop="item.aliasName || item.name" :label="item.des"
-                             :width="item.width || ''" :formatter="item.formatter" align="center" ></el-table-column>
+                             :width="item.width || ''" :formatter="item.formatter" align="center" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column v-for="item in columns" v-if="item.slot" :label="item.des" :key="item.name" align="center" >
                 <template slot-scope="scope">
                     <slot :name="item.slotName" :row="scope.row"></slot>
@@ -78,8 +78,8 @@
         :before-close="handleClose">
         <el-form :inline="true" :model="form" :rules="rules" ref="form" class="demo-form-inline" label-width="170px" >
             <el-form-item v-for="item in formColumns"  :key="item.des" :label="item.des" :prop="item.name" v-if="item.formShow !== 'false'">
-                <el-input v-model="form[item.aliasName]||form[item.name]" v-if="item.type === 'string'" :disabled="item.disabled || disabled"></el-input>
-                <el-select v-model="form[item.aliasName]||form[item.name]" v-else-if="item.type === 'select'" filterable :disabled="item.disabled || disabled">
+                <el-input v-model="form[item.name]" v-if="item.type === 'string'" :disabled="item.disabled || disabled"></el-input>
+                <el-select v-model="form[item.name]" v-else-if="item.type === 'select'" filterable :disabled="item.disabled || disabled">
                     <el-option v-for="opItem in item.options" :value="opItem.value" :label="opItem.label" :key="opItem.value"></el-option>
                 </el-select>
                 <el-radio-group v-if="item.type === 'radio'" v-model="form[item.name]" :disabled="item.disabled || disabled" style="width: 178px" >

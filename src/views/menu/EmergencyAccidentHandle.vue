@@ -2,7 +2,7 @@
     <section>
         <CommonCRUD :formColumns="formColumns" apiRoot="/identity/emergencyAccidentHandle" :columns="columns" ref="table">
             <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="info" plain  class="self-btn self-feedback" @click="showDeal(slotProps.selected)"></el-button>
+                <el-button type="info" plain  class="self-btn self-feedback" @click="showDeal(slotProps.selected)">&nbsp;</el-button>
             </template>
             <template slot="ResultMsg" slot-scope="scope">
                 <el-tag v-if="scope.row.accidentResult==='0'"
@@ -26,19 +26,14 @@
                     <el-input v-model="form.accidentId" ></el-input>
                 </el-form-item>
                 <el-form-item label="处理完成情况"  id="t1">
-
                     <el-input type="textarea"  :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solutionGrade" style="width: 400px;"></el-input>
-
                 </el-form-item>
                 <el-form-item label="处理结果描述" >
                     <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solutionResult" style="width: 400px;"></el-input>
                 </el-form-item>
                 <el-form-item label="附件" >
                     <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event"></CommonFileUpload>
-
                 </el-form-item>
-
-
             </el-form>
             <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>

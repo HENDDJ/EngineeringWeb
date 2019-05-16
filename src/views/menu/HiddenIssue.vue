@@ -5,7 +5,7 @@
             apiRoot="/identity/hiddenIssue" :queryFormColumns="queryFormColumns"
             :columns="columns" :addBtnVis="false" :editBtnVis="false" :delBtnVis="false" ref="table">
             <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="info" v-if="dealBtn" plain  class="self-btn self-deal" @click="deal(slotProps.selected)"></el-button>
+                <el-button type="info" v-if="dealBtn" plain  class="self-btn self-deal" @click="deal(slotProps.selected)">&nbsp;</el-button>
             </template>
             <template slot="hiddenStatus" slot-scope="scope">
                 <el-tag v-if="scope.row.statusName==='完成'"
@@ -26,25 +26,25 @@
             :append-to-body="true"
             :before-close="handleClose">
             <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
-                <el-form-item >
+                <el-form-item style="display: none">
                     <el-input v-model="form.issueId" type="hidden"></el-input>
                 </el-form-item>
-                <el-form-item label="处理结果描述" >
-                    <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solveDes"></el-input>
-                </el-form-item>
+
                 <el-form-item label="图片" >
                     <CommonUpload :value="form.solveImage" @getValue="form.solveImage = $event"></CommonUpload>
                 </el-form-item>
-                <el-form-item label="完成日期" >
-                <el-date-picker  v-model="form.solveTime"
-                                type="date"
-                                value-format="yyyy-MM-dd"
-                                placeholder="选择日期"
-                >
-                </el-date-picker>
-                </el-form-item>
                 <el-form-item label="附件" >
                     <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event"></CommonFileUpload>
+                </el-form-item>
+                <el-form-item label="完成日期" >
+                    <el-date-picker  v-model="form.solveTime"
+                                     type="date"
+                                     value-format="yyyy-MM-dd"
+                                     placeholder="选择日期">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="处理结果描述" >
+                    <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solveDes"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer footer-position">
@@ -73,7 +73,7 @@
                 dialogVisible: false,
                 form:{id:'',createdAt:'',createdBy:'',issueId:'',solveImage:'',solveDes:'',solveTime:'',enclosure:''},
                 submitLoading: false,
-                title: '',
+                title: '隐患处理',
                 disabled: false,
                 selected: [],
                 rules: {},
@@ -81,7 +81,6 @@
                 recordsForm: {issueId:'',preNodeId:'',nextNodeId:'',actionType:'',des:''},
                 queryFormColumns:[{name:'userId',value:''}]
             }
-
         },
         methods:{
             handleSelectOptions() {

@@ -70,7 +70,7 @@ export default {
             let arr = [];
             // 如果有重定向，则是由于没有子菜单(因此过滤掉)
             let matched = this.$route.matched.filter(route => !route.redirect);
-            console.log('123', this.$store.state.menuList, this.$route.matched);
+            //console.log('123', this.$store.state.menuList, this.$route.matched);
             this.$store.state.menuList.map(item => {
                 if (item.name === matched[0].name) {
                     arr.push(item);

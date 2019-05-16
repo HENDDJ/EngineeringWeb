@@ -11,6 +11,12 @@
             return {
             };
         },
+        watch: {
+            '$route.name' : function () {
+                let matched = this.$route.matched;
+                this.$store.commit("getClassInfo", matched[matched.length-1].meta.classInfo);
+            }
+        },
         components: {
         },
         methods: {

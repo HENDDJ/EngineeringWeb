@@ -15,7 +15,7 @@
                         close-transition>完成</el-tag>
             </template>
             <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="info" plain  class="self-btn-max self-programme" @click="showDeal(slotProps.selected)"></el-button>
+                <el-button type="info" plain  class="self-btn-max self-programme" @click="showDeal(slotProps.selected)">&nbsp;</el-button>
             </template>
         </CommonCRUD>
 

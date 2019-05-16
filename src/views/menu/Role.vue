@@ -3,7 +3,7 @@
         <CommonCRUD :columns="$store.state.classInfo.properties" apiRoot="/identity/role"
                     :formColumns="formColumns">
             <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="info" plain  class="self-btn-max self-jurisdiction" @click="authorizationConfig(slotProps.selected)"></el-button>
+                <el-button type="info" plain  class="self-btn-max self-jurisdiction" @click="authorizationConfig(slotProps.selected)">&nbsp;</el-button>
             </template>
         </CommonCRUD>
         <el-dialog
