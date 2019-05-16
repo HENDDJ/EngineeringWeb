@@ -3,7 +3,7 @@
         <CommonCRUD :columns="$store.state.classInfo.properties" apiRoot="/identity/sysClass"
                     :formColumns="$store.state.classInfo.properties">
             <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="info" plain class="self-btn-max self-attribute" @click="showPropertyConfig(slotProps.selected)"></el-button>
+                <el-button type="info" plain class="self-btn-max self-attribute" @click="showPropertyConfig(slotProps.selected)">&nbsp;</el-button>
             </template>
         </CommonCRUD>
         <el-dialog

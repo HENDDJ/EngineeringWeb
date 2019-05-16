@@ -15,7 +15,7 @@
                         close-transition>完成</el-tag>
             </template>
             <template slot="header-btn0" slot-scope="slotProps">
-                <el-button type="primary"  class="self-btn self-report" @click="addUp(slotProps.selected)"></el-button>
+                <el-button type="primary"  class="self-btn self-report" @click="addUp(slotProps.selected)">&nbsp;</el-button>
             </template>
         </CommonCRUD>
         <!--<CommonCRUD :columns="$store.state.classInfo.properties" apiRoot="/identity/sysClass" :formColumns="$store.state.classInfo.properties"></CommonCRUD>-->

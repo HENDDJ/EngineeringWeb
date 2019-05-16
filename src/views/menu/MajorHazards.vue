@@ -11,11 +11,11 @@
             :lookBtnVis = false
             :delBtnVis=false>
             <template slot="header-btn" slot-scope="slotProps">
-                <el-button type="primary" v-if="addBtnVis" plain  class="self-btn self-report" @click="add()" ></el-button>
-                <el-button type="warning" v-if="editBtnVis" plain  class="self-btn self-change" @click="edit(slotProps.selected)" ></el-button>
-                <el-button type="success" plain  class="self-btn self-look" @click="look(slotProps.selected)" ></el-button>
-                <el-button type="danger" v-if="delBtnVis" plain class="self-del self-btn" @click="del(slotProps.selected)" ></el-button>
-                <el-button type="primary" v-if="conBtnVis" plain  class="self-btn self-confirm" @click="showMajorHazards(slotProps.selected)" ></el-button>
+                <el-button type="primary" v-if="addBtnVis" plain  class="self-btn self-report" @click="add()" >&nbsp;</el-button>
+                <el-button type="warning" v-if="editBtnVis" plain  class="self-btn self-change" @click="edit(slotProps.selected)" >&nbsp;</el-button>
+                <el-button type="success" plain  class="self-btn self-look" @click="look(slotProps.selected)" >&nbsp;</el-button>
+                <el-button type="danger" v-if="delBtnVis" plain class="self-del self-btn" @click="del(slotProps.selected)" >&nbsp;</el-button>
+                <el-button type="primary" v-if="conBtnVis" plain  class="self-btn self-confirm" @click="showMajorHazards(slotProps.selected)" >&nbsp;</el-button>
             </template>
         </CommonCRUD>
         <!--确认-->

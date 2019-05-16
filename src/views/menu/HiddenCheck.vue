@@ -5,7 +5,7 @@
         apiRoot="/identity/hiddenHandle"
         :columns="columns" :addBtnVis="false" :editBtnVis="false" :delBtnVis="false" ref="table">
         <template slot="header-btn" slot-scope="slotProps">
-            <el-button type="info" v-if="checkVis" plain  class="self-btn self-examine" @click="check(slotProps.selected)"></el-button>
+            <el-button type="info" v-if="checkVis" plain  class="self-btn self-examine" @click="check(slotProps.selected)">&nbsp;</el-button>
             <!--<el-button type="info" v-if="checkResVis" plain @click="checkResult(slotProps.selected)">查看审核结果</el-button>-->
         </template>
         <template slot="hiddenStatus" slot-scope="scope">
