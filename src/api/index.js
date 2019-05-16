@@ -9,7 +9,8 @@ import { Message } from 'element-ui';
 // 后台返回的请求状态码
 const CODE_MAP = {
     SUCCESS: 200,
-    ERROR: 500
+    ERROR: 500,
+    PWD_ERROR: 101
 };
 // 创建实例
 const service = axios.create({
@@ -41,14 +42,21 @@ service.interceptors.response.use(
             // 请求成功则只返回返回的数据，并且用promise做封装，以方便做业务逻辑的同步处理
             // 有些成功的请求并不需要弹框，还需传标志位。。。
             if (response.config.showMessage) {
-                Message('success', response.data.msg);
+                Message({
+                    message:response.data.msg,
+                    type: 'success'
+                });
             }
             return Promise.resolve(response.data.content);
         } else if (response.data.code === CODE_MAP.ERROR) {
             // 请求失败则要弹提示框
             Message.error(response.data.msg);
             return Promise.reject(response.data.msg);
-        } else {
+        } else if (response.data.code === CODE_MAP.PWD_ERROR) {
+            // 请求失败则要弹提示框
+            Message.error(response.data.msg);
+            return Promise.reject(response.data.msg);
+        }else {
             return response.data
         }
     },
