@@ -2,7 +2,7 @@
     <section>
         <CommonCRUD
             :formColumns="formColumns"
-            apiRoot="/identity/hiddenIssue" :look="show"
+            apiRoot="/identity/hiddenIssue" :look="show" :queryFormColumns="queryFormColumns"
             :columns="columns" :addBtnVis="false" :editBtnVis="false" :delBtnVis="false" ref="table">
             <template slot="hiddenStatus" slot-scope="scope">
                 <el-tag v-if="scope.row.statusName==='完成'"
@@ -126,9 +126,8 @@
                 self: this,
                 activeNames: ['1','2','3'],
                 formItems0:[],
-                recordsForm:Array
-
-
+                recordsForm:Array,
+                queryFormColumns:[{name:'userId',value:''}]
             }
 
         },
@@ -173,7 +172,18 @@
                 })
 
 
-            }
+            },
+            //权限控制（列表数据）
+            controlAuthority(){
+                this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
+                //上报人显示增删改查按钮
+                if( this.roleCode === 'PROJECT_MANAGER'){
+                    //显示自己上报的内容
+                    this.queryFormColumns[0].value = JSON.parse(sessionStorage.getItem('userInfo')).id;
+                }else{
+                    this.queryFormColumns[0].value = null;
+                }
+            },
 
         },
         components :{
@@ -182,6 +192,7 @@
             CommonFileUpload
         },
         created () {
+            this.controlAuthority();
             this.columns = []
             this.columns.length = 0;
             let temp = JSON.parse(JSON.stringify(this.$store.state.classInfo.properties));

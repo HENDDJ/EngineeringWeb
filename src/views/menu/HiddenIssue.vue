@@ -2,7 +2,7 @@
     <section>
         <CommonCRUD
             :formColumns="formColumns"
-            apiRoot="/identity/hiddenIssue"
+            apiRoot="/identity/hiddenIssue" :queryFormColumns="queryFormColumns"
             :columns="columns" :addBtnVis="false" :editBtnVis="false" :delBtnVis="false" ref="table">
             <template slot="header-btn" slot-scope="slotProps">
                 <el-button type="info" v-if="dealBtn" plain  class="self-btn self-deal" @click="deal(slotProps.selected)"></el-button>
@@ -46,8 +46,6 @@
                 <el-form-item label="附件" >
                     <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event"></CommonFileUpload>
                 </el-form-item>
-
-
             </el-form>
             <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>
@@ -80,7 +78,8 @@
                 selected: [],
                 rules: {},
                 queryForm:{issueId:''},
-                recordsForm: {issueId:'',preNodeId:'',nextNodeId:'',actionType:'',des:''}
+                recordsForm: {issueId:'',preNodeId:'',nextNodeId:'',actionType:'',des:''},
+                queryFormColumns:[{name:'userId',value:''}]
             }
 
         },
@@ -183,17 +182,15 @@
                     }
                 });
             },
+            //权限控制（列表数据）
             controlAuthority(){
                 this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
-                //  console.log(JSON.parse(sessionStorage.getItem('userInfo')));
-                if( this.roleCode === 'MAJOR_HAZARDS_DECLARE'){
+                //上报人显示增删改查按钮
+                if( this.roleCode === 'PROJECT_MANAGER'){
+                    //显示自己上报的内容
                     this.queryFormColumns[0].value = JSON.parse(sessionStorage.getItem('userInfo')).id;
-                    this.dealBtn = false
-                    this.uploadBtn = true;
-                }
-                if(this.roleCode === 'MAJOR_HAZARDS_CONFIRM'){
-                    this.uploadBtn = false;
-                    this.dealBtn = true;
+                }else{
+                    this.queryFormColumns[0].value = null;
                 }
             },
             handleClose (done) {
@@ -206,7 +203,23 @@
                     })
                     .catch(_ => {});
             },
-
+            loadDepartmentOptions() {
+                this.$http('POST', 'identity/organization/list', false).then(
+                    data => {
+                        this.formColumns.filter( item => item.name === 'departmentId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
+                this.$http('POST', 'identity/projectInfo/list', false).then(
+                    data => {
+                        this.formColumns.filter( item => item.name === 'projectId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
+                this.$http('POST', 'identity/principal/list', false).then(
+                    data => {
+                        this.formColumns.filter( item => item.name === 'userId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
+            }
         },
         components :{
             CommonUpload,
@@ -222,6 +235,7 @@
             this.columns = temp
             var columsItems1 = {slot:true,name:'hiddenStatus',des:'状态',slotName:'hiddenStatus'}
             this.columns.push(columsItems1)
+            this.loadDepartmentOptions();
             this.handleSelectOptions();
             this.controlAuthority();
         }

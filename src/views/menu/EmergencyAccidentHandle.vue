@@ -106,8 +106,7 @@
                             this.$http(type, path, Object.assign({}, this.form)).then(() => {
                                 this.submitLoading = false;
                                 this.dialogVisibleDeal = false;
-                                this.$refs.table.refreshTableData();
-
+                                this.$refs.table.refreshTableData()
                                 this.form = {};
                             });
                         })

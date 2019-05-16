@@ -193,6 +193,13 @@
                     this.checkResVis = true;
                 }
             },
+            loadDepartmentOptions() {
+                this.$http('POST', 'identity/projectInfo/list', false).then(
+                    data => {
+                        this.formColumns.filter( item => item.name === 'projectId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
+            }
 
         },
         components: {
@@ -207,6 +214,7 @@
             this.columns = temp
             var columsItems1 = {slot:true,name:'hiddenStatus',des:'状态',slotName:'hiddenStatus'}
             this.columns.push(columsItems1)
+            this.loadDepartmentOptions();
         }
     };
 </script>
