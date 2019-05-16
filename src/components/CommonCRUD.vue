@@ -55,7 +55,7 @@
                 align="center">
             </el-table-column>
             <el-table-column v-for="item in columns" v-if="item.notShow !== 'true' && !item.slot" :key="item.name" :prop="item.aliasName || item.name" :label="item.des"
-                             :width="item.width || ''" :formatter="item.formatter" align="center" ></el-table-column>
+                             :width="item.width || ''" :formatter="item.formatter" align="center" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column v-for="item in columns" v-if="item.slot" :label="item.des" :key="item.name" align="center" >
                 <template slot-scope="scope">
                     <slot :name="item.slotName" :row="scope.row"></slot>
