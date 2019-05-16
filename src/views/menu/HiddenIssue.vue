@@ -26,7 +26,7 @@
             :append-to-body="true"
             :before-close="handleClose">
             <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
-                <el-form-item >
+                <el-form-item style="display: none">
                     <el-input v-model="form.issueId" type="hidden"></el-input>
                 </el-form-item>
                 <el-form-item label="处理结果描述" >
