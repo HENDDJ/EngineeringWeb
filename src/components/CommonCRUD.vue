@@ -78,8 +78,8 @@
         :before-close="handleClose">
         <el-form :inline="true" :model="form" :rules="rules" ref="form" class="demo-form-inline" label-width="170px" >
             <el-form-item v-for="item in formColumns"  :key="item.des" :label="item.des" :prop="item.name" v-if="item.formShow !== 'false'">
-                <el-input v-model="form[item.aliasName]||form[item.name]" v-if="item.type === 'string'" :disabled="item.disabled || disabled"></el-input>
-                <el-select v-model="form[item.aliasName]||form[item.name]" v-else-if="item.type === 'select'" filterable :disabled="item.disabled || disabled">
+                <el-input v-model="form[item.name]" v-if="item.type === 'string'" :disabled="item.disabled || disabled"></el-input>
+                <el-select v-model="form[item.name]" v-else-if="item.type === 'select'" filterable :disabled="item.disabled || disabled">
                     <el-option v-for="opItem in item.options" :value="opItem.value" :label="opItem.label" :key="opItem.value"></el-option>
                 </el-select>
                 <el-radio-group v-if="item.type === 'radio'" v-model="form[item.name]" :disabled="item.disabled || disabled" style="width: 178px" >
