@@ -10,7 +10,8 @@ import { Message } from 'element-ui';
 const CODE_MAP = {
     SUCCESS: 200,
     ERROR: 500,
-    PWD_ERROR: 101
+    PWD_ERROR: 101,
+    TOKEN_ERROR: 401,
 };
 // 创建实例
 const service = axios.create({
@@ -55,6 +56,11 @@ service.interceptors.response.use(
         } else if (response.data.code === CODE_MAP.PWD_ERROR) {
             // 请求失败则要弹提示框
             Message.error(response.data.msg);
+            return Promise.reject(response.data.msg);
+        }else if (response.data.code === CODE_MAP.TOKEN_ERROR) {
+            // 请求失败则要弹提示框
+            Message.error("用户已失效，请重新登录");
+            this.router.push({path:'/login'});
             return Promise.reject(response.data.msg);
         }else {
             return response.data
