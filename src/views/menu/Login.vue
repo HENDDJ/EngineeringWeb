@@ -62,6 +62,7 @@ export default {
         },
         handleLogin () {
             this.$http('POST', '/identity/principal/login', this.loginForm).then(data => {
+                this.loading = true;
                 let token = data.split("$")[0];
                 sessionStorage.setItem('token', token);
                 sessionStorage.setItem('user', this.loginForm.code);
