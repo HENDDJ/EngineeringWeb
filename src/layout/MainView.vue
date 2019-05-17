@@ -14,7 +14,7 @@
             return {
                 picSty: {},
                 picMenu: [{src:"/static/img/menu/GIS平台.png",alt:"GIS平台",path:"/project/gismap"},
-                    {src:"/static/img/menu/事故隐患.png",alt:"事故隐患",path:"/latentDanger/hiddenIssueVideoUp"},
+                    {src:"/static/img/menu/事故隐患.png",alt:"事故隐患",path:"/latentDanger/hiddenIssueMsg"},
                     {src:"/static/img/menu/企业安全.png",alt:"企业安全",path:"/enterpriseSafety/safetyRegulations"},
                     {src:"/static/img/menu/应急.png",alt:"应急",path:"/emergencyManagement/emergencyPrevention"},
                     {src:"/static/img/menu/政务.png",alt:"政务",path:""},

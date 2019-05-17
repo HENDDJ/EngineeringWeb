@@ -228,6 +228,7 @@
                 this.loadTableData(path)
             },
             sizeChange(value) {
+                this.pageable.pageSize = value;
                 let path = `${this.apiRoot}/page?page=0&size=${value}`;
                 this.loadTableData(path)
             },
