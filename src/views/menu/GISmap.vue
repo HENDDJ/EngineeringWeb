@@ -362,7 +362,7 @@
                 this.initPM25(row.id);
                 this.loadEquipment(row.id);
                 this.loadWarning(row.id);
-                this.loadCamera(row.id);
+                this.loadCamera(row.regionId);
                 this.bottomBarClass += " bottom-bar-active";
                 this.$store.commit("getIsCollapse", true);
                 document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 66}px`;
@@ -442,7 +442,7 @@
             },
             loadEquipment(projectId) {
                 let param = {
-                    projectId: projectId,
+                    proId: projectId,
                     type: "SPECIAL_EQUIPMENT"
                 };
                 this.$http('POST',`/identity/safetyEquipment/page?page=0&size=5`, param, false).then(
@@ -463,10 +463,14 @@
             },
             /**  视频处理部分
              */
-            loadCamera(projectId) {
+            loadCamera(regionId) {
                 let param = {
-                    pId: projectId
+                    regionUuid: regionId
                 };
+                if(!regionId){
+                    this.cameraList = [];
+                    return ;
+                }
                 this.$http("POST", `/identity/camera/list`, param, false).then(
                     data => {
                         this.cameraList = data;

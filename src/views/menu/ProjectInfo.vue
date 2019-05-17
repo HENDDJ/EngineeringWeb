@@ -214,7 +214,7 @@
                 data => {
                     this.formColumns.forEach(item => {
                         if (item.name === 'regionId') {
-                            item.options = data.map(item => new Object({label: item.name, value: item.id}))
+                            item.options = data.map(item => new Object({label: item.name, value: item.regionUuid}))
                         }
                     })
                 }
