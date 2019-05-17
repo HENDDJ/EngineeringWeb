@@ -1,6 +1,6 @@
 <template>
     <section>
-        <CommonCRUD :columns="tableColumns" api-root="identity/projectInfo" :formColumns="formColumns"></CommonCRUD>
+        <CommonCRUD :columns="tableColumns" api-root="identity/projectInfo" :formColumns="formColumns"  :queryFormColumns="queryFormColumns"></CommonCRUD>
     </section>
 </template>
 
@@ -194,7 +194,15 @@
                         type: 'date',
 
                     }
-                ]
+                ],
+                queryFormColumns:[
+                    {
+                        name: 'name',
+                        type: 'string',
+                        des: '工程名称',
+                        visible: true
+                    }
+                ],
             }
         },
         components: {
