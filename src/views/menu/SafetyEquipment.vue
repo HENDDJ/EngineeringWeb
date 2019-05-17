@@ -12,12 +12,17 @@
         name: 'SafetyEquipment',
         data() {
             return {
-                formColumns :{}
+                formColumns :{},
 
             }
         },
         methods: {
             handleSelectOptions() {
+                this.$http('POST', 'identity/projectInfo/list', false).then(
+                    data => {
+                        this.formColumns.filter( item => item.name === 'proId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
                 let  items = [
                     ['lastInspection', 'CheckResult']
                 ].forEach(item => {
