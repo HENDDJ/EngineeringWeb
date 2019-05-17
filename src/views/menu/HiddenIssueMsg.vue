@@ -82,16 +82,12 @@
                             <el-step  v-if="items.actionType === 'UPLOAD'" status='wait' :title="'['+items.createdByName+']在'+items.createdAt.substr(0,10) +'上报了该隐患'":description="'描述:'+items.des"></el-step>
                             <el-step  v-if="items.actionType === 'HANDLE'" status="finish" :title="'['+items.createdByName+']在'+items.createdAt.substr(0,10) +'处理了该隐患'":description="'描述:'+items.des"></el-step>
                             <el-step  v-if="items.actionType === 'UNCHECKED'"  status='error' :title="'['+items.createdByName+']在'+items.createdAt.substr(0,10) +'驳回了该隐患'":description="'驳回原因:'+items.des"></el-step>
-                            <el-step  v-if="items.actionType === 'CHECKED'" status='success' :title="'['+items.createdByName+']在'+items.createdAt.substr(0,10) +'完成了该隐患'":description="'描述:'+items.des"></el-step>
+                            <el-step  v-if="items.actionType === 'CHECKED'" status='success' :title="'['+items.createdByName+']在'+items.createdAt.substr(0,10) +'审核通过了该隐患'":description="'审核意见:'+items.des"></el-step>
                         </template>
                        </el-steps>
                     </div>
                 </el-collapse-item>
             </el-collapse>
-
-
-
-
             <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>
                 <el-button @click="handleClose">取 消</el-button>

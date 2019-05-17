@@ -172,6 +172,7 @@
                     data.disabled = true;
                     data.form = Object.assign({}, data.selected[0]);
                     data.dialogVisible = true;
+                    data.submitLoading = false;
                 }
             },
         },
@@ -250,6 +251,7 @@
                 this.title='新增';
                 this.dialogVisible = true;
                 this.form = {};
+                this.submitLoading = false;
                 this.formColumns.forEach((item) => {
                     if (item.value) {
                         this.form[item.name] = item.value;
@@ -257,10 +259,11 @@
                 });
             },
             edit() {
-                this.title='编辑'
+                this.title='编辑';
                 if (this.validateRows()) {
                     this.form = Object.assign({}, this.selected[0]);
                     this.dialogVisible = true;
+                    this.submitLoading = false;
                 }
             },
             deleteRow() {

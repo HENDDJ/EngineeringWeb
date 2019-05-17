@@ -153,6 +153,11 @@
                         type: 'string'
                     },
                     {
+                        name:'regionId',
+                        des:'监控平台项目',
+                        type: 'select',
+                    },
+                    {
                         name:'isHazard',
                         des:'是否存在重大危险源',
                         type:'radio',
@@ -192,10 +197,20 @@
                         name:'startTime',
                         des:'开始时间',
                         type: 'date',
-
                     }
                 ]
             }
+        },
+        created() {
+            this.$http('POST', `/identity/projectRegion/list`, false).then(
+                data => {
+                    this.formColumns.forEach(item => {
+                        if (item.name === 'regionId') {
+                            item.options = data.map(item => new Object({label: item.name, value: item.id}))
+                        }
+                    })
+                }
+            )
         },
         components: {
             CommonCRUD
