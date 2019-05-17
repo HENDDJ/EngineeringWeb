@@ -7,7 +7,7 @@
             :addBtnVis=false
             :editBtnVis=false
             :lookBtnVis = false>
-            <template slot="header-btn" slot-scope="slotProps">
+            <template slot="header-btn0" slot-scope="slotProps">
                 <el-button type="success" plain class="self-btn self-look" @click="look(slotProps.selected)" >&nbsp;</el-button>
             </template>
         </CommonCRUD>

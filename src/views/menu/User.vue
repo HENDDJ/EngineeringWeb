@@ -1,7 +1,7 @@
 <template>
     <section>
         <CommonCRUD :columns="$store.state.classInfo.properties" apiRoot="/identity/principal"
-                    :formColumns="formColumns">
+                    :formColumns="formColumns" :queryFormColumns="queryFormColumns">
         </CommonCRUD>
         <!--<CommonCRUD :columns="$store.state.classInfo.properties" apiRoot="/identity/sysClass" :formColumns="$store.state.classInfo.properties"></CommonCRUD>-->
     </section>
@@ -13,7 +13,15 @@
         name: 'User',
         data() {
             return {
-                formColumns: []
+                formColumns: [],
+                queryFormColumns:[
+                    {
+                        name: 'name',
+                        type: 'string',
+                        des: '姓名',
+                        visible: true
+                    }
+                ],
             }
         },
         methods: {
