@@ -66,5 +66,12 @@
         overflow-y: scroll !important;
         padding-right: 0 !important;
     }
+    .vs-button-primary.vs-button-line{
+        color: #6a7af3 !important;
+        border-color: rgba(188,216,251,.75) !important;
+    }
+    .vs-button-primary.vs-button-line .vs-button-linex {
+        background: rgba(188,216,251,.75) !important;
+    }
 
 </style>

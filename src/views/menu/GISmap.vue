@@ -482,7 +482,10 @@
             startPreviewByCameraUuid(cameraUuid) {
                 this.$http('POST', `/identity/camera/getPreviewXml/${cameraUuid}`,false)
                     .then(data => {
-                        this.startPreview(data.data);
+                        data.replace('/', '');
+                        let xml = JSON.parse(data).data;
+                        console.log(JSON.parse(data))
+                        this.startPreview(xml);
                     })
             },
             initSpvx(spv) {
