@@ -362,7 +362,7 @@
                 this.initPM25(row.id);
                 this.loadEquipment(row.id);
                 this.loadWarning(row.id);
-                this.loadCamera(row.id);
+                this.loadCamera(row.regionId);
                 this.bottomBarClass += " bottom-bar-active";
                 this.$store.commit("getIsCollapse", true);
                 document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 66}px`;
@@ -442,7 +442,7 @@
             },
             loadEquipment(projectId) {
                 let param = {
-                    projectId: projectId,
+                    proId: projectId,
                     type: "SPECIAL_EQUIPMENT"
                 };
                 this.$http('POST',`/identity/safetyEquipment/page?page=0&size=5`, param, false).then(
@@ -463,10 +463,14 @@
             },
             /**  视频处理部分
              */
-            loadCamera(projectId) {
+            loadCamera(regionId) {
                 let param = {
-                    pId: projectId
+                    regionUuid: regionId
                 };
+                if(!regionId){
+                    this.cameraList = [];
+                    return ;
+                }
                 this.$http("POST", `/identity/camera/list`, param, false).then(
                     data => {
                         this.cameraList = data;
@@ -476,16 +480,12 @@
                 )
             },
             startPreviewByCameraUuid(cameraUuid) {
-                let time = new Date().getTime();
-                const IP_PORT = "http://122.97.218.162:18080";
-                const APP_KEY = "a592d676";
-                const opUserUuid = 'c26a811c141a11e79aeeb32ef95273f2';
-                // const netZoneUuid = 'f5816cf43fcc41d880d9f636fa8bc443';
-                const netZoneUuid = '5b994421aced4e2d9a76179e8cc70734';
-                this.$http('POST', IP_PORT + "/openapi/service/vss/preview/getPreviewParamByCameraUuid?token=" + this.getSinglePreviewToken(time, cameraUuid),
-                    {appkey: APP_KEY, time: time, pageNo: 1, pageSize: 10, opUserUuid: opUserUuid, cameraUuid: cameraUuid, netZoneUuid: netZoneUuid}).then(
-                    data => {
-                        this.startPreview(data.data);
+                this.$http('POST', `/identity/camera/getPreviewXml/${cameraUuid}`,false)
+                    .then(data => {
+                        data.replace('/', '');
+                        let xml = JSON.parse(data).data;
+                        console.log(JSON.parse(data))
+                        this.startPreview(xml);
                     })
             },
             initSpvx(spv) {
@@ -513,27 +513,6 @@
             startPreview(xml) {
                 this.spv.MPV_SetPlayWndCount(1);
                 this.spv.MPV_StartPreview(xml);
-            },
-            getSinglePreviewToken(time, uuid) {
-                const APP_KEY = "a592d676";
-                const SECRET = "69681c3587194a50a2b11f1335ad6f41";
-                const opUserUuid = 'c26a811c141a11e79aeeb32ef95273f2';
-                const netZoneUuid = '5b994421aced4e2d9a76179e8cc70734';
-                let uri = "/openapi/service/vss/preview/getPreviewParamByCameraUuid";
-                let strParam = {
-                    appkey: APP_KEY,
-                    time: time,
-                    pageNo: 1,
-                    pageSize: 10,
-                    opUserUuid: opUserUuid,
-                    cameraUuid: uuid,
-                    netZoneUuid: netZoneUuid
-                };
-                return this.genToken(uri, JSON.stringify(strParam), SECRET);
-            },
-            genToken(uri, strParam, mySecret) {
-                let srcStr = uri + strParam + mySecret;
-                return md5.hex_md5(srcStr).toUpperCase();
             }
         },
         mounted() {
