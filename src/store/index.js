@@ -16,7 +16,8 @@ export default new Vuex.Store({
         projectName: '',
         routerKey: '',
         routerIndex: '',
-        isCollapse: false
+        isCollapse: false,
+        shotUrl:''
     },
     mutations: {
         getMenu(state, data) {
@@ -39,6 +40,9 @@ export default new Vuex.Store({
         },
         getIsCollapse(state, data) {
             state.isCollapse = data;
+        },
+        getShotUrl(state, data) {
+            state.shotUrl = data;
         }
     }
 });

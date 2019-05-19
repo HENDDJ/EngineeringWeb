@@ -18,6 +18,8 @@ import Icon from 'vue-svg-icon/Icon.vue';
 import { generate, common, getRouter, ht } from '@/api';
 import store from '@/store';
 import DynamicRoutes from '@/utils/dynamic-routes';
+import VueClipboard from 'vue-clipboard2'
+import lrz from 'lrz'
 
 Vue.config.productionTip = false;
 
@@ -25,6 +27,8 @@ Vue.use(ElementUI, {size: 'mini'});
 Vue.use(vuesax);
 Vue.use(store);
 Vue.component('icon', Icon);
+VueClipboard.config.autoSetContainer = true
+Vue.use(VueClipboard)
 
 if (isIE()) {
     Vue.prototype.$http = ht;

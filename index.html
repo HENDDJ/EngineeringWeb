@@ -10,7 +10,20 @@
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <!--<script src="https://cdn.bootcss.com/babel-core/6.1.19/browser.js"></script>-->
     <script src="/static/tinymce4.7.5/tinymce.min.js"></script>
+    <script language="javascript" for="spv" event="MPV_FireSnapShot(lWndId,lpPicName,lpCameraUUID,lPicResult)">
+        window.videoUp.shotUrl = lpPicName
+        szMsg = "窗口" + lWndId;
+        if(1 == lPicResult)
 
+        {
+            szMsg += (" - 抓图成功：" + lpPicName+" ; 图片地址已复制到粘贴板");
+        }
+        else
+        {
+            szMsg += " - 抓图失败";
+        }
+        alert(szMsg)
+    </script>
 </head>
 <body>
 <div id="app"></div>

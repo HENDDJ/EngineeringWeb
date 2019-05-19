@@ -20,6 +20,9 @@
         components: {
         },
         methods: {
+        },
+        created () {
+            window.app=this
         }
     };
 </script>
