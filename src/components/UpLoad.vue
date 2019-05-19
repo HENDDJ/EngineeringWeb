@@ -63,8 +63,9 @@
         methods: {
             // base64转文件
             dataURItoBlob(dataURI) {
-                var byteString = atob(dataURI.split(',')[1]);
-                var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+                let temp = dataURI.split(",");
+                var byteString = atob(temp[1]);
+                var mimeString = temp[0].split(":")[1].split(";")[0];
                 var ab = new ArrayBuffer(byteString.length);
                 var ia = new Uint8Array(ab);
                 for (var i = 0; i < byteString.length; i++) {
@@ -79,7 +80,7 @@
             },
             uploadFile(http) {
                 var app = this.app
-                let image = http.file;
+                var image = http.file;
 
                 var reader = new FileReader();
                 reader.readAsDataURL(image);
@@ -89,18 +90,14 @@
                         quality = 0.8, //图像质量
                         canvas = document.createElement("canvas"),
                         drawer = canvas.getContext("2d");
-
+                    img.src = canvas.toDataURL("image/jpeg", quality);
                     img.onload = function () {
                         canvas.width = width;
                         canvas.height = width * (img.height / img.width);
                         drawer.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        img.src = canvas.toDataURL("image/jpeg", quality);
-
                     }
-                    console.log(img.src)
-                    let files = new File([app.dataURItoBlob(img.src)], image.name, {type: image.type})
-
-                    let formData = new FormData();
+                    var files = new File([app.dataURItoBlob(img.src)], 'PIC' + new Date().toLocaleDateString()+ '.jpg', {type: image.type});
+                    var formData = new FormData();
                     formData.append('file', files);
                     app.$http('POST', '/identity/accessory/', formData, false).then(
                         res => {

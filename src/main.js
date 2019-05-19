@@ -19,7 +19,7 @@ import { generate, common, getRouter, ht } from '@/api';
 import store from '@/store';
 import DynamicRoutes from '@/utils/dynamic-routes';
 import VueClipboard from 'vue-clipboard2'
-import lrz from 'lrz'
+import 'formdata-polyfill'
 
 Vue.config.productionTip = false;
 

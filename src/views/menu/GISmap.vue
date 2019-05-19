@@ -484,7 +484,6 @@
                     .then(data => {
                         data.replace('/', '');
                         let xml = JSON.parse(data).data;
-                        console.log(JSON.parse(data))
                         this.startPreview(xml);
                     })
             },

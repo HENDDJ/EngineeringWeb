@@ -281,55 +281,18 @@
             childrenClick (val) {
                 this.initVideoDialogVue(val);
             },
-            initVideoDialogVue (cameraUuid) {
-                let time = new Date().getTime();
-                const IP_PORT = 'http://122.97.218.162:18080';
-                const APP_KEY = 'a592d676';
-                const opUserUuid = 'c26a811c141a11e79aeeb32ef95273f2';
-                // const netZoneUuid = 'f5816cf43fcc41d880d9f636fa8bc443';
-                const netZoneUuid = '5b994421aced4e2d9a76179e8cc70734';
-                this.$http('POST', IP_PORT + '/openapi/service/vss/preview/getPreviewParamByCameraUuid?token=' + this.getSinglePreviewToken(time, cameraUuid),
-                    {
-                        appkey: APP_KEY,
-                        time: time,
-                        pageNo: 1,
-                        pageSize: 10,
-                        opUserUuid: opUserUuid,
-                        cameraUuid: cameraUuid,
-                        netZoneUuid: netZoneUuid
-                    }).then(
-                    data => {
-                        this.startPreview(data.data);
-                    });
-
+            initVideoDialogVue(cameraUuid) {
+                this.$http('POST', `/identity/camera/getPreviewXml/${cameraUuid}`,false)
+                    .then(data => {
+                        data.replace('/', '');
+                        let xml = JSON.parse(data).data;
+                        this.startPreview(xml);
+                    })
             },
             startPreview (xml) {
                 this.spv.MPV_SetPlayWndCount(4);
                 this.spv.MPV_StartPreview(xml);
-                this.spv.setCaptureParam(0,'',1,1000,4)
-
-
-            },
-            getSinglePreviewToken (time, uuid) {
-                const APP_KEY = 'a592d676';
-                const SECRET = '69681c3587194a50a2b11f1335ad6f41';
-                const opUserUuid = 'c26a811c141a11e79aeeb32ef95273f2';
-                const netZoneUuid = '5b994421aced4e2d9a76179e8cc70734';
-                let uri = '/openapi/service/vss/preview/getPreviewParamByCameraUuid';
-                let strParam = {
-                    appkey: APP_KEY,
-                    time: time,
-                    pageNo: 1,
-                    pageSize: 10,
-                    opUserUuid: opUserUuid,
-                    cameraUuid: uuid,
-                    netZoneUuid: netZoneUuid
-                };
-                return this.genToken(uri, JSON.stringify(strParam), SECRET);
-            },
-            genToken (uri, strParam, mySecret) {
-                let srcStr = uri + strParam + mySecret;
-                return md5.hex_md5(srcStr).toUpperCase();
+                // this.spv.setCaptureParam(0,'',1,1000,4)
             },
             shotPic() {
                 var ocxObj = document.getElementById("spv");
@@ -337,12 +300,8 @@
                 if (ret != 0){
                     alert("选中窗口预览抓图失败");
                 }
-
             }
                 //this.srcUrl = 'http://172.16.0.199:8888/g1/M00/00/00/rBAAx1ycPeaAJwcvAABGYipskI4596.jpg'
-
-
-
         },
         components: {
             CommonCRUD,
