@@ -73,31 +73,26 @@
                 }
                 return new Blob([ab], { type: mimeString });
             },
-            blobToFile(theBlob, fileName){
-                theBlob.lastModifiedDate = new Date();
-                theBlob.name = fileName;
-                return theBlob;
-            },
             uploadFile(http) {
                 var app = this.app
                 var image = http.file;
-
                 var reader = new FileReader();
                 reader.readAsDataURL(image);
-                var img = new Image;
+                var img = new Image();
                 reader.onload = function (e) {
                     var width = 1080, //图像大小
                         quality = 0.8, //图像质量
                         canvas = document.createElement("canvas"),
                         drawer = canvas.getContext("2d");
-                    img.src = canvas.toDataURL("image/jpeg", quality);
-                    img.onload = function () {
+                        img.src = e.target.result
+                        img.onload = function () {
                         canvas.width = width;
                         canvas.height = width * (img.height / img.width);
                         drawer.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    }
-                    var files = new File([app.dataURItoBlob(img.src)], 'PIC' + new Date().toLocaleDateString()+ '.jpg', {type: image.type});
-                    var formData = new FormData();
+                        var dataURL = canvas.toDataURL("image/jpeg", quality);
+                        console.log(app.dataURItoBlob(dataURL))
+                    let files = new File([app.dataURItoBlob(dataURL)], image.name, {type: image.type})
+                    let formData = new FormData();
                     formData.append('file', files);
                     app.$http('POST', '/identity/accessory/', formData, false).then(
                         res => {
@@ -105,10 +100,8 @@
                             app.$emit('getValue', app.images.map(item => item.path).join(','));
                         }
                     )
-
                 }
-
-
+                }
 
             },
 
