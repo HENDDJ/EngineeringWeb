@@ -122,7 +122,14 @@
                         type: 'string',
                         value: 'MAJOR_HAZARDS',
                         visible: false
-                    }
+                    },
+                    {
+                        name: 'proId',
+                        des: '工程名称',
+                        type: 'select',
+                        visible: true,
+                        options: []
+                    },
                 ],
                 lookDia:false,
             }
@@ -157,6 +164,14 @@
                     })
                     .catch(_ => {});
             },
+            //工程名称下拉项
+            loadProjectOptions() {
+                this.$http('POST', 'identity/projectInfo/list', false).then(
+                    data => {
+                        this.queryFormColumns.filter(item => item.type==='select')[0].options = data.map(item =>{return {value: item.id, label: item.name}});
+                    }
+                )
+            },
 
 
         },
@@ -166,6 +181,7 @@
         created () {
            // this.formColumns =this.$store.state.classInfo.properties;
             tansfer(this.columns);//表格字段显示中文
+            this.loadProjectOptions();
         }
     }
 </script>
