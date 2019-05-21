@@ -60,7 +60,6 @@
                 this.$emit('getValue', files.map(item => item.path + '&' +item.name).join(','));
             },
             downLoad(file){
-                console.log(file);
                 window.open(file.res,'_blank');
             }
         }

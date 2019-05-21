@@ -74,7 +74,8 @@
         border-color: rgba(188,216,251,.75) !important;
     }
     .vs-button-primary.vs-button-line .vs-button-linex {
-        background: rgba(188,216,251,.75) !important;
+        margin-top: 3px !important;
+        /*background: rgba(188,216,251,.75) !important;*/
     }
 
 </style>

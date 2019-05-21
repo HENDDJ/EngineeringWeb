@@ -79,7 +79,9 @@ export default {
                     this.$router.push({path: 'MainView'});
                     this.loading = false;
                 });
-            });
+            }).catch(e => {
+                this.loading = false;
+            })
         }
     },
     created () {
