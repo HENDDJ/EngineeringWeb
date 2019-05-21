@@ -2,11 +2,10 @@
     <section id="t1">
     <CommonCRUD
         :formColumns="formColumns"
-        apiRoot="/identity/hiddenHandle"
-        :columns="columns" :addBtnVis="false" :editBtnVis="false" :delBtnVis="false" ref="table">
+        apiRoot="/identity/hiddenIssue"
+        :columns="columns" :addBtnVis="false" :editBtnVis="false" :delBtnVis="false" ref="table" :queryFormColumns="queryFormColumns">
         <template slot="header-btn" slot-scope="slotProps">
             <el-button type="info" v-if="checkVis" plain  class="self-btn self-examine" @click="check(slotProps.selected)">&nbsp;</el-button>
-            <!--<el-button type="info" v-if="checkResVis" plain @click="checkResult(slotProps.selected)">查看审核结果</el-button>-->
         </template>
         <template slot="hiddenStatus" slot-scope="scope">
             <el-tag v-if="scope.row.statusName==='完成'"
@@ -83,7 +82,24 @@
                 CRdialogVisible:false,
                 CRtitle:'查看审核结果',
                 checkRes:'',
-                queryResult:{issueId:''}
+                queryResult:{issueId:''},
+                issueIdList:[],
+                queryFormColumns:[
+                    {name:'status',value:'86427b26-b4c3-462c-8ce0-4992098534eb'},
+                    {
+                    name:'issueName',
+                    visible:true,
+                    des:'隐患名称',
+                    type:'string'
+                },
+                    {
+                        name:'projectId',
+                        visible:true,
+                        des:'工程名称',
+                        type:'select',
+                        options:Array
+                    }],
+
             }
         },
         methods:{
@@ -199,8 +215,15 @@
                         this.formColumns.filter( item => item.name === 'projectId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
                     }
                 )
+            },
+            //查询select赋值
+            loadSelect() {
+                this.$http('POST', 'identity/projectInfo/list', false).then(
+                    data => {
+                        this.queryFormColumns.filter( item => item.name === 'projectId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
             }
-
         },
         components: {
             CommonCRUD
@@ -215,6 +238,7 @@
             var columsItems1 = {slot:true,name:'hiddenStatus',des:'状态',slotName:'hiddenStatus'}
             this.columns.push(columsItems1)
             this.loadDepartmentOptions();
+            this.loadSelect();
         }
     };
 </script>

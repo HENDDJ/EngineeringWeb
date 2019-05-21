@@ -1,6 +1,10 @@
 <template>
     <section>
-        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/emergencyPrevention" :columns="Columns"  >
+        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/emergencyPrevention" :addBtnVis=addVis
+                    :editBtnVis=editVis
+                    :delBtnVis=delVis
+                    :queryFormColumns="queryFormColumns"
+                    :columns="Columns"  >
             <template slot="handle" slot-scope="scope" >
                 <div class="encStyle" @click="downLoad(scope.row)">
                     {{(scope.row.enclosure) ? scope.row.enclosure.split("&")[1] : ' ' }}
@@ -16,6 +20,9 @@
         name: 'EmergencyPrevention',
         data() {
             return {
+                addVis:true,
+                editVis:true,
+                delVis:true,
                 Columns: [
                     {
                         name: "name",
@@ -56,11 +63,27 @@
                     {value:'薄弱环节',label:'薄弱环节'},
                     {value:'重要工程',label:'重要工程'},
                 ],
+                queryFormColumns:[
+                    {
+                        name:'name',
+                        visible:true,
+                        des:'应急名称',
+                        type:'string'
+                    },
+                    {
+                        name:'type',
+                        visible:true,
+                        des:'当事人',
+                        type:'select',
+                        options:Array
+                    }
+                ]
             }
         },
         methods: {
             handleSelectOptions() {
                 this.formColumns.filter(item => item.name === 'type')[0].options = this.typeOptions
+                this.queryFormColumns.filter(item => item.name === 'type')[0].options = this.typeOptions
             },
             handleEnc(){
                 var columsItems = {slot:true,name:'enclosure',des:'附件',slotName:'handle'};
@@ -68,13 +91,26 @@
             },
             downLoad(row){
                 window.open(row.enclosure.split("&")[0],'_self')
-            }
+            },
+            controlAuthority(){
+                this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
+                //上报人显示增删改查按钮
+                if( this.roleCode === 'PROJECT_MANAGER'){
+                    //显示自己上报的内容
+                    this.addVis = false,
+                        this.editVis = false,
+                        this.delVis = false
+                }else{
+
+                }
+            },
         },
         components:{
             CommonCRUD
         },
         created () {
             this.formColumns =this.$store.state.classInfo.properties;
+            this.controlAuthority();
             this.handleSelectOptions();
             this.handleEnc();
         }

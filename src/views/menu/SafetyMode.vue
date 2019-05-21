@@ -1,6 +1,6 @@
 <template>
     <section>
-        <CommonCRUD :formColumns="formColumns" :columns="columns" apiRoot="/identity/safetyMode">
+        <CommonCRUD :formColumns="formColumns" :columns="$store.state.classInfo.properties" apiRoot="/identity/safetyMode" :queryFormColumns="queryFormColumns">
             <template slot="handle" slot-scope="scope" >
                 <div class="encStyle" @click="downLoad(scope.row)">
                     {{(scope.row.enclosure) ? scope.row.enclosure.split("&")[1] : ' ' }}
@@ -17,7 +17,21 @@
         data(){
             return {
                 columns:[],
-                formColumns :{}
+                formColumns :{},
+                queryFormColumns:[
+                    {
+                        name:'name',
+                        visible:true,
+                        des:'名称',
+                        type:'string'
+                    },
+                    {
+                        name:'type',
+                        visible:true,
+                        des:'类型',
+                        type:'string'
+                    },
+                ]
             }
         },
         methods :{

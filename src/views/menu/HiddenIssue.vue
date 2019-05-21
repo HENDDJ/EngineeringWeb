@@ -79,7 +79,29 @@
                 rules: {},
                 queryForm:{issueId:''},
                 recordsForm: {issueId:'',preNodeId:'',nextNodeId:'',actionType:'',des:''},
-                queryFormColumns:[{name:'userId',value:''}]
+                queryFormColumns:[
+                    {name:'userId',value:''},
+                    {name:'status',value:'3dfa705b-c5ec-4e95-9838-0045022358bb'},
+                    {
+                        name:'issueName',
+                        visible:true,
+                        des:'隐患名称',
+                        type:'string'
+                    },
+                    {
+                        name:'projectId',
+                        visible:true,
+                        des:'工程名称',
+                        type:'select',
+                        options:Array
+                    },
+                    {
+                        name:'issueGrade',
+                        visible:true,
+                        des:'隐患等级',
+                        type:'select'
+                    }
+                    ]
             }
         },
         methods:{
@@ -191,7 +213,7 @@
                 }else{
                     this.queryFormColumns[0].value = null;
                 }
-            },
+        },
             handleClose (done) {
                 this.$confirm('确认关闭？')
                     .then(_ => {
@@ -218,7 +240,23 @@
                         this.formColumns.filter( item => item.name === 'userId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
                     }
                 )
+            },
+            //查询select赋值
+            loadSelect() {
+
+                let  items = [
+                    ['issueGrade', 'IssueType']
+                ].forEach(item => {
+                        this.queryFormColumns.filter(sub => sub.name === item[0])[0].options = LookUp[item[1]]
+                    }
+                )
+                this.$http('POST', 'identity/projectInfo/list', false).then(
+                    data => {
+                        this.queryFormColumns.filter( item => item.name === 'projectId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
             }
+
         },
         components :{
             CommonUpload,
@@ -237,6 +275,7 @@
             this.loadDepartmentOptions();
             this.handleSelectOptions();
             this.controlAuthority();
+            this.loadSelect();
         }
     };
 </script>

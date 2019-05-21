@@ -91,7 +91,8 @@
                         drawer.drawImage(img, 0, 0, canvas.width, canvas.height);
                         var dataURL = canvas.toDataURL("image/jpeg", quality);
                         console.log(app.dataURItoBlob(dataURL))
-                    let files = new File([app.dataURItoBlob(dataURL)],new LocalDate().toString, {type: image.type})
+                         var timestamp=new Date().getTime().toString()
+                    let files = new File([app.dataURItoBlob(dataURL)], timestamp, {type: image.type})
                     let formData = new FormData();
                     formData.append('file', files);
                     app.$http('POST', '/identity/accessory/', formData, false).then(

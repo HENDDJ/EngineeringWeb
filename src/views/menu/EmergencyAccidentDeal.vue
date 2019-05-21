@@ -1,7 +1,10 @@
 <template>
     <section>
         <CommonCRUD  :columns="columns" apiRoot="/identity/emergencyAccident"
-                    :formColumns="formColumns" ref="table" >
+                    :formColumns="formColumns" ref="table"  :addBtnVis=false
+                     :editBtnVis=false
+                     :lookBtnVis = false
+                     :delBtnVis=false :queryFormColumns="queryFormColumns">
             <template slot="Handle" slot-scope="scope">
                 <el-tag v-if="scope.row.emergencyAccidentHandle==='0'"
                     close-transition type="danger">未派发</el-tag>
@@ -42,10 +45,7 @@
                 </el-form-item>
                 <el-form-item label="附件" >
                     <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event"></CommonFileUpload>
-
                 </el-form-item>
-
-
             </el-form>
             <div slot="footer" class="dialog-footer footer-position">
                 <el-button type="primary" :loading="submitLoading" @click="submit('form')">确 定</el-button>
@@ -77,7 +77,21 @@
                 disabled:false,
                 submitLoading: false,
                 rules: [],
-                apiRootDeal: '/identity/emergencyAccidentHandle'
+                apiRootDeal: '/identity/emergencyAccidentHandle',
+                queryFormColumns:[
+                    {
+                        name:'name',
+                        visible:true,
+                        des:'事故名称',
+                        type:'string'
+                    },
+                    {
+                        name:'litigantName',
+                        visible:true,
+                        des:'当事人',
+                        type:'string'
+                    }
+                ]
             }
 
         },

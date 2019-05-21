@@ -112,6 +112,12 @@
                         type: 'string',
                         value: 'SPECIAL_EQUIPMENT',
                         visible: false
+                    },
+                    {
+                        name:'warnDescribe',
+                        visible:true,
+                        des:'描述',
+                        type:'string'
                     }
                 ],
                 lookDia:false,

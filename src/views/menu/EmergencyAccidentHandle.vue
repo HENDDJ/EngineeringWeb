@@ -1,6 +1,9 @@
 <template>
     <section>
-        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/emergencyAccidentHandle" :columns="columns" ref="table">
+        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/emergencyAccidentHandle" :columns="columns" ref="table" :queryFormColumns="queryFormColumns"
+                    :addBtnVis=addVis
+                    :editBtnVis=editVis
+                    :delBtnVis=delVis>
             <template slot="header-btn" slot-scope="slotProps">
                 <el-button type="info" plain  class="self-btn self-feedback" @click="showDeal(slotProps.selected)">&nbsp;</el-button>
             </template>
@@ -51,13 +54,30 @@
         name: 'EmergencyAccidentHandle',
         data() {
             return {
+                addVis:true,
+                editVis:true,
+                delVis:true,
                 formColumns :{},
                 columns: [],
                 dialogVisibleDeal:false,
                 Dealtitle:'提交处理结果',
                 form:{accidentId:'',solutionGrade:'',solutionResult:'',enclosure:''},
                 submitLoading: false,
-                apiRootDeal: '/identity/emergencyAccidentResult'
+                apiRootDeal: '/identity/emergencyAccidentResult',
+                queryFormColumns:[
+                    {
+                        name:'name',
+                        visible:true,
+                        des:'事故名称',
+                        type:'string'
+                    },
+                    {
+                        name:'litigantName',
+                        visible:true,
+                        des:'当事人',
+                        type:'string'
+                    }
+                ]
 
             }
         },
@@ -121,7 +141,20 @@
                         }
                 }
                 });
-            }
+            },
+            //权限控制（列表数据）
+            controlAuthority(){
+                this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
+                //上报人显示增删改查按钮
+                if( this.roleCode === 'PROJECT_MANAGER'){
+                    //显示自己上报的内容
+                    this.addVis = false,
+                        this.editVis = false,
+                        this.delVis = false
+                }else{
+
+                }
+            },
         },
         components: {
             CommonUpload,
@@ -138,6 +171,7 @@
             var columsItems2 = {slot:true,name:'accidentResult',des:'处理结果',slotName:'ResultMsg'}
             this.columns.push(columsItems2)
             this.timeTransfer();
+            this.controlAuthority();
         }
     };
 </script>

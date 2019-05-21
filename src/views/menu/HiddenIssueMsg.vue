@@ -68,7 +68,7 @@
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="附件" >
-                            <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event" :disabled=disabled></CommonFileUpload>
+                            <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event" disabled=true></CommonFileUpload>
                         </el-form-item>
                     </el-form>
                 </el-collapse-item>
@@ -123,7 +123,25 @@
                 activeNames: ['1','2','3'],
                 formItems0:[],
                 recordsForm:Array,
-                queryFormColumns:[{name:'userId',value:''}]
+                queryFormColumns:[{name:'userId',value:''},
+                    {
+                        name:'issueName',
+                        visible:true,
+                        des:'隐患名称',
+                        type:'string'
+                    },
+                    {
+                        name:'projectId',
+                        visible:true,
+                        des:'工程名称',
+                        type:'select'
+                    },
+                    {
+                        name:'issueGrade',
+                        visible:true,
+                        des:'隐患等级',
+                        type:'select'
+                    }]
             }
 
         },
@@ -180,6 +198,21 @@
                     this.queryFormColumns[0].value = null;
                 }
             },
+            //查询select赋值
+            loadSelect() {
+
+                let  items = [
+                    ['issueGrade', 'IssueType']
+                ].forEach(item => {
+                        this.queryFormColumns.filter(sub => sub.name === item[0])[0].options = LookUp[item[1]]
+                    }
+                )
+                this.$http('POST', 'identity/projectInfo/list', false).then(
+                    data => {
+                        this.queryFormColumns.filter( item => item.name === 'projectId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
+            }
 
         },
         components :{
@@ -201,6 +234,7 @@
             this.formItems0.filter(item=>item.name === 'status')[0].notShow = null
             this.formItems0.filter(item=>item.name === 'status')[0].formShow = 'true'
             this.handleSelectOptions();
+            this.loadSelect();
     }
     };
 </script>

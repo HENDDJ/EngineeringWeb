@@ -1,6 +1,6 @@
 <template>
     <section>
-        <CommonCRUD :queryFormColumns="queryColumns" :columns="columns" apiRoot="/identity/safetyRegulations"
+        <CommonCRUD :queryFormColumns="queryColumns" :columns="$store.state.classInfo.properties" apiRoot="/identity/safetyRegulations"
                     :formColumns="formColumns" >
             <template slot="handle" slot-scope="scope" >
                 <div class="encStyle" @click="downLoad(scope.row)">
@@ -20,11 +20,11 @@
         data() {
             return {
                 formColumns: [],
-                columns:[],
                 queryColumns:[
                     {
                         des: '名称',
                         name: 'name',
+                        visible:true,
                         type: 'string'
                     }
                 ],

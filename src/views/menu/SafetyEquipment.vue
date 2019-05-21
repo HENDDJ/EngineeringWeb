@@ -1,6 +1,6 @@
 <template>
     <section>
-        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/safetyEquipment" :columns="$store.state.classInfo.properties"></CommonCRUD>
+        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/safetyEquipment" :columns="$store.state.classInfo.properties" :queryFormColumns="queryFormColumns"></CommonCRUD>
     </section>
 </template>
 
@@ -13,6 +13,21 @@
         data() {
             return {
                 formColumns :{},
+                queryFormColumns:[
+                    {
+                        name:'proId',
+                        visible:true,
+                        des:'工程名称',
+                        type:'select',
+                        options:Array
+                    },
+                    {
+                        name:'equipmentType',
+                        visible:true,
+                        des:'设备种类',
+                        type:'string'
+                    }
+                ]
 
             }
         },
@@ -30,6 +45,11 @@
                     }
                 )
                 tansfer(this.formColumns);
+                this.$http('POST', 'identity/projectInfo/list', false).then(
+                    data => {
+                        this.queryFormColumns.filter( item => item.name === 'proId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                    }
+                )
             }
         },
         components :{

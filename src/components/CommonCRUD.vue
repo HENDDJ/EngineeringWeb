@@ -2,10 +2,10 @@
     <div style="padding: 30px;">
         <div class="common-query">
             <slot name="query"></slot>
-            <el-form :inline="true" :model="queryForm" ref="form" class="demo-form-inline" label-width="75px">
+            <el-form :inline="true" :model="queryForm" ref="queryForm" class="demo-form-inline" label-width="75px">
                 <el-form-item v-for="item in queryFormColumns" v-if="item.visible" :key="item.des" :label="item.type === 'checkbox' ? '' : item.des">
                     <el-input v-model="queryForm[item.name]" v-if="item.type === 'string'"></el-input>
-                    <el-select v-model="queryForm[item.name]" v-else-if="item.type === 'select'">
+                    <el-select v-model="queryForm[item.name]" clearable filterable v-else-if="item.type === 'select'">
                         <el-option v-for="opItem in item.options" :value="opItem.value" :label="opItem.label" :key="opItem.value"></el-option>
                     </el-select>
                     <el-radio-group v-if="item.type === 'radio'" v-model="queryForm[item.name]" >
@@ -80,7 +80,7 @@
             <el-form-item v-for="item in formColumns"  :key="item.des" :label="item.des" :prop="item.name" v-if="item.formShow !== 'false'">
                 <el-input v-model="form[item.name]" v-if="item.type === 'string'" :disabled="item.disabled || disabled"></el-input>
                 <el-select v-model="form[item.name]" v-else-if="item.type === 'select'" filterable :disabled="item.disabled || disabled">
-                    <el-option v-for="opItem in item.options" :value="opItem.value" :label="opItem.label" :key="opItem.value"></el-option>
+                <el-option v-for="opItem in item.options" :value="opItem.value" :label="opItem.label" :key="opItem.value"></el-option>
                 </el-select>
                 <el-radio-group v-if="item.type === 'radio'" v-model="form[item.name]" :disabled="item.disabled || disabled" style="width: 178px" >
                     <el-radio v-for="opItem in item.options" :label="opItem.value" :key="opItem.value"> {{opItem.label}}</el-radio>
@@ -167,12 +167,20 @@
             },
             look: {
                 type: Function,
-                default: (data)=>{
+                default: (data)=> {
                     data.title = '查看';
-                    data.disabled = true;
-                    data.form = Object.assign({}, data.selected[0]);
-                    data.dialogVisible = true;
-                    data.submitLoading = false;
+                    if (data.selected.length !== 1) {
+                        data.$message({
+                            type: 'warning',
+                            message: data.selected.length > 1 ? '仅能选择一行记录' : '请选择一行记录'
+                        });
+                        return false;
+                    }
+                        data.disabled = true;
+                        data.form = Object.assign({}, data.selected[0]);
+                        data.dialogVisible = true;
+                        data.submitLoading = false;
+
                 }
             },
         },
@@ -238,6 +246,14 @@
                 this.sortColumns.forEach((item) => {
                     path += `&sort=${item.name},${item.type}`;
                 });
+                if(this.queryForm){
+                    for(var i in this.queryForm){
+                        if(this.queryForm[i] == ''){
+                            delete this.queryForm[i];
+                        }
+                    }
+                }
+
                 this.$http(reqType.POST, path, this.queryForm, false).then(
                     data => {
                         this.tableData = data.content;

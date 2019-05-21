@@ -1,7 +1,9 @@
 <template>
     <section>
         <CommonCRUD  :columns="columns" apiRoot="/identity/emergencyAccident"
-                    :formColumns="formColumns" :addBtnVis="false" ref="table">
+                    :formColumns="formColumns"  ref="table" :queryFormColumns="queryFormColumns" :addBtnVis=addVis
+                     :editBtnVis=editVis
+                     :delBtnVis=delVis>
             <template slot="Handle" slot-scope="scope">
                 <el-tag v-if="scope.row.emergencyAccidentHandle==='0'"
                         close-transition type="danger">未派发</el-tag>
@@ -30,10 +32,27 @@
         name: 'EmergencyAccident',
         data() {
             return {
+                addVis:false,
+                editVis:true,
+                delVis:true,
                 formColumns:[],
                 columns: [],
                 handlers:true,
-                Results:true
+                Results:true,
+                queryFormColumns:[
+                    {
+                        name:'name',
+                        visible:true,
+                        des:'事故名称',
+                        type:'string'
+                    },
+                    {
+                        name:'litigantName',
+                        visible:true,
+                        des:'当事人',
+                        type:'string'
+                    }
+                ]
             }
         },
         methods: {
@@ -56,21 +75,17 @@
             addUp(val){
                 this.$refs.table.add(val)
             },
+            //权限控制（列表数据）
             controlAuthority(){
                 this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
-                //  console.log(JSON.parse(sessionStorage.getItem('userInfo')));
-                if( this.roleCode === 'MAJOR_HAZARDS_DECLARE'){
-                    this.queryFormColumns[0].value = JSON.parse(sessionStorage.getItem('userInfo')).id;
-                    this.addBtnVis = true;
-                    this.editBtnVis = true;
-                    this.delBtnVis = true;
-                    this.conBtnVis = false;
-                }
-                if(this.roleCode === 'MAJOR_HAZARDS_CONFIRM'){
-                    this.addBtnVis = false;
-                    this.editBtnVis = false;
-                    this.delBtnVis = false;
-                    this.conBtnVis = true;
+                //上报人显示增删改查按钮
+                if( this.roleCode === 'PROJECT_MANAGER'){
+                    //显示自己上报的内容
+                    this.addVis = false,
+                        this.editVis = false,
+                        this.delVis = false
+                }else{
+
                 }
             },
         },
@@ -88,7 +103,7 @@
             var columsItems2 = {slot:true,name:'emergencyAccidentResult',des:'是否处理完成',slotName:'ResultMsg'}
             this.columns.push(columsItems1,columsItems2)
             this.handleSelectOptions();
-
+            this.controlAuthority();
         }
     };
 </script>
