@@ -93,16 +93,6 @@
                         type: 'string',
                     },
                     {
-                        name:'longitude',
-                        des: '经度',
-                        type: 'string'
-                    },
-                    {
-                        name:'latitude',
-                        des:'维度',
-                        type: 'string'
-                    },
-                    {
                         name:'department',
                         des:'部门',
                         type: 'string'
@@ -111,11 +101,6 @@
                         name:' responsibility',
                         des:'负责项目组',
                         type: 'string',
-                    },
-                    {
-                        name:'address',
-                        des:'地址',
-                        type: 'string'
                     },
                     {
                         name:'investment',
@@ -197,7 +182,12 @@
                         name:'startTime',
                         des:'开始时间',
                         type: 'date',
-                    }
+                    },
+                    {
+                        name:'address',
+                        des:'地址',
+                        type: 'location'
+                    },
                 ],
                 queryFormColumns:[
                     {

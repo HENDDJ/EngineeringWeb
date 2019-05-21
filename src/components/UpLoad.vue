@@ -64,23 +64,23 @@
             // base64转文件
             dataURItoBlob(dataURI) {
                 let temp = dataURI.split(",");
-                var byteString = atob(temp[1]);
-                var mimeString = temp[0].split(":")[1].split(";")[0];
-                var ab = new ArrayBuffer(byteString.length);
-                var ia = new Uint8Array(ab);
-                for (var i = 0; i < byteString.length; i++) {
+                let byteString = atob(temp[1]);
+                let mimeString = temp[0].split(":")[1].split(";")[0];
+                let ab = new ArrayBuffer(byteString.length);
+                let ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
                     ia[i] = byteString.charCodeAt(i);
                 }
                 return new Blob([ab], { type: mimeString });
             },
             uploadFile(http) {
-                var app = this.app
-                var image = http.file;
-                var reader = new FileReader();
+                let app = this.app;
+                let image = http.file;
+                let reader = new FileReader();
                 reader.readAsDataURL(image);
-                var img = new Image();
+                let img = new Image();
                 reader.onload = function (e) {
-                    var width = 1080, //图像大小
+                    let width = 1080, //图像大小
                         quality = 0.8, //图像质量
                         canvas = document.createElement("canvas"),
                         drawer = canvas.getContext("2d");
@@ -89,10 +89,8 @@
                         canvas.width = width;
                         canvas.height = width * (img.height / img.width);
                         drawer.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        var dataURL = canvas.toDataURL("image/jpeg", quality);
-                        console.log(app.dataURItoBlob(dataURL))
-                         var timestamp=new Date().getTime().toString()
-                    let files = new File([app.dataURItoBlob(dataURL)], timestamp, {type: image.type})
+                        let dataURL = canvas.toDataURL("image/jpeg", quality);
+                    let files = new File([app.dataURItoBlob(dataURL)], `pic${new Date().getTime()}.jpg`, {type: image.type})
                     let formData = new FormData();
                     formData.append('file', files);
                     app.$http('POST', '/identity/accessory/', formData, false).then(
@@ -184,6 +182,6 @@
         border-radius: 5px;
     }
     .file-upload{
-        width:600px;
+        min-width:300px;
     }
 </style>

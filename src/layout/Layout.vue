@@ -24,15 +24,19 @@
         computed: {
         },
         methods: {
+            checkSize() {
+                if (this.$store.state.isCollapse) {
+                    // 折叠
+                    document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 66}px`;
+                } else {
+                    // 不折叠
+                    document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 202}px`;
+                }
+            }
         },
         mounted() {
-            if (this.$store.state.isCollapse) {
-                // 折叠
-                document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 66}px`;
-            } else {
-                // 不折叠
-                document.getElementsByClassName('main-container')[0].style.width = `${document.body.clientWidth - 202}px`;
-            }
+            this.checkSize();
+            window.onsize = this.checkSize;
         }
     }
 </script>
@@ -56,7 +60,7 @@
 
     .sidebar-container {
         height: 100%;
-        position: relative;
+        position: fixed;
         top: 0;
         bottom: 0;
         left: 0;

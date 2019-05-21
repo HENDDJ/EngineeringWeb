@@ -23,7 +23,7 @@
                 <el-dropdown trigger="click">
                     <span class="el-dropdown-link">
                         <img class="person-img fl"  alt="" :src="userInfo.photo">
-                        <vs-button type="line" style="padding: 5px 10px">{{user}} ▼</vs-button>
+                        <vs-button type="line" style="padding: 0 8px">{{user}} ▼</vs-button>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="myMessage">我的消息</el-dropdown-item>
