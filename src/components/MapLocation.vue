@@ -36,7 +36,7 @@
             initMap() {
                 // 百度地图API功能
                 this.map = new BMap.Map("location-map");    // 创建Map实例
-                this.map.centerAndZoom(new BMap.Point(119.175002, 31.951788), 12);  // 初始化地图,设置中心点坐标和地图级别
+                this.map.centerAndZoom(new BMap.Point(119.175002, 31.951788), 10);  // 初始化地图,设置中心点坐标和地图级别
                 //添加地图类型控件
                 this.map.addControl(new BMap.MapTypeControl({
                     mapTypes: [
@@ -45,7 +45,7 @@
                     ]
                 }));
                 this.map.enableScrollWheelZoom(true);
-                if (!disabled) {
+                if (!this.disabled) {
                     this.map.addEventListener("click", this.located);
                 }
                 this.map.addEventListener("zoomstart", (e) => {
@@ -62,7 +62,7 @@
                 if (this.value) {
                     this.x = this.value.split(',')[0];
                     this.y = this.value.split(',')[1];
-                    this.currentPointMarker = new BMap.Marker(new BMap.Point(x, y), {icon: new BMap.Icon(locationIcon, new BMap.Size(32,32))});
+                    this.currentPointMarker = new BMap.Marker(new BMap.Point(this.x, this.y), {icon: new BMap.Icon(locationIcon, new BMap.Size(32,32))});
                     this.map.addOverlay(this.currentPointMarker);
                     this.currentPointMarker.setAnimation(BMAP_ANIMATION_BOUNCE);
                 }
@@ -70,7 +70,7 @@
             located(e){
                 if (this.currentPointMarker) {
                     this.map.removeOverlay(this.currentPointMarker);
-                    this.currentPointMarker = ''
+                    this.currentPointMarker = '';
                 }
                 this.currentPointMarker = new BMap.Marker(e.point, {icon: new BMap.Icon(locationIcon, new BMap.Size(32,32))});
                 this.map.addOverlay(this.currentPointMarker);
