@@ -73,6 +73,7 @@
         :visible.sync="dialogVisible"
         width="880px"
         align="left"
+        id="crud-dialog"
         :modal-append-to-body='false'
         :append-to-body="true"
         :before-close="handleClose">
@@ -106,6 +107,7 @@
                 <Tinymce v-if="item.type === 'rich-editor'" v-model="form[item.name]"></Tinymce>
                 <CommonFileUpload v-if="item.type === 'file'" :value="form[item.name]" :disabled="item.disabled || disabled" @getValue="form[item.name] = $event"></CommonFileUpload>
                 <CommonUpload v-if="item.type === 'image'" :value="form[item.name]" :disabled="item.disabled || disabled" @getValue="form[item.name] = $event"></CommonUpload>
+                <MapLocation v-if="item.type === 'location'" :value="form[item.name]" :disabled="item.disabled || disabled" @getValue="form[item.name] = $event"></MapLocation>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer  footer-position">
@@ -121,6 +123,7 @@
     import CommonFileUpload from '@/components/FileUpLoad';
     import CommonUpload from '@/components/UpLoad';
     import Tinymce from '@/components/Tinymce';
+    import MapLocation from '@/components/MapLocation';
     export default {
         name: 'CommonCRUD',
         props: {
@@ -203,7 +206,7 @@
                 rules: {},
                 title: '',
                 disabled: false,
-                self: this
+                self: this,
             };
         },
         computed: {
@@ -214,7 +217,8 @@
         components: {
            CommonFileUpload,
             CommonUpload,
-            Tinymce
+            Tinymce,
+            MapLocation
         },
         methods: {
             rowClick(row) {
@@ -376,7 +380,8 @@
                 let path = `${this.apiRoot}/page?page=${this.pageable.currentPage - 1}&size=${this.pageable.pageSize}`;
                 this.defaultRequestConfig(path);
                 this.loadTableData(path);
-            }
+            },
+
         },
         created() {
             this.refreshTableData();
