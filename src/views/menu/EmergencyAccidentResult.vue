@@ -131,6 +131,18 @@
                 columns: [],
                 inputDisabled:true,
                 queryFormColumns:[
+                    {
+                        name:'name',
+                        visible:true,
+                        des:'事故名称',
+                        type:'string'
+                    },
+                    {
+                        name:'litigantName',
+                        visible:true,
+                        des:'当事人',
+                        type:'string'
+                    }
                 ],
                 form:{},
                 dialogVisible:false,

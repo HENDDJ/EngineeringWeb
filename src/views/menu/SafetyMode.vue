@@ -1,6 +1,9 @@
 <template>
     <section>
-        <CommonCRUD :formColumns="formColumns" :columns="$store.state.classInfo.properties" apiRoot="/identity/safetyMode" :queryFormColumns="queryFormColumns">
+        <CommonCRUD :formColumns="formColumns" :columns="$store.state.classInfo.properties" apiRoot="/identity/safetyMode" :queryFormColumns="queryFormColumns"
+                    :editBtnVis=editVis
+                    :addBtnVis = addBVis
+                    :delBtnVis=delVis>
             <template slot="handle" slot-scope="scope" >
                 <div class="encStyle" @click="downLoad(scope.row)">
                     {{(scope.row.enclosure) ? scope.row.enclosure.split("&")[1] : ' ' }}
@@ -17,6 +20,9 @@
         data(){
             return {
                 columns:[],
+                editVis:true,
+                addBVis:true,
+                delVis:true,
                 formColumns :{},
                 queryFormColumns:[
                     {
@@ -54,7 +60,17 @@
             },
             downLoad(row){
                 window.open(row.enclosure.split("&")[0],'_self')
-            }
+            },
+            //权限控制（列表数据）
+            controlAuthority(){
+                this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
+                //上报人显示增删改查按钮
+                if( this.roleCode === 'PROJECT_MANAGER'){
+                    this.editVis = false
+                    this.addBVis = false
+                    this.delVis = false
+                }
+            },
         },
         components :{
             CommonCRUD
@@ -64,6 +80,7 @@
                 this.columns = this.$store.state.classInfo.properties;
                 this.loadDepartmentOptions();
                 this.handleEnc();
+                this.controlAuthority();
         }
     };
 </script>

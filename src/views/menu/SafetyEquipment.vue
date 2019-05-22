@@ -1,6 +1,9 @@
 <template>
     <section>
-        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/safetyEquipment" :columns="$store.state.classInfo.properties" :queryFormColumns="queryFormColumns"></CommonCRUD>
+        <CommonCRUD :formColumns="formColumns" apiRoot="/identity/safetyEquipment" :columns="$store.state.classInfo.properties" :queryFormColumns="queryFormColumns"
+                    :editBtnVis=editVis
+                    :addBtnVis = addBVis
+                    :delBtnVis=delVis></CommonCRUD>
     </section>
 </template>
 
@@ -13,14 +16,12 @@
         data() {
             return {
                 formColumns :{},
+                editVis:true,
+                addBVis:true,
+                delVis:true,
+                selVis:true,
+                roleCode:'',
                 queryFormColumns:[
-                    {
-                        name:'proId',
-                        visible:true,
-                        des:'工程名称',
-                        type:'select',
-                        options:Array
-                    },
                     {
                         name:'equipmentType',
                         visible:true,
@@ -45,12 +46,33 @@
                     }
                 )
                 tansfer(this.formColumns);
-                this.$http('POST', 'identity/projectInfo/list', false).then(
-                    data => {
-                        this.queryFormColumns.filter( item => item.name === 'proId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
-                    }
-                )
-            }
+            },
+            //权限控制（列表数据）
+            controlAuthority(){
+                this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
+                //上报人显示增删改查按钮
+                if( this.roleCode === 'PROJECT_MANAGER'){
+                    var userId = JSON.parse(sessionStorage.getItem('userInfo')).proId;
+                    this.queryFormColumns.push( {
+                        name:'proId',
+                        value:userId
+                    })
+
+                }else{
+                    this.queryFormColumns.push( {
+                        name:'proId',
+                        visible:this.selVis,
+                        des:'工程名称',
+                        type:'select',
+                        options:Array
+                    })
+                    this.$http('POST', 'identity/projectInfo/list', false).then(
+                        data => {
+                            this.queryFormColumns.filter( item => item.name === 'proId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                        }
+                    )
+                }
+            },
         },
         components :{
             CommonCRUD
@@ -58,6 +80,8 @@
         created () {
             this.formColumns =this.$store.state.classInfo.properties;
             this.handleSelectOptions();
+            this.controlAuthority();
+            console.log(this.queryFormColumns)
         }
     };
 </script>

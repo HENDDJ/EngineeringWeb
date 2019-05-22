@@ -1,7 +1,9 @@
 <template>
     <section>
         <CommonCRUD :queryFormColumns="queryColumns" :columns="columns" apiRoot="/identity/safetyRegulations"
-                    :formColumns="formColumns" >
+                    :formColumns="formColumns" :editBtnVis=editVis
+                    :addBtnVis = addBVis
+                    :delBtnVis=delVis>
             <template slot="handle" slot-scope="scope" >
                 <div class="encStyle" @click="downLoad(scope.row)">
                     {{(scope.row.enclosure) ? scope.row.enclosure.split("&")[1] : ' ' }}
@@ -21,6 +23,9 @@
             return {
                 formColumns: [],
                 columns:[],
+                editVis:true,
+                addBVis:true,
+                delVis:true,
                 queryColumns:[
                     {
                         des: '名称',
@@ -42,7 +47,17 @@
             },
             downLoad(row){
                 window.open(row.enclosure.split("&")[0],'_self')
-            }
+            },
+            //权限控制（列表数据）
+            controlAuthority(){
+                this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
+                //上报人显示增删改查按钮
+                if( this.roleCode === 'PROJECT_MANAGER'){
+                    this.editVis = false
+                    this.addBVis = false
+                    this.delVis = false
+                }
+            },
         },
         components: {
             CommonCRUD
@@ -51,6 +66,7 @@
             this.formColumns = this.$store.state.classInfo.properties;
             this.columns = this.$store.state.classInfo.properties;
             this.handleEnc();
+            this.controlAuthority();
         }
     };
 </script>

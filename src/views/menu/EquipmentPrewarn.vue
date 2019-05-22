@@ -2,7 +2,7 @@
     <section>
         <CommonCRUD
             apiRoot="/identity/preWarning"
-            :columns="columns"
+            :columns="columnsNext"
             :queryFormColumns="queryFormColumns"
             :addBtnVis="false"
             :editBtnVis="false"
@@ -59,7 +59,26 @@
         name: 'EquipmentPrewarn',
         data() {
             return {
+                queryFormColumns:[
+                    {  name:'proId',
+                        type: 'string',
+                        value:''},
+                    {
+                        name: 'type',
+                        type: 'string',
+                        value: 'SPECIAL_EQUIPMENT',
+                        visible: false
+                    },
+                    {
+                        name:'warnDescribe',
+                        visible:true,
+                        des:'描述',
+                        type:'string'
+                    }
+                ],
                 form:{},
+                roleCode:'',
+                columnsNext:{},
                 columns :[
                     {
                         name: "projectName",
@@ -106,20 +125,7 @@
                         des: "预警描述",
                     },
                 ],
-                queryFormColumns:[
-                    {
-                        name: 'type',
-                        type: 'string',
-                        value: 'SPECIAL_EQUIPMENT',
-                        visible: false
-                    },
-                    {
-                        name:'warnDescribe',
-                        visible:true,
-                        des:'描述',
-                        type:'string'
-                    }
-                ],
+
                 lookDia:false,
             }
         },
@@ -152,13 +158,36 @@
                     })
                     .catch(_ => {});
             },
+            //权限控制（列表数据）
+            controlAuthority(){
+                this.roleCode = JSON.parse(sessionStorage.getItem('userInfo')).roleCode;
+                //上报人显示增删改查按钮
+                if( this.roleCode === 'PROJECT_MANAGER'){
+                    var userId = JSON.parse(sessionStorage.getItem('userInfo')).proId;
+                        this.queryFormColumns[0].value = userId
+                }else{
+                    this.queryFormColumns.push( {
+                        name:'proId',
+                        visible:true,
+                        des:'工程名称',
+                        type:'select',
+                        options:Array
+                    })
+                    this.$http('POST', 'identity/projectInfo/list', false).then(
+                        data => {
+                            this.queryFormColumns.filter( item => item.name === 'proId')[0].options = data.map(item => { return {value: item.id, label: item.name}});
+                        }
+                    )
+                }
+            },
         },
         components :{
             CommonCRUD
         },
         created (){
-            tansfer(this.columns);//表格字段显示中文
-
+            this.controlAuthority();
+            this.columnsNext = []
+            this.columnsNext = this.columns
         }
     };
 </script>

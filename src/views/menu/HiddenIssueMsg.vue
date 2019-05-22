@@ -68,7 +68,7 @@
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="附件" >
-                            <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event" disabled=true></CommonFileUpload>
+                            <CommonFileUpload :value="form.enclosure" @getValue="form.enclosure = $event" :disabled=disabled></CommonFileUpload>
                         </el-form-item>
                     </el-form>
                 </el-collapse-item>
@@ -169,6 +169,13 @@
 
             },
             show() {
+                if (this.$refs.table.selected.length !== 1) {
+                    this.$message({
+                        type: 'warning',
+                        message: this.$refs.table.selected.length > 1 ? '仅能选择一行记录' : '请选择一行记录'
+                    });
+                    return false;
+                }
                 this.form = Object.assign({}, this.$refs.table.selected[0]);
                 this.showRecords()
                 this.dialogVisible = true
