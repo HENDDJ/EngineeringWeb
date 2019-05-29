@@ -183,7 +183,7 @@
                             let type = 'Post';
                             let path = '/identity/hiddenIssue/';
                             this.form.status = '3dfa705b-c5ec-4e95-9838-0045022358bb';
-                            this.$http(type, path, Object.assign({}, this.form)).then((data) => {
+                            this.$http(type, path, Object.assign({}, this.form), false).then((data) => {
 
                                 this.$nextTick(() => {
                                     let type = 'Post';
@@ -193,15 +193,18 @@
                                     this.recordsForm.preNodeId = '';
                                     this.recordsForm.nextNodeId = '3dfa705b-c5ec-4e95-9838-0045022358bb';
                                     this.recordsForm.des = '隐患上报';
-                                    this.$http(type, path, this.recordsForm).then(() => {
+                                    this.$http(type, path, this.recordsForm, false).then(() => {
                                         this.recordsForm = {};
+                                        this.submitLoading = false;
+                                        this.dialogVisible = false;
+                                        this.form = {
+                                            projectId: '',
+                                            userId: '',
+                                            departmentId: ''
+                                        };
+                                        this.$message({type: 'success', message: '下发成功'})
                                     });
                                 });
-
-                                this.submitLoading = false;
-                                this.dialogVisible = false;
-                                this.$refs.table.refreshTableData();
-                                this.form = {};
                             });
                         });
                     } else {

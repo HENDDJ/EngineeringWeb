@@ -9,7 +9,7 @@
             :disabled="disabled">
             <div v-for="(item,index) in images" class="img-container" @click.stop="stopEvent" @mouseover="moveIn(item)" @mouseout="moveOut(item)">
                 <img class="img-pre" :src="item.path">
-                <div v-show="item.active" style="background-color: rgba(255,255,255,.6);position: relative;top: -77px;width: 70px;height: 70px">
+                <div v-show="item.active" style="background-color: rgba(255,255,255,.6);position: relative;top: -80px;width: 70px;height: 70px">
                     <i class="el-icon-delete ico-po-del" @click.stop="deleteImg(index)"></i>
                     <i class="el-icon-zoom-in ico-po-zoom" @click.stop="zoomIn(item.path)"></i>
                 </div>
@@ -22,6 +22,7 @@
             :append-to-body="true"
             width="50%"
             style="text-align: center">
+            <iframe  src='about:blank' frameBorder='0' marginHeight='0' marginWidth='0' style='position: fixed; visibility: inherit; top: 0px; left: 0px; width: 100vw; height: 100vh; z-index: -1; filter: alpha(opacity = 0);'></iframe>
             <img :src="dialogUrl" style="max-width: 500px"/>
         </el-dialog>
 

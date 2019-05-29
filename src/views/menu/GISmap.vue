@@ -543,7 +543,7 @@
     .sidebarx {
         z-index: 1888;
     }
-    .vs-sidebar.vs-sidebar-parent {
+    .sidebarx .vs-sidebar.vs-sidebar-parent {
         margin-top: 55px;
         height: calc(100% - 320px) !important;
     }
@@ -607,7 +607,7 @@
         .bottom-bar-active > .vs-row > .vs-col {
             transform: translateY(-253px);
         }
-        .vs-sidebar.vs-sidebar-parent {
+        .sidebarx .vs-sidebar.vs-sidebar-parent {
             margin-top: 55px;
             height: calc(100% - 260px) !important;
         }
