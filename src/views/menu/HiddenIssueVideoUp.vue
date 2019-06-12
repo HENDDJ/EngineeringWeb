@@ -5,8 +5,8 @@
             <object classid="clsid:9ECD2A40-1222-432E-A4D4-154C7CAB9DE3" id="spv" width="100%" height="100%"></object>
         </div>
         <div style="display: inline-block;width: 40%;vertical-align: top;overflow: hidden;padding: 20px 20px;">
-            <el-form :inline="false" label-width="80px">
-                <el-form-item label="项目名称">
+            <el-form :inline="false" label-width="80px" :rules="rules">
+                <el-form-item label="项目名称" prop="selectValue">
                     <el-select v-model="selectValue" filterable clearable placeholder="请选择" @change="showChildren" size="small">
                         <el-option
                             v-for="item in options"
@@ -105,7 +105,8 @@
                 title: '隐患上报',
                 disabled: false,
                 selected: [],
-                rules: {},
+                rules: {
+                },
                 options: [],
                 srcUrl: '',
                 recordsForm: {issueId: '', preNodeId: '', nextNodeId: '', actionType: '', des: ''},

@@ -31,11 +31,11 @@
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm" id="formStyle">
+            <el-form :inline="true" :model="form"  ref="form" :rules="rules" label-width="170px" class="demo-ruleForm" id="formStyle">
                 <el-form-item style="display: none">
                     <el-input v-model="form.accidentId"></el-input>
                 </el-form-item>
-                <el-form-item label="处理方案"  id="t1">
+                <el-form-item label="处理方案" prop="solution" id="t1">
 
                     <el-input type="textarea"  :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solution" style="width: 400px;"></el-input>
 
@@ -76,7 +76,8 @@
                 selectedForm:{},
                 disabled:false,
                 submitLoading: false,
-                rules: [],
+                rules: {
+                    solution:[{ required: true, message: '请输入处理方案', trigger: 'blur' }]},
                 apiRootDeal: '/identity/emergencyAccidentHandle',
                 queryFormColumns:[
                     {

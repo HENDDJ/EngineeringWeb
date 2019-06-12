@@ -24,11 +24,11 @@
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
+            <el-form :inline="true" :model="form"  ref="form"  :rules="rules" label-width="170px" class="demo-ruleForm">
                 <el-form-item style="display: none">
                     <el-input v-model="form.accidentId" ></el-input>
                 </el-form-item>
-                <el-form-item label="处理完成情况"  id="t1">
+                <el-form-item label="处理完成情况"  id="t1" prop="solutionGrade">
                     <el-input type="textarea"  :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solutionGrade" style="width: 400px;"></el-input>
                 </el-form-item>
                 <el-form-item label="处理结果描述" >
@@ -54,7 +54,7 @@
         name: 'EmergencyAccidentHandle',
         data() {
             return {
-                addVis:true,
+                addVis:false,
                 editVis:true,
                 delVis:true,
                 formColumns :{},
@@ -77,7 +77,10 @@
                         des:'当事人',
                         type:'string'
                     }
-                ]
+                ],
+                rules:{
+                    solutionGrade:[{ required: true, message: '请输入处理完成情况', trigger: 'blur' }]
+                }
 
             }
         },

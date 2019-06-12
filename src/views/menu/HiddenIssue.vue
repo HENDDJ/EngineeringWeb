@@ -25,7 +25,7 @@
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
+            <el-form :inline="true" :model="form"  ref="form" :rules="rules" label-width="170px" class="demo-ruleForm">
                 <el-form-item style="display: none">
                     <el-input v-model="form.issueId" type="hidden"></el-input>
                 </el-form-item>
@@ -43,7 +43,7 @@
                                      placeholder="选择日期">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="处理结果描述" >
+                <el-form-item label="处理结果描述" prop="solveDes">
                     <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.solveDes"></el-input>
                 </el-form-item>
             </el-form>
@@ -76,7 +76,9 @@
                 title: '隐患处理',
                 disabled: false,
                 selected: [],
-                rules: {},
+                rules: {
+                    solveDes:[{ required: true, message: '请输入处理结果描述', trigger: 'blur' }]
+                },
                 queryForm:{issueId:''},
                 recordsForm: {issueId:'',preNodeId:'',nextNodeId:'',actionType:'',des:''},
                 queryFormColumns:[
@@ -129,7 +131,10 @@
                     });
                     return false;
                 }
-
+                this.form = {}
+                if (this.$refs['form'] !== undefined) {
+                    this.$refs['form'].resetFields();
+                }
                 this.form.issueId = val[0].id
                 this.queryForm.issueId = val[0].id
                 this.dialogVisible = true

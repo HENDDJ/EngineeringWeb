@@ -25,11 +25,11 @@
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
+            <el-form :inline="true" :model="form"  ref="form" :rules="rules"  label-width="170px" class="demo-ruleForm">
                 <el-form-item >
                     <el-input v-model="form.issueId" type="hidden"></el-input>
                 </el-form-item>
-                <el-form-item label="理由与评价" >
+                <el-form-item label="理由与评价"  prop="des">
                     <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.des"></el-input>
                 </el-form-item>
             </el-form>
@@ -40,24 +40,6 @@
             </div>
         </el-dialog>
 
-        <el-dialog
-            v-if="CRdialogVisible"
-            :title="CRtitle"
-            :visible.sync="CRdialogVisible"
-            width="880px"
-            align="left"
-            :modal-append-to-body='false'
-            :append-to-body="true"
-            :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form"  label-width="170px" class="demo-ruleForm">
-                <el-form-item label="理由与评价" >
-                    <el-input type="textarea" class="result_area" :autosize="{ minRows: 3, maxRows: 5}" v-model="checkRes"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer footer-position">
-                <el-button @click="handleClose">取 消</el-button>
-            </div>
-        </el-dialog>
 
 
         </section>
@@ -84,6 +66,7 @@
                 checkRes:'',
                 queryResult:{issueId:''},
                 issueIdList:[],
+                rules:{ des:[{ required: true, message: '请输入理由与评价', trigger: 'blur' }]},
                 queryFormColumns:[
                     {name:'status',value:'86427b26-b4c3-462c-8ce0-4992098534eb'},
                     {
@@ -125,7 +108,9 @@
                     });
                     return false;
                 }
-                this.form.issueId = val[0].issueId
+
+                this.form.issueId = val[0].id
+                console.log(val[0].id)
                 this.dialogVisible = true
             },
             checkResult(val){

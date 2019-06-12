@@ -26,14 +26,14 @@
             width="60%"
             align="left"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form" class="demo-form-inline" label-width="100px">
-                <el-form-item label="工程名称">
+            <el-form :inline="true" :model="form" :rules="rulesOne" ref="form" class="demo-form-inline" label-width="100px">
+                <el-form-item label="工程名称" prop="projectName">
                     <el-input v-model="form.projectName" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="工作类型">
+                <el-form-item label="工作类型" prop="workType">
                     <el-input v-model="form.workType" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="具体描述">
+                <el-form-item label="具体描述" prop="description">
                     <el-input v-model="form.description" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="开始时间">
@@ -61,17 +61,17 @@
             :modal-append-to-body='false'
             :append-to-body="true"
             :before-close="handleClose">
-            <el-form :inline="true" :model="form"  ref="form" class="demo-form-inline" label-width="170px" >
-                <el-form-item label="工程名称">
+            <el-form :inline="true" :model="form" :rules="rulesTwo" ref="form" class="demo-form-inline" label-width="170px" >
+                <el-form-item label="工程名称" prop="projectName">
                     <el-select v-model="form.proId" placeholder="请选择" :disabled="disabled">
                         <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="工作类型">
+                <el-form-item label="工作类型" prop="workType">
                     <el-input v-model="form.workType" :disabled="disabled"></el-input>
                 </el-form-item>
-                <el-form-item label="具体描述">
+                <el-form-item label="具体描述" prop="description">
                     <el-input v-model="form.description" :disabled="disabled"></el-input>
                 </el-form-item>
                 <el-form-item label="开始时间">
@@ -123,6 +123,13 @@
                     endTime:'',
                     damage:'',
                     state:''
+                },
+                rulesOne:{
+                },
+                rulesTwo:{
+                    projectName:[{ required: true, message: '请输入工程名称', trigger: 'change' }],
+                    workType:[{ required: true, message: '请输入工作类型', trigger: 'blur' }],
+                    description:[{ required: true, message: '请输入描述', trigger: 'blur' }]
                 },
                 disabled:false,
                 addBtnVis:true,//
@@ -207,30 +214,38 @@
                     .catch(_ => {});
             },
             submit (form) {
-                this.submitLoading = true;
-                //上报
-                if(form.id==null){
-                    form.state = "TO_BE_CONFIRMED";
-                    this.$http('POST',`identity/majorHazards/`,form).then(() => {
-                        this.submitLoading = false;
-                        this.dialogVisible = false;
-                        this.$refs.table.refreshTableData();
-                    });
-                }
-                //编辑
-                if((form.id!=null)&&(this.disabled===false)){
-                    form.state = "TO_BE_CONFIRMED";
-                    this.$http('PUT', `identity/majorHazards/${form.id}id`,form).then(() =>{
-                        this.submitLoading = false;
-                        this.dialogVisible = false;
-                        this.$refs.table.refreshTableData();
-                        this.form={};
-                    });
-                }else{//查看
-                    this.submitLoading = false;
-                    this.dialogVisible = false;
-                    this.form={};
-                }
+                this.$refs['form'].validate((valid) => {
+                    if (valid) {
+                        this.submitLoading = true;
+                        //上报
+                        if (form.id == null) {
+                            form.state = "TO_BE_CONFIRMED";
+                            this.$http('POST', `identity/majorHazards/`, form).then(() => {
+                                this.submitLoading = false;
+                                this.dialogVisible = false;
+                                this.$refs.table.refreshTableData();
+                            });
+                        }
+                        //编辑
+                        if ((form.id != null) && (this.disabled === false)) {
+                            form.state = "TO_BE_CONFIRMED";
+                            this.$http('PUT', `identity/majorHazards/${form.id}id`, form).then(() => {
+                                this.submitLoading = false;
+                                this.dialogVisible = false;
+                                this.$refs.table.refreshTableData();
+                                this.form = {};
+                            });
+                        } else {//查看
+                            this.submitLoading = false;
+                            this.dialogVisible = false;
+                            this.form = {};
+                        }
+                    } else {
+                        this.dialogVisible = true;
+                        console.log('error submit!!');
+                        return false;
+                    }
+                })
             },
 
             //工程名称下拉项
