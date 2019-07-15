@@ -20,7 +20,6 @@ import store from '@/store';
 import DynamicRoutes from '@/utils/dynamic-routes';
 import VueClipboard from 'vue-clipboard2'
 import 'formdata-polyfill'
-
 Vue.config.productionTip = false;
 
 Vue.use(ElementUI, {size: 'mini'});

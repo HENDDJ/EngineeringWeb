@@ -5,9 +5,10 @@
                 placeholder="输入关键字进行过滤"
                 size="large"
                 v-model="filterText"
-                style="width: 98%;margin-left: 12px;margin-bottom: 10px;">
+                style="width: 50%;left: -24px;margin-bottom: 10px;">
             </el-input>
-            <el-scrollbar>
+            <el-button type="primary" size="small" style="position: relative" round @click="refreshCamera">刷新摄像头信息</el-button>
+            <el-scrollbar v-loading="loading"  element-loading-text="数据更新中">
                 <el-tree
                     :data="treeData"
                     @node-click="handleNodeClick"
@@ -33,7 +34,8 @@
             return {
                 treeData: [],
                 filterText: '',
-                spv: {}
+                spv: {},
+                loading:false
             }
         },
         watch: {
@@ -75,7 +77,7 @@
                 this.initVideoDialogVue(obj.id);
             },
             loadTreeData() {
-                this.$http('post', '/identity/projectRegion/list', false).then(
+               return this.$http('post', '/identity/projectRegion/list', false).then(
                     data => {
                         if (this.$store.state.projectName) {
                             this.filterText = this.$store.state.projectName;
@@ -94,7 +96,12 @@
                         this.initSpvx(this.spv);
                         this.setLocalParam(this.spv);
                     }
-                )
+                ).catch(_=>{
+                   this.$message({
+                       type:'warning',
+                       message:'请使用IE浏览器查看监控'
+                   })
+               })
             },
             initVideoDialogVue(cameraUuid) {
                 this.$http('POST', `/identity/camera/getPreviewXml/${cameraUuid}`,false)
@@ -130,6 +137,15 @@
                 this.spv.MPV_SetPlayWndCount(4);
                 this.spv.MPV_StartPreview(xml);
             },
+            refreshCamera(){
+                let _this = this
+                this.loading = true
+                this.$http('Post',"identity/camera/freshCamera",{},false).then(()=>{
+                    this.loadTreeData().then(()=>{
+                        _this.loading = false
+                    });
+                })
+            }
         },
         mounted() {
             this.loadTreeData();
