@@ -106,6 +106,9 @@
                 disabled: false,
                 selected: [],
                 rules: {
+                    projectId:[{ required: true, message: '请输入', trigger: 'blur' }],
+                    userId:[{ required: true, message: '请输入', trigger: 'blur' }],
+                    departmentId:[{ required: true, message: '请输入', trigger: 'blur' }],
                 },
                 options: [],
                 srcUrl: '',
@@ -216,21 +219,6 @@
                 });
             },
             loadDepartmentOptions () {
-                this.$http('POST', 'identity/organization/list', false).then(
-                    data => {
-                        this.formColumns.filter(item => item.name === 'departmentId')[0].options = data.map(item => {
-                            return {value: item.id, label: item.name};
-                        });
-                        this.form.departmentId = JSON.parse(sessionStorage.getItem('userInfo')).organizationId;
-                    }
-                );
-                this.$http('POST', 'identity/projectInfo/list', false).then(
-                    data => {
-                        this.formColumns.filter(item => item.name === 'projectId')[0].options = data.map(item => {
-                            return {value: item.id, label: item.name};
-                        });
-                    }
-                );
                 this.$http('POST', 'identity/principal/list', false).then(
                     data => {
                         this.formColumns.filter(item => item.name === 'userId')[0].options = data.map(item => {
@@ -238,6 +226,22 @@
                         });
                     }
                 );
+                this.$http('POST', 'identity/organization/list', false).then(
+                    data => {
+                            this.formColumns.filter(item => item.name === 'departmentId')[0].options = data.map(item => {
+                                return {value: item.id, label: item.name};
+                            });
+                            this.form.departmentId = JSON.parse(sessionStorage.getItem('userInfo')).organizationId;
+                    }
+                );
+                this.$http('POST', 'identity/projectInfo/list', false).then(
+                    data => {
+                            this.formColumns.filter(item => item.name === 'projectId')[0].options = data.map(item => {
+                                return {value: item.id, label: item.name};
+                            });
+                    }
+                );
+
 
             },
             loadOptionsData () {
@@ -246,6 +250,8 @@
                         this.options = data.map(item => {
                             return {value: item.regionUuid, label: item.name};
                         });
+                        this.selectValue = this.options[0].value
+                        this.showChildren();
                         this.$store.commit('getProjectName', '');
                         this.spv = document.getElementById('spv');
                         this.initSpvx(this.spv);
@@ -345,7 +351,10 @@
             this.formColumns = temp1;
             this.handleSelectOptions();
             //this.controlAuthority();
-            this.loadDepartmentOptions();
+            this.$nextTick(()=>{
+                this.loadDepartmentOptions();
+
+            })
             this.loadOptionsData();
             window.videoUp = this
         }

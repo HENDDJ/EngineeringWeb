@@ -129,6 +129,7 @@
                     .then(_ => {
                         this.from = {};
                         this.$refs['form'].resetFields();
+                        this.form = {};
                         this.dialogVisible = false;
                         done();
                     })
